@@ -1,3 +1,6 @@
+# Vim temp
+*.swp
+
 # Prerequisites
 *.d
 
