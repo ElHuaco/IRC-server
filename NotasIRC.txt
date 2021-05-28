@@ -1,0 +1,39 @@
+---¿Qué es el IRC?---
+IRC: es un "application layer" que permite comunicación por texto. Este chat
+funciona con un modelo de red "cliente/servidor".
+	· Application Layer: es un "abstraction layer" que especifica los protocolos
+	de comunicación compartidos por los "hosts de la red", así como los métodos
+	de interfaz usados.
+		· Abstraction Layer: categorización de los entresijos de un sistema para
+		poder atacarlos por separado.
+		· Host de Red: ordenador conectado a una red, asignado con una dirección
+		red al menos.
+	· Modelo Cliente/Servidor: es una forma de "distributed application" donde se
+	reparten las tareas entre los proveedores de un servicio (servidores) y los 
+	usuarios del servicio (clientes). Un "host de red" del servicio ejecuta
+	programas que pueden compartir sus recursos con lo clientes. Un cliente no
+	comparte sus recursos, pero sí que exige el servicio al servidor.
+		· Distributed Application: programa que se ejecuta en un "distributed
+		system".
+			· Distributed System: sistema cuyas componentes están en diferentes
+			ordenadores de la red, como los MMORPGs.
+Los clientes IRC se comunican con los servidores del chat para transmitir mensa-
+jes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
+---¿Qué es el RFC?---
+Request For Comments, son la documentación del IRC.
+[Link](https://es.wikipedia.org/wiki/Internet_Relay_Chat)
+RFC 1459
+RFC 2810
+RFC 2811
+RFC 2812
+RFC 2813
+RFC 7194
+---Mandatory parts---
+· Server-Server comunication, con servidores reales
+· Use cryptographic library to handle TLS communications
+· ./ircserv [host:port_network:password_network] <port> <password>
+· Varios clientes, servidores a la vez sin colgarse.
+· No forking, all IO non-blocking and use only 1 select for all (read, write,
+listen...)
+· Verificar errores en low bandwith, partial data received...
+· test con nc para enviar cachos de un command.
