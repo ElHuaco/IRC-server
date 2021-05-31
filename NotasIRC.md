@@ -1,4 +1,5 @@
-##---¿Qué es el IRC?---##
+¿Qué es el IRC?
+---------------
 
 IRC: es un "application layer" sobre la Internet, que permite comunicación por
 texto. Este chat funciona con un modelo de red "cliente/servidor".
@@ -18,7 +19,8 @@ Ejemplos de lunáticos creando servidores TCP/IP socket para IRC en C/C++:
   - [Tutorial 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
   - [Tutorial 2](https://www.youtube.com/watch?v=WDn-htpBlnU)
 
-##---¿Qué es el RFC?---##
+¿Qué es el RFC?
+---------------
 
 Request For Comments, son la documentación del [IRC.](https://es.wikipedia.org/wiki/Internet_Relay_Chat)
   - [RFC 1459:](https://datatracker.ietf.org/doc/html/rfc1459)
@@ -28,7 +30,8 @@ Request For Comments, son la documentación del [IRC.](https://es.wikipedia.org/
   - [RFC 2813](https://datatracker.ietf.org/doc/html/rfc2813)
   - [RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
 
-##---Mandatory parts---##
+Mandatory parts
+---------------
 
   - Server-Server comunication, con servidores reales
   - Use cryptographic library to handle TLS communications
