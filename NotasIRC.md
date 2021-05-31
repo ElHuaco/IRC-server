@@ -16,19 +16,20 @@ jes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
 
 Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++:
   - [Maniac](https://www.youtube.com/watch?v=Cct_vXCJOFw)
-  - [Tutorial 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
-  - [Tutorial 2](https://www.youtube.com/watch?v=WDn-htpBlnU)
+  - [ ] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
+  - [ ] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc)
+  - [Esquema](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
 
 ¿Qué es el RFC?
 ---------------
 
 Request For Comments, son la documentación del [IRC.](https://es.wikipedia.org/wiki/Internet_Relay_Chat)
-  - [RFC 1459:](https://datatracker.ietf.org/doc/html/rfc1459)
-  - [RFC 2810](https://datatracker.ietf.org/doc/html/rfc2810)
-  - [RFC 2811](https://datatracker.ietf.org/doc/html/rfc2811)
-  - [RFC 2812](https://datatracker.ietf.org/doc/html/rfc2812)
-  - [RFC 2813](https://datatracker.ietf.org/doc/html/rfc2813)
-  - [RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
+  - [ ] [RFC 1459](https://datatracker.ietf.org/doc/html/rfc1459)
+  - [ ] [RFC 2810](https://datatracker.ietf.org/doc/html/rfc2810)
+  - [ ] [RFC 2811](https://datatracker.ietf.org/doc/html/rfc2811)
+  - [ ] [RFC 2812](https://datatracker.ietf.org/doc/html/rfc2812)
+  - [ ] [RFC 2813](https://datatracker.ietf.org/doc/html/rfc2813)
+  - [ ] [RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
 
 Mandatory parts
 ---------------
