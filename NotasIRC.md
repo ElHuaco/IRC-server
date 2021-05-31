@@ -1,7 +1,8 @@
 ---¿Qué es el IRC?---
+
 IRC: es un "application layer" sobre la Internet, que permite comunicación por
 texto. Este chat funciona con un modelo de red "cliente/servidor".
-  - Internet: https://developer.mozilla.org/en-US/docs/Learn/Common_questions/How_does_the_Internet_work
+  - [Internet](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/How_does_the_Internet_work)
   - Application Layer: es un "abstraction layer" que especifica los protocolos de comunicación compartidos por los "hosts de la red", así como los métodos de interfaz usados.
     - Abstraction Layer: categorización de los entresijos de un sistema para poder atacarlos por separado.
     - Host de Red: ordenador conectado a una red, asignado con una dirección red al menos.
@@ -11,12 +12,14 @@ texto. Este chat funciona con un modelo de red "cliente/servidor".
 Los clientes IRC se comunican con los servidores del chat para transmitir mensa-
 jes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
   - TCP/IP: [Link](https://www.youtube.com/watch?v=614QGgw_FA4)
+
 Ejemplos de lunáticos creando servidores TCP/IP socket para IRC en C/C++:
   - [Link](https://www.youtube.com/watch?v=Cct_vXCJOFw)
   - [Link](https://www.youtube.com/watch?v=C7CpfL1p6y0)
   - [Link](https://www.youtube.com/watch?v=WDn-htpBlnU)
 
 ---¿Qué es el RFC?---
+
 Request For Comments, son la documentación del IRC.
 [Link](https://es.wikipedia.org/wiki/Internet_Relay_Chat)
 [RFC 1459:](https://datatracker.ietf.org/doc/html/rfc1459)
@@ -27,6 +30,7 @@ Request For Comments, son la documentación del IRC.
 [RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
 
 ---Mandatory parts---
+
   - Server-Server comunication, con servidores reales
   - Use cryptographic library to handle TLS communications
   - ./ircserv [host:port_network:password_network] <port> <password>
