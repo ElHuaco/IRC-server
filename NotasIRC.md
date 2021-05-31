@@ -1,4 +1,4 @@
----¿Qué es el IRC?---
+##---¿Qué es el IRC?---##
 
 IRC: es un "application layer" sobre la Internet, que permite comunicación por
 texto. Este chat funciona con un modelo de red "cliente/servidor".
@@ -14,22 +14,21 @@ jes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
   - TCP/IP: [Link](https://www.youtube.com/watch?v=614QGgw_FA4)
 
 Ejemplos de lunáticos creando servidores TCP/IP socket para IRC en C/C++:
-  - [Link](https://www.youtube.com/watch?v=Cct_vXCJOFw)
-  - [Link](https://www.youtube.com/watch?v=C7CpfL1p6y0)
-  - [Link](https://www.youtube.com/watch?v=WDn-htpBlnU)
+  - [Maniac](https://www.youtube.com/watch?v=Cct_vXCJOFw)
+  - [Tutorial 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
+  - [Tutorial 2](https://www.youtube.com/watch?v=WDn-htpBlnU)
 
----¿Qué es el RFC?---
+##---¿Qué es el RFC?---##
 
-Request For Comments, son la documentación del IRC.
-[Link](https://es.wikipedia.org/wiki/Internet_Relay_Chat)
-[RFC 1459:](https://datatracker.ietf.org/doc/html/rfc1459)
-[RFC 2810](https://datatracker.ietf.org/doc/html/rfc2810)
-[RFC 2811](https://datatracker.ietf.org/doc/html/rfc2811)
-[RFC 2812](https://datatracker.ietf.org/doc/html/rfc2812)
-[RFC 2813](https://datatracker.ietf.org/doc/html/rfc2813)
-[RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
+Request For Comments, son la documentación del [IRC.](https://es.wikipedia.org/wiki/Internet_Relay_Chat)
+  - [RFC 1459:](https://datatracker.ietf.org/doc/html/rfc1459)
+  - [RFC 2810](https://datatracker.ietf.org/doc/html/rfc2810)
+  - [RFC 2811](https://datatracker.ietf.org/doc/html/rfc2811)
+  - [RFC 2812](https://datatracker.ietf.org/doc/html/rfc2812)
+  - [RFC 2813](https://datatracker.ietf.org/doc/html/rfc2813)
+  - [RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
 
----Mandatory parts---
+##---Mandatory parts---##
 
   - Server-Server comunication, con servidores reales
   - Use cryptographic library to handle TLS communications
