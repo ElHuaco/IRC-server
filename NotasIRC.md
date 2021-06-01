@@ -17,7 +17,7 @@ jes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
 Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++:
   - [Maniac](https://www.youtube.com/watch?v=Cct_vXCJOFw)
   - [ ] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
-  - [ ] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc)
+  - [ ] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): Socket and Connection classes; Event loops en threads con mutex?
   - [Esquema](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
 
 ¿Qué es el RFC?
