@@ -50,6 +50,8 @@ Funciones Externas
 -------------------
 
   - socket
+  - open
+  - close
   - setsockopt
   - getsockname
   - getprotobyname
@@ -67,3 +69,16 @@ Funciones Externas
   - inet_ntoa
   - send
   - recv
+  - exit
+  - signal
+  - lseek
+  - fstat
+  - read
+  - write
+  - fcntl(fd, F_SETFL, O_NONBLOCK);
+  - select
+  - FD_CLR
+  - FD_COPY
+  - FD_ISSET
+  - FD_SET
+  - FD_ZERO
