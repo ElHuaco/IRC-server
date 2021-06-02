@@ -17,7 +17,7 @@ jes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
 Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++:
   - [Maniac](https://www.youtube.com/watch?v=Cct_vXCJOFw)
   - [ ] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
-  - [ ] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): Socket and Connection classes; Event loops en threads con mutex?
+  - [ ] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): Socket and Connection classes; Event loops en threads con mutex? -> cambiar por
   - [Esquema](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
 
 ¿Qué es el RFC?
@@ -43,3 +43,25 @@ Mandatory parts
       - TCP/IP Socket: Once a peer-to-peer connection is established, a socket descriptor is used to uniquely identify the connection. The socket descriptor itself is a task-specific numerical value.
   - Verificar errores en low bandwith, partial data received...
   - test con nc para enviar cachos de un command.
+  
+Funciones Externas
+-------------------
+
+  - socket
+  - setsockopt
+  - getsockname
+  - getprotobyname
+  - gethostbyname
+  - getaddrinfo
+  - bind
+  - connect
+  - listen
+  - accept
+  - htons
+  - htonl
+  - ntohs
+  - ntohl
+  - inet_addr
+  - inet_ntoa
+  - send
+  - recv
