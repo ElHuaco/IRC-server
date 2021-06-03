@@ -23,6 +23,7 @@ Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++
   - [X] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0): repaso IP, TCP, sockets.
   - [X] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): abstraer el código de conexión con Socket, Server classes.
   - [Esquema aplicación server-client socket](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
+  - [Puertos IRC](https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=IRC)
 
 ¿Qué es el RFC?
 ---------------
