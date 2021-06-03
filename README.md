@@ -51,7 +51,7 @@ Mandatory parts
 Funciones Externas
 -------------------
 
-  - socket: lo crea. Selecciona protocolos (`PF_INET` ó `PF_INET6`; `SOCK_STREAM`; `getprotobyname("tcp")`). También se puede rellenar con el struct addrinfo usado en `getaddrinfo()`.
+  - `socket()`: lo crea. Selecciona protocolos (`PF_INET` ó `PF_INET6`; `SOCK_STREAM`; `getprotobyname("tcp")`). También se puede rellenar con el `struct addrinfo` usado en `getaddrinfo()`.
   - open: 
   - close
   - setsockopt
