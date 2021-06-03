@@ -16,11 +16,13 @@ texto. Este chat funciona con un modelo de red "cliente/servidor".
 Los clientes IRC se comunican con los servidores del chat para transmitir mensajes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
   - [TCP/IP](https://www.youtube.com/watch?v=614QGgw_FA4)
 
-Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++:
-  - [Maniac](https://www.youtube.com/watch?v=Cct_vXCJOFw)
-  - [X] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0)
-  - [ ] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): Socket and Connection classes; Event loops en threads con mutex? -> cambiar por
-  - [Esquema](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
+Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++
+---------------
+  - [ ] [Programación básica de redes](https://beej.us/guide/bgnet/html//index.html#what-is-a-socket)
+  - [Loco crea IRC server en C para NeoVim](https://www.youtube.com/watch?v=Cct_vXCJOFw)
+  - [X] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0): repaso IP, TCP, sockets.
+  - [X] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): abstraer el código de conexión con Socket, Server classes.
+  - [Esquema aplicación server-client socket](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
 
 ¿Qué es el RFC?
 ---------------
@@ -49,8 +51,8 @@ Mandatory parts
 Funciones Externas
 -------------------
 
-  - socket
-  - open
+  - socket: lo crea. Selecciona protocolos y si es non-blocking.
+  - open: 
   - close
   - setsockopt
   - getsockname
