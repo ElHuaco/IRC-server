@@ -78,10 +78,10 @@ Funciones Externas
   - fstat
   - read
   - write
-  - fcntl(fd, F_SETFL, O_NONBLOCK);
-  - select
-  - FD_CLR
-  - FD_COPY
-  - FD_ISSET
-  - FD_SET
-  - FD_ZERO
+  - `fcntl(socket_fd, F_SETFL, O_NONBLOCK)`;
+  - `select`:  gives you the power to monitor several sockets at the same time. It’ll tell you which ones are ready for reading, which are ready for writing, and which sockets have raised exceptions.
+  - `FD_CLR`: removes a particular fd from the set.
+  - `FD_COPY`: 
+  - `FD_ISSET`: returns true if fd is in the set.
+  - `FD_SET`: adds fd to the set.
+  - `FD_ZERO`: clears all entries from the set.
