@@ -53,8 +53,10 @@ Funciones Externas
 -------------------
 
   - `socket()`: lo crea. Selecciona protocolos (`PF_INET` ó `PF_INET6`; `SOCK_STREAM`; `getprotobyname("tcp")`). También se puede rellenar con el `struct addrinfo` usado en `getaddrinfo()`.
-  - open: 
-  - close
+  - open, close, read, write.
+  - signal, exit.
+  - lseek
+  - fstat
   - `setsockopt()`, `getsockname()`: controlar socket descriptors, como `fcntl()`.
   - `getprotobyname()`: devuelve el número asociado al nombre del protocolo, como "tcp" o "udp".
   - `gethostbyname()`: da la dirección IP de un host name. No funciona bien con IPv6. Mejor usar `getaddrinfo()`.
@@ -67,16 +69,10 @@ Funciones Externas
   - `inet_addr()`, `inet_ntoa()`: convierte dirección IP en `char` a `struct in_addr` y viceversa. No admiten IPv6.
   - `send()`: envía datos a través de un TCP socket. Para un chat habrá que determinar cuando empieza y termina un mensaje en el working buffer de `recv()`, por los posibles envíos parciales de información -> estructura de paquete con (longitud, usuario, mensaje) para llamar a `recv()` hasta que los bytes recibidos sean igual al que pone en longitud. El working buffer debe tener el tamaño de 2 paquetes al menos porque podemos enviar la parte final de uno y el comienzo del siguiente antes de operar con el primero.
   - `recv()`: lee datos entrantes del remoto al buffer. Devuelve los bytes recibidos. Si el remoto ha cerrado la conexión, devuelve 0.
-  - exit
-  - signal
-  - lseek
-  - fstat
-  - read
-  - write
   - `fcntl(socket_fd, F_SETFL, O_NONBLOCK)`: hace al socket descriptor non-blocking.
   - `select`:  gives you the power to monitor several sockets at the same time. It’ll tell you which ones are ready for reading, which are ready for writing, and which sockets have raised exceptions.
   - `FD_CLR`: removes a particular fd from the set.
-  - `FD_COPY`: 
+  - `FD_COPY`: reemplaza un fd set por otro.
   - `FD_ISSET`: returns true if fd is in the set.
   - `FD_SET`: adds fd to the set.
   - `FD_ZERO`: clears all entries from the set.
