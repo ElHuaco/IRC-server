@@ -18,7 +18,7 @@ Los clientes IRC se comunican con los servidores del chat para transmitir mensaj
 
 Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++
 ---------------
-  - [ ] [Programación básica de redes](https://beej.us/guide/bgnet/html//index.html#what-is-a-socket)
+  - [ ] [Biblia introductora a programación de redes](https://beej.us/guide/bgnet/html//index.html#what-is-a-socket)
   - [Loco crea IRC server en C para NeoVim](https://www.youtube.com/watch?v=Cct_vXCJOFw)
   - [X] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0): repaso IP, TCP, sockets.
   - [X] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): abstraer el código de conexión con Socket, Server classes.
@@ -63,12 +63,8 @@ Funciones Externas
   - `connect()`: conecta un socket a un servidor. Tras `bind()` si se queria el cliente en una IP y puerto concretos. Permite llamar a `send()` y `recv()`.
   - `listen()`: que el socket descriptor escuche conexiones entrantes. Especifica número máximo de conexiones.
   - `accept()`: acepta una conexión entrante en un listening socket. Tras haber creado un `SOCK_STREAM`y haberlo preparado para conexiones entrantes con `listen()`, llamas a esta función para crear un nuevo socket descriptor que pueda ser usado para las siguientes comunicaciones con el nuevo cliente. El socket anterior sigue estando ahí y podrá ser usado para nuevos `accept()`. Hay que `close()`este nuevo socket cuando terminemos.
-  - htons
-  - htonl
-  - ntohs
-  - ntohl
-  - inet_addr
-  - inet_ntoa
+  - `htons()`, `htonl()`, `ntohs()`, `ntohl()`: convierten integer types de host byte order a network byte order y viceversa, según si preparas para enviar el tipo, o lo has recibido.
+  - `inet_addr()`, `inet_ntoa()`: convierte dirección IP en `char` a `struct in_addr` y viceversa. No admiten IPv6.
   - `send()`: envía datos a través de un TCP socket. Para un chat habrá que determinar cuando empieza y termina un mensaje en el working buffer de `recv()`, por los posibles envíos parciales de información -> estructura de paquete con (longitud, usuario, mensaje) para llamar a `recv()` hasta que los bytes recibidos sean igual al que pone en longitud. El working buffer debe tener el tamaño de 2 paquetes al menos porque podemos enviar la parte final de uno y el comienzo del siguiente antes de operar con el primero.
   - `recv()`: lee datos entrantes del remoto al buffer. Devuelve los bytes recibidos. Si el remoto ha cerrado la conexión, devuelve 0.
   - exit
