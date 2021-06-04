@@ -55,30 +55,29 @@ Funciones Externas
   - `socket()`: lo crea. Selecciona protocolos (`PF_INET` ó `PF_INET6`; `SOCK_STREAM`; `getprotobyname("tcp")`). También se puede rellenar con el `struct addrinfo` usado en `getaddrinfo()`.
   - open: 
   - close
-  - setsockopt
-  - getsockname
-  - getprotobyname
-  - gethostbyname
-  - getaddrinfo
-  - bind
-  - connect
-  - listen
-  - accept
+  - `setsockopt()`, `getsockname()`: controlar socket descriptors, como `fcntl()`.
+  - `getprotobyname()`: devuelve el número asociado al nombre del protocolo, como "tcp" o "udp".
+  - `gethostbyname()`: da la dirección IP de un host name. No funciona bien con IPv6. Mejor usar `getaddrinfo()`.
+  - `getaddrinfo()`: recibe información de un host name y un `struct addrinfo` con los tipos de IP y sockets a usar. Rellena el `struct sockaddr` con el resultado y crea una lista de `struct addrinfo` con las direcciones que cumplen la información pasada de argumento.
+  - `bind()`: asocia un socket con una IP y puerto.
+  - `connect()`: conecta un socket a un servidor. Tras `bind()` si se queria el cliente en una IP y puerto concretos. Permite llamar a `send()` y `recv()`.
+  - `listen()`: que el socket descriptor escuche conexiones entrantes. Especifica número máximo de conexiones.
+  - `accept()`: acepta una conexión entrante en un listening socket. Tras haber creado un `SOCK_STREAM`y haberlo preparado para conexiones entrantes con `listen()`, llamas a esta función para crear un nuevo socket descriptor que pueda ser usado para las siguientes comunicaciones con el nuevo cliente. El socket anterior sigue estando ahí y podrá ser usado para nuevos `accept()`. Hay que `close()`este nuevo socket cuando terminemos.
   - htons
   - htonl
   - ntohs
   - ntohl
   - inet_addr
   - inet_ntoa
-  - send
-  - recv
+  - `send()`: envía datos a través de un TCP socket. Para un chat habrá que determinar cuando empieza y termina un mensaje en el working buffer de `recv()`, por los posibles envíos parciales de información -> estructura de paquete con (longitud, usuario, mensaje) para llamar a `recv()` hasta que los bytes recibidos sean igual al que pone en longitud. El working buffer debe tener el tamaño de 2 paquetes al menos porque podemos enviar la parte final de uno y el comienzo del siguiente antes de operar con el primero.
+  - `recv()`: lee datos entrantes del remoto al buffer. Devuelve los bytes recibidos. Si el remoto ha cerrado la conexión, devuelve 0.
   - exit
   - signal
   - lseek
   - fstat
   - read
   - write
-  - `fcntl(socket_fd, F_SETFL, O_NONBLOCK)`;
+  - `fcntl(socket_fd, F_SETFL, O_NONBLOCK)`: hace al socket descriptor non-blocking.
   - `select`:  gives you the power to monitor several sockets at the same time. It’ll tell you which ones are ready for reading, which are ready for writing, and which sockets have raised exceptions.
   - `FD_CLR`: removes a particular fd from the set.
   - `FD_COPY`: 
