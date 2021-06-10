@@ -29,7 +29,7 @@ Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++
 ---------------
 
 Request For Comments, son la documentación del IRC.
-  - [ ] [RFC 1459](https://datatracker.ietf.org/doc/html/rfc1459)
+  - [X] [RFC 1459](https://datatracker.ietf.org/doc/html/rfc1459)
   - [ ] [RFC 2810](https://datatracker.ietf.org/doc/html/rfc2810)
   - [ ] [RFC 2811](https://datatracker.ietf.org/doc/html/rfc2811)
   - [ ] [RFC 2812](https://datatracker.ietf.org/doc/html/rfc2812)
