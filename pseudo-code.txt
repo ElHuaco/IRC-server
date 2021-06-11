@@ -32,3 +32,18 @@ main
 	}
 
 }
+
+ Server
+ {
+	 vector de clientes
+	 vector de canales
+ }
+ Cliente
+ {
+	 canales a los que pertenece
+ }
+ Canal
+ {
+	 vector de clientes chanop
+	 lista de sockets dentro
+ }
