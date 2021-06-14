@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 12:24:57 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 12:29:16 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,9 @@ int main(int argc, char **argv)
 	{
 		std::cout << "error: ircserv: bad arguments" << std::endl;
 		return (EXIT_FAILURE);
-<<<<<<< HEAD
-	}	
-	//if (argc == 3)
-=======
 	}
-	if (argc == 3)
->>>>>>> 9f0d628b112d89a3139e07107a806775bd0c0920
-		Server server(arg[0], arg[1]);
-	//else
-	//	Server server(arg[3], arg[4], arg[0], arg[1], arg[2]);
+	//Rehacer esto para argc 5.
+	Server server(arg[0], arg[1]);
 	fd_set read_fds;
 	while (1)
 	{
@@ -124,4 +117,5 @@ std::cout << "New connection. " << std::endl;
 			}
 		}
 	}
+}
 
