@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 09:45:31 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/14 10:55:39 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,50 @@
 #include "Channel.hpp"
 #include "Commands.hpp"
 
+#include <iostream>
+#include <string>
+
 //signal_handlers con signal(SIGKILL)
 
 //bool	is_cmd(const std::string &str);
 
+std::string	*ft_argv_parser(int argc, char **argv)
+{
+	if (argc == 3)
+	{
+		std::string		array[2];
+		array[0] = argv[1];
+		array[1] = argv[2];
+		return (array);
+	}
+	if (argc == 4)
+	{
+		std::string		array[5];
+		int i = 0;
+		char *aux = strtok(argv[1], ":");
+		while (aux != 0 && i < 5)
+		{
+			array[i++] = aux;
+			aux = strtok(0, ":");
+		}
+		if (i != 3)
+			return (0);
+		array[3] = argv[2];
+		array[4] = argv[3];
+		return (array);
+	}
+	return (0);
+}
+
 int main(int argc, char **argv)
 {
-	if (argc != 3 && argc != 4)
+	std::string *arg = ft_argv_parser(argc, argv);
+	if (arg == 0)
 	{
 		std::cout << "error: ircserv: bad arguments" << std::endl;
 		return (EXIT_FAILURE);
 	}
+	
 	//Parsear argv en host, post_network, pass_network, port, password.
 	Server server(); //Hace todo el setup desde getaddrinfo() hasta listen().
 	//posibles exceptions en creacion del objeto Server.
@@ -63,4 +96,5 @@ int main(int argc, char **argv)
 			}
 		}
 	}
+	return (0);
 }
