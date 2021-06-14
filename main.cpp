@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 11:46:30 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 11:47:44 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,33 +20,32 @@
 //signal_handlers con signal(SIGKILL)
 
 //bool	is_cmd(const std::string &str);
-
 std::string	*ft_argv_parser(int argc, char **argv)
 {
-	if (argc == 3)
+	if (argc == 3)		// Two arguments case, no need to parse
 	{
 		std::string		array[2];
 		array[0] = argv[1];
 		array[1] = argv[2];
 		return (array);
 	}
-	if (argc == 4)
+	if (argc == 4)		// Three arguments case, the IRC network provided must be parsed (first one)
 	{
 		std::string		array[5];
 		int i = 0;
-		char *aux = strtok(argv[1], ":");
+		char *aux = strtok(argv[1], ":"); // Using strtok to separate the tokens
 		while (aux != 0 && i < 5)
 		{
 			array[i++] = aux;
 			aux = strtok(0, ":");
 		}
-		if (i != 3)
+		if (i != 3) // In case there are more or less tokens an error will be returned
 			return (0);
 		array[3] = argv[2];
 		array[4] = argv[3];
 		return (array);
 	}
-	return (0);
+	return (0); // In case there are too many or too few arguments an error will be returned
 }
 
 int main(int argc, char **argv)
