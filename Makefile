@@ -6,11 +6,11 @@
 #    By: aleon-ca <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/22 09:25:30 by aleon-ca          #+#    #+#              #
-#    Updated: 2021/06/11 09:56:16 by aleon-ca         ###   ########.fr        #
+#    Updated: 2021/06/14 12:19:19 by aleon-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.cpp
+SRCS = main.cpp Server.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

@@ -6,11 +6,9 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 11:47:44 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 12:18:28 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#pragma once
 
 #include "Server.hpp"
 //#include "Commands.hpp"
@@ -56,16 +54,16 @@ int main(int argc, char **argv)
 		std::cout << "error: ircserv: bad arguments" << std::endl;
 		return (EXIT_FAILURE);
 	}	
-	if (argc == 3)
+	//if (argc == 3)
 		Server server(arg[0], arg[1]);
-	else if (argc == 4)
-		Server server(arg[0], arg[1], arg[2], arg[3], arg[4]);
+	//else
+	//	Server server(arg[3], arg[4], arg[0], arg[1], arg[2]);
 	fd_set read_fds;
 	while (1)
 	{
 		read_fds = server.getMaster();
 		if (select(server.getMax() + 1, &read_fds, NULL, NULL, NULL) == -1)
-			throw std::exception(strerror(errno));
+			throw std::runtime_error(strerror(errno));
 		for (int i = 0; i <= server.getMax(); ++i)
 		{
 			if (FD_ISSET(i, &read_fds) == false)
@@ -75,10 +73,10 @@ int main(int argc, char **argv)
 				//server.addUser(); El nuevo socket va al nuevo objeto User
 				struct sockaddr_storage remoteaddr; // client address
 				socklen_t addrlen = sizeof remoteaddr;
-				int newfd = accept(server._listener, (struct sockaddr *)&remoteaddr,
+				int newfd = accept(server.getListener(), (struct sockaddr *)&remoteaddr,
 					&addrlen);
 				if (newfd == -1)
-					throw std::exception(strerror(errno));
+					throw std::runtime_error(strerror(errno));
 				FD_SET(newfd, &server.getMaster());
 				if (newfd > server.getMax())
 					server.setMax(newfd);
@@ -90,10 +88,10 @@ std::cout << "New connection. " << std::endl;
 			{
 				char buff[412];
 				int nbytes;
-				if (nbytes = recv(i, buff, sizeof buff, 0) <= 0)
+				if ((nbytes = recv(i, buff, sizeof buff, 0)) <= 0)
 				{
 					if (nbytes != 0)
-						throw std::exception(strerror(errno));
+						throw std::runtime_error(strerror(errno));
 					close(i);
 					FD_CLR(i, &server.getMaster());
 				}
@@ -104,7 +102,7 @@ std::cout << "New connection. " << std::endl;
 						if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
 							&& j != i)
 							if (send(j, buff, nbytes, 0) == -1)
-								throw std::exception(strerror(errno));
+								throw std::runtime_error(strerror(errno));
 					}
 				}
 				//parsear xq puede ser mensaje simple en vez de command
