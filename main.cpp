@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 11:18:01 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 11:46:30 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 //#include "Commands.hpp"
 
 #include <iostream>
-#include <string>
 
 //signal_handlers con signal(SIGKILL)
 
@@ -57,40 +56,69 @@ int main(int argc, char **argv)
 	{
 		std::cout << "error: ircserv: bad arguments" << std::endl;
 		return (EXIT_FAILURE);
-	}
-	
-	//Parsear argv en host, post_network, pass_network, port, password.
-	Server server(); //Hace todo el setup desde getaddrinfo() hasta listen().
-	//posibles exceptions en creacion del objeto Server.
-	fd_set read_fds; //lista sockets sobre los que hacer select();
-	//Bucle principal sobre select() y los sockets que estén listos entonces.
+	}	
+	if (argc == 3)
+		Server server(arg[0], arg[1]);
+	else if (argc == 4)
+		Server server(arg[0], arg[1], arg[2], arg[3], arg[4]);
+	fd_set read_fds;
 	while (1)
 	{
-		read_fds = server.getMasterFD();
-		//select(&read_fds);
-		for (int i = 0; i <= server.getMaxFD(); ++i)
+		read_fds = server.getMaster();
+		if (select(server.getMax() + 1, &read_fds, NULL, NULL, NULL) == -1)
+			throw std::exception(strerror(errno));
+		for (int i = 0; i <= server.getMax(); ++i)
 		{
 			if (FD_ISSET(i, &read_fds) == false)
 				continue ;
-			//Si es nueva conexión, server.newUser();
-			if (i == server.getListerner())
+			if (i == server.getListener())
 			{
-				//server.addUser(); El nuevo socket va al nuevo objeto Usere
+				//server.addUser(); El nuevo socket va al nuevo objeto User
+				struct sockaddr_storage remoteaddr; // client address
+				socklen_t addrlen = sizeof remoteaddr;
+				int newfd = accept(server._listener, (struct sockaddr *)&remoteaddr,
+					&addrlen);
+				if (newfd == -1)
+					throw std::exception(strerror(errno));
+				FD_SET(newfd, &server.getMaster());
+				if (newfd > server.getMax())
+					server.setMax(newfd);
+std::cout << "New connection. " << std::endl;
 			}
 			//Si no es nueva conexión, parsea para ver si es un Command y entonces
 			// el command.execute(server, ...) hace su función o se envía el mensaje.
 			else
 			{
+				char buff[412];
+				int nbytes;
+				if (nbytes = recv(i, buff, sizeof buff, 0) <= 0)
+				{
+					if (nbytes != 0)
+						throw std::exception(strerror(errno));
+					close(i);
+					FD_CLR(i, &server.getMaster());
+				}
+				else
+				{
+					for (int j = 0; j <= server.getMax(); ++j)
+					{
+						if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
+							&& j != i)
+							if (send(j, buff, nbytes, 0) == -1)
+								throw std::exception(strerror(errno));
+					}
+				}
 				//parsear xq puede ser mensaje simple en vez de command
 				//recv();
-				std::string info(buf);
-				if (/*es un command*/ is_cmd(info) == true)
+				/*std::string info(buf);
+				if (is_cmd(info) == true)
 				{
 					Command cmd(info);
 					cmd.execute();
 				}
 				else
-					//User.mensaje(info);
+					User.mensaje(info);
+				*/
 			}
 		}
 	}

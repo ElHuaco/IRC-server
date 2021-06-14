@@ -6,7 +6,7 @@
 /*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 11:15:52 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 11:27:41 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,8 @@ std::vector <User>		Server::getUsers(void) const
 std::vector <Channel>	Server::getChannels(void) const
 {
 	return (_channels);
+}
+int						Server::getListener(void) const
+{
+	return (_listener);
 }

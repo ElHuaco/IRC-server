@@ -6,7 +6,7 @@
 /*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 11:16:20 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 11:27:18 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class Server
 		//Enviar numeric reply
 		void					setMax(int max);
 		int						getMax(void) const;
+		int						getListener(void) const;
 		void					setMaster(fd_set set);
 		fd_set					getMaster(void) const;
 		void					setPassword(const std::string &password);
