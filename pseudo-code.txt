@@ -17,6 +17,7 @@ main
 {
 	//Iniciar TCP socket server
 	Server server(argv);
+		// Host Port vs Connection Port?
 	
 	//Bucle infinito sobre los grupos de socket con select()
 	//Problema: hacer esto dentro de la estructura de la clase server?
