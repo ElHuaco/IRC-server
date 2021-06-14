@@ -6,13 +6,13 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 11:47:44 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/14 12:06:15 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "Server.hpp"
+//#include "Server.hpp"
 //#include "Commands.hpp"
 
 #include <iostream>
@@ -24,14 +24,14 @@ std::string	*ft_argv_parser(int argc, char **argv)
 {
 	if (argc == 3)		// Two arguments case, no need to parse
 	{
-		std::string		array[2];
+		static std::string		array[2];
 		array[0] = argv[1];
 		array[1] = argv[2];
 		return (array);
 	}
 	if (argc == 4)		// Three arguments case, the IRC network provided must be parsed (first one)
 	{
-		std::string		array[5];
+		static std::string		array[5];
 		int i = 0;
 		char *aux = strtok(argv[1], ":"); // Using strtok to separate the tokens
 		while (aux != 0 && i < 5)
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	{
 		std::cout << "error: ircserv: bad arguments" << std::endl;
 		return (EXIT_FAILURE);
-	}	
+	}
 	if (argc == 3)
 		Server server(arg[0], arg[1]);
 	else if (argc == 4)
@@ -121,5 +121,4 @@ std::cout << "New connection. " << std::endl;
 			}
 		}
 	}
-	return (0);
-}
+
