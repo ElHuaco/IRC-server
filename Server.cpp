@@ -6,27 +6,30 @@
 /*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 12:23:53 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/15 11:19:56 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-Server::Server(const std::string &port_listen, const std::string &password,
-		const std::string &host, const std::string &port_network,
-		const std::string &password_network) :
-	_password(password)
+Server::Server(void)
 {
+}
+Server::~Server(void)
+{
+}
+
+void	Server::start(const std::string &port_listen, const std::string &host,
+		const std::string &port_network, const std::string &password_network)
+{
+	//TODO: Código de enviar a host:port_network
+	//Código de escuchar en port_listen
 	struct addrinfo hints, *servinfo;
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 	const char *node = NULL;
-//	if (host.empty() == false)
-//		node = host.c_str();
-	const char *port = "6667";
-//	if (port_network.empty() == false)
-//		port = port_network.c_str();
+	const char *port = port_listen.c_str();
 	int status;
 	if ((status = getaddrinfo(node, port, &hints, &servinfo)) != 0)
 	{
@@ -50,9 +53,6 @@ Server::Server(const std::string &port_listen, const std::string &password,
 	FD_ZERO(&_master);
 	FD_SET(_listener, &_master);
 	_max = _listener;
-}
-Server::~Server(void)
-{
 }
 
 void					Server::setMax(int max)
