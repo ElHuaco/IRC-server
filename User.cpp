@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/14 13:30:07 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/16 11:29:37 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 // Constructor + Destructor
 
-User::User(std::string username, std::string hostname, std::string realname)
-	: _username(username), _hostname(hostname), _realname(realname)
+User::User(int fd) : _socket(fd)
 {
 	return;
 }
@@ -25,6 +24,10 @@ User::~User(void)
 	return;
 }
 
+User					*User::clone(void) const
+{
+	return (new User(_socket));
+}
 // Getters
 
 int						User::getSocket(void) const
@@ -55,10 +58,10 @@ bool					User::getIsOP(void) const
 {
 	return (this->_isOP);
 }
-std::list<Channel*>		User::getChannels(void) const
+/*std::list<Channel*>		User::getChannels(void) const
 {
 	return (this->_channels);
-}
+}*/
 
 // Setters
 
@@ -77,8 +80,11 @@ void					User::setIsOP(bool OP)
 	this->_isOP = OP;
 	return;
 }
-void					User::setChannels(std::list<Channel*> channels)
+/*void					User::setChannels(std::list<Channel*> channels)
 {
 	this->_channels = channels;
 	return;
-}
+}*/
+/*void					User::message(char *buff)
+{
+}*/

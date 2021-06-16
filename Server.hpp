@@ -6,11 +6,12 @@
 /*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 11:16:28 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/16 11:34:44 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SERVER_HPP
+# define SERVER_HPP
 
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -24,32 +25,40 @@
 # include <cerrno>
 # include <unistd.h>
 # include <fcntl.h>
-//# include "User.hpp"
+# include "User.hpp"
 //# include "Channel.hpp"
 
 class Server
 {
+	public:
+		typedef std::vector<User *>::iterator		u_iterator;
+//		typedef std::vector<Channel *>::iterator	c_iterator;
+
 	private:
 		fd_set					_master;
 		int						_max;
 		int						_listener;
 		std::string				_password;
-//		std::vector<User>		_users;
-//		std::vector<Channel>	_channels;
+		std::vector<User *>		_users;
+//		std::vector<Channel *>	_channels;
 		Server(const Server & other);
 		Server	&operator=(const Server &rhs);
 
 	public:
-		//Un constructor con un parametro a default, que es el host:pass:port.
-		// host, port_network son del getaddrinfo(). port es del bind()????
 		Server(void);
 		~Server(void);
 		void					start(const std::string &port,
 			const std::string &host = std::string(),
 			const std::string &port_network = std::string(),
 			const std::string &password_network = std::string());
-		//Crear cliente nuevo con accept()
-		// Usere tiene método de enviar, según canal o privado
+		void					addUser(void);
+		User					*getSocketUser(int socket);
+		std::vector<User *>		getUsers(void) const;
+		void					deleteUser(const std::string &nick);
+		void					deleteUser(int fd);
+//		void					addChannel(void);
+//		void					deleteChannel(const std::string &name);
+		// User tiene método de enviar, según canal o privado
 		//Enviar numeric reply
 		void					setMax(int max);
 		int						getMax(void) const;
@@ -58,6 +67,6 @@ class Server
 		fd_set					&getMaster(void);
 		void					setPassword(const std::string &password);
 		std::string				getPassword(void) const;
-//		std::vector <User>		getUsers(void) const;
 //		std::vector <Channel>	getChannels(void) const;
 };
+#endif

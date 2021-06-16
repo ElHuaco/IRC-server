@@ -6,7 +6,7 @@
 /*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 11:19:56 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/16 11:31:38 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,18 @@ Server::Server(void)
 }
 Server::~Server(void)
 {
+	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+		delete *it;
+	_users.clear();
+//	for (c_iterator it2 = _channels.begin(); it2 != _channels.end(); ++it2)
+//		delete *it2;
+//	_channels.clear();
+	std::cout << "Server conf destroyed" << std::endl;
 }
-
 void	Server::start(const std::string &port_listen, const std::string &host,
 		const std::string &port_network, const std::string &password_network)
 {
-	//TODO: Código de enviar a host:port_network
+	//TODO?: Código de enviar a host:port_network
 	//Código de escuchar en port_listen
 	struct addrinfo hints, *servinfo;
 	memset(&hints, 0, sizeof hints);
@@ -39,7 +45,6 @@ void	Server::start(const std::string &port_listen, const std::string &host,
 	if ((_listener = socket(servinfo->ai_family, servinfo->ai_socktype,
 		servinfo->ai_protocol)) == -1)
 		throw std::runtime_error(strerror(errno));
-	// connect() si dan host???
 	int yes = 1;
 	if (setsockopt(_listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) == -1)
 		throw std::runtime_error(strerror(errno));
@@ -78,16 +83,78 @@ void					Server::setPassword(const std::string &password)
 std::string				Server::getPassword(void) const
 {
 	return (_password);
-}/*
-std::vector <User>		Server::getUsers(void) const
-{
-	return (_users);
 }
-std::vector <Channel>	Server::getChannels(void) const
-{
-	return (_channels);
-}*/
 int						Server::getListener(void) const
 {
 	return (_listener);
 }
+std::vector<User *>		Server::getUsers(void) const
+{
+	return (_users);
+}
+void					Server::addUser(void)
+{
+	struct sockaddr_storage remoteaddr;
+	socklen_t addrlen = sizeof remoteaddr;
+	int newfd = accept(_listener, (struct sockaddr *)&remoteaddr,
+		&addrlen);
+	if (newfd == -1)
+		throw std::runtime_error(strerror(errno));
+	_users.push_back(User(newfd).clone());
+	FD_SET(newfd, &_master);
+	if (newfd > _max)
+		_max = newfd;
+}
+User					*Server::getSocketUser(int socket)
+{
+	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->getSocket() == socket)
+			return (*it);
+	}
+	return (nullptr);
+}
+void					Server::deleteUser(int fd)
+{
+	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->getSocket() == fd)
+		{
+			close(fd);
+			FD_CLR(fd, &_master);
+			if (fd == _max)
+				//Reencontrar el max
+			delete *it;
+			_users.erase(it);
+			return ;
+		}
+	}
+}
+void					Server::deleteUser(const std::string &nick)
+{
+	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+		{
+			close((*it)->getSocket());
+			FD_CLR((*it)->getSocket(), &_master);
+			if ((*it)->getSocket() == _max)
+				//reecontrar max
+			delete *it;
+			_users.erase(it);
+			return ;
+		}
+	}
+}
+/*
+std::vector<Channel *>	Server::getChannels(void) const
+{
+	return (_channels);
+}
+void					Server::addChannel(void)
+{
+}
+void					Server::deleteChannel(void)
+{
+}
+*/

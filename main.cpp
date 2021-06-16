@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 11:19:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/16 11:30:13 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 	fd_set read_fds;
 	while (1)
 	{
-		//Quizá need write_fds para connect()
+		//Quizá need write_fds para connect()?
 		read_fds = server.getMaster();
 		if (select(server.getMax() + 1, &read_fds, NULL, NULL, NULL) == -1)
 			throw std::runtime_error(strerror(errno));
@@ -78,20 +78,11 @@ int main(int argc, char **argv)
 				continue ;
 			if (i == server.getListener())
 			{
-				//server.addUser(); El nuevo socket va al nuevo objeto User
-				struct sockaddr_storage remoteaddr; // client address
-				socklen_t addrlen = sizeof remoteaddr;
-				int newfd = accept(server.getListener(), (struct sockaddr *)&remoteaddr,
-					&addrlen);
-				if (newfd == -1)
-					throw std::runtime_error(strerror(errno));
-				FD_SET(newfd, &server.getMaster());
-				if (newfd > server.getMax())
-					server.setMax(newfd);
-std::cout << "New connection. " << std::endl;
+				server.addUser();
+				std::cout << "New connection. " << std::endl;
 			}
-			//Si no es nueva conexión, parsea para ver si es un Command y entonces
-			// el command.execute(server, ...) hace su función o se envía el mensaje.
+			//Si no es nueva conexión, parsea para ver si es un Command y 
+			// entonces command.execute(server, ...)  o se envía el mensaje.
 			else
 			{
 				char buff[412];
@@ -100,15 +91,14 @@ std::cout << "New connection. " << std::endl;
 				{
 					if (nbytes != 0)
 						throw std::runtime_error(strerror(errno));
-					close(i);
-					FD_CLR(i, &server.getMaster());
+					server.deleteUser(i);
 				}
 				else
 				{
 					for (int j = 0; j <= server.getMax(); ++j)
 					{
-						if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-							&& j != i)
+						if (FD_ISSET(j, &server.getMaster())
+							&& j != server.getListener() && j != i)
 							if (send(j, buff, nbytes, 0) == -1)
 								throw std::runtime_error(strerror(errno));
 					}
@@ -119,7 +109,8 @@ std::cout << "New connection. " << std::endl;
 				if (is_cmd(info) == true)
 				{
 					Command cmd(info);
-					cmd.execute();
+					if ((ret = cmd.execute() != 0)
+						server.reply_error(ret);
 				}
 				else
 					User.mensaje(info);

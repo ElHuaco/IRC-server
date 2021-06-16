@@ -6,14 +6,17 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/14 13:27:09 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/16 11:35:52 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "Server.hpp"
-# include "Channel.hpp"
+# include <list>
+# include <string>
+
+class Server;
+//# include "Channel.hpp"
 
 class User
 {
@@ -25,16 +28,18 @@ class User
 		std::string				_realname;
 		std::string				_hostname;
 		bool					_isOP;
-		std::list<Channel*>		_channels;
+//		std::list<Channel*>		_channels;
 
 		User(void);
 		User(const User & other);
+		User	&operator=(const User &rhs);
 		
 	public:
 		// Constructor + Destructor
-		User(std::string username, std::string hostname, std::string realname);
+		User(int fd);
 		~User(void);
 
+		User					*clone(void) const;
 		// Getters + Setters
 		int						getSocket() const;
 		int						getHopcount() const;
@@ -43,13 +48,15 @@ class User
 		std::string				getRealname() const;
 		std::string				getHostname() const;
 		bool					getIsOP() const;
-		std::list<Channel*>		getChannels() const;
+//		std::list<Channel*>		getChannels() const;
 
 		void					setHopcount(int hopcount);
 		void					setNickname(std::string nickname);
 		void					setIsOP(bool OP);
-		void					setChannels(std::list<Channel*>);
+//		void					setChannels(std::list<Channel*>);
 		
-		//métodos de enviar a secas a otros sockets
+		//métodos de enviar a secas a otros sockets, comprobando channels
+//		void					message(char *buff);
 		//otros métodos de command
 };
+# include "Server.hpp"
