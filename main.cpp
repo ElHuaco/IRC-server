@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 11:40:00 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:03:45 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ int main(int argc, char **argv)
 				if (is_cmd(info) == true)
 				{
 					Command cmd(info);
-					if ((ret = cmd.execute() != 0)
-						server.reply_error(ret);
+					key = cmd.execute();
+					server.numeric_reply(key, user);
 				}
 				else
 					User.mensaje(info);

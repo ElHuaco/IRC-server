@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 12:52:31 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:15:14 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ void					Server::addUser(void)
 		&addrlen);
 	if (newfd == -1)
 		throw std::runtime_error(strerror(errno));
+	if (fcntl(newfd, F_SETFL, O_NONBLOCK) == -1)
+		throw std::runtime_error(strerror(errno));
 	_users.push_back(User(newfd).clone());
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
@@ -185,3 +187,15 @@ void					Server::deleteChannel(void)
 {
 }
 */
+/*
+void					Server::numeric_reply(int key, User *client)
+{
+	char buff[412];
+	if (key == 300)
+		buff = "blablabla\r\n";
+	else if (key == 301)
+		buff = "lololo\r\n";
+	...
+	nbytes = strlen(buff);
+	send(client->getSocket(), buff, nbytes, 0);
+}*/
