@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 11:13:57 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:03:47 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "User.hpp"
 # include <map>
 
-typedef int (*commandFt) (Server server, User commander, std::string *params, int paramsNum);
+typedef int (*commandFt) ();
 class Command
 {
 	private:
@@ -45,5 +45,15 @@ class Command
 		int				execute();
 
 		// Commands
+		commandFt		ftNICK();
+		commandFt		ftUSER();
+		commandFt		ftOPER();
+		commandFt		ftQUIT();
+		commandFt		ftJOIN();
+		commandFt		ftPART();
+		commandFt		ftTOPIC();
+		commandFt		ftNAMES();
+		commandFt		ftLIST();
+		commandFt		ftKICK();
 
 };

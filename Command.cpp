@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/16 12:35:59 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:02:55 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,18 @@ Command::~Command(void)
 
 // Init
 void		Command::initCommands(void)
-// {
-// 	this->_commandList.insert("STATS", commmand_stats);
-// 	// I wont do this now, so, etc...
-// }
+{
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("NICK", this->ftNICK()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("USER", this->ftUSER()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("OPER", this->ftOPER()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("QUIT", this->ftQUIT()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("JOIN", this->ftJOIN()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("PART", this->ftPART()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("TOPIC", this->ftTOPIC()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("NAMES", this->ftNAMES()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("LIST", this->ftLIST()));
+ 	this->_commandList.insert(std::pair<std::string, commandFt>("KICK", this->ftKICK()));
+}
 
 // Parser
 int		Command::parseStr(std::string str)
@@ -71,4 +79,46 @@ int			Command::execute(void)
 			return (it->second(this->_server, this->_commander, this->_params, this->_paramsNum));
 	if (it == this->_commandList.end())
 		return (-1);						// Error, bad command.
+}
+
+// Commands
+commandFt		ftNICK()
+{
+	return (0);
+}
+commandFt		ftUSER()
+{
+	return (0);
+}
+commandFt		ftOPER()
+{
+	return (0);
+}
+commandFt		ftQUIT()
+{
+	return (0);
+}
+commandFt		ftJOIN()
+{
+	return (0);
+}
+commandFt		ftPART()
+{
+	return (0);
+}
+commandFt		ftTOPIC()
+{
+	return (0);
+}
+commandFt		ftNAMES()
+{
+	return (0);
+}
+commandFt		ftLIST()
+{
+	return (0);
+}
+commandFt		ftKICK()
+{
+	return (0);
 }
