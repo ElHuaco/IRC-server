@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 11:40:32 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:37:08 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ class User
 		bool					_isOP;
 //		std::list<Channel*>		_channels;
 
-		User(void);
-		User(const User & other);
-		User	&operator=(const User &rhs);
 		
 	public:
 		// Constructor + Destructor
 		User(int fd);
 		~User(void);
+		User(void);
+		User(const User & other);
+		User	&operator=(const User &rhs);
 
 		User					*clone(void) const;
 		// Getters + Setters

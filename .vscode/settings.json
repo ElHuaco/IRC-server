@@ -64,6 +64,7 @@
 		"__tree": "cpp",
 		"memory_resource": "cpp",
 		"list": "cpp",
-		"map": "cpp"
+		"map": "cpp",
+		"iomanip": "cpp"
 	}
 }

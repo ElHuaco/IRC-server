@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 11:40:47 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:36:52 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ class Server
 		std::string				_password;
 		std::vector<User *>		_users;
 //		std::vector<Channel *>	_channels;
-		Server(const Server & other);
 		
 
 	public:
 		Server(void);
 		~Server(void);
 		Server	&operator=(const Server &rhs);
+		Server(const Server & other);
 		void					start(const std::string &port,
 			const std::string &host = std::string(),
 			const std::string &port_network = std::string(),

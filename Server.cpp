@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 11:41:14 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:10:28 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,16 @@ User					*Server::getSocketUser(int socket)
 	}
 	return (nullptr);
 }
+static int				max_element(void)
+{
+	int max = 0;
+	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->getSocket() > max)
+			max = (*it)->getSocket();
+	}
+	return (max);
+}
 void					Server::deleteUser(int fd)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -132,10 +142,10 @@ void					Server::deleteUser(int fd)
 		{
 			close(fd);
 			FD_CLR(fd, &_master);
-			if (fd == _max)
-				//Reencontrar el max
 			delete *it;
 			_users.erase(it);
+			if (fd == _max)
+				_max = max_element();
 			return ;
 		}
 	}
@@ -148,10 +158,10 @@ void					Server::deleteUser(const std::string &nick)
 		{
 			close((*it)->getSocket());
 			FD_CLR((*it)->getSocket(), &_master);
-			if ((*it)->getSocket() == _max)
-				//reecontrar max
 			delete *it;
 			_users.erase(it);
+			if (fd == _max)
+				_max = max_element();
 			return ;
 		}
 	}

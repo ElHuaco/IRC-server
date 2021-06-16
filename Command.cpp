@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/16 11:33:46 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:35:59 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ Command::~Command(void)
 }
 
 // Init
-void		initCommands(void)
-{
-	this->_commandList.push_back(std::make_pair("STATS", this->commmand_stats));
-	// I wont do this now, so, etc...
-}
+void		Command::initCommands(void)
+// {
+// 	this->_commandList.insert("STATS", commmand_stats);
+// 	// I wont do this now, so, etc...
+// }
 
 // Parser
-int		parseStr(std::string str)
+int		Command::parseStr(std::string str)
 {
 	char *aux;
-	if ((aux = strtok(str, " ")) == 0)
+	if ((aux = strtok((char*)str.c_str(), " ")) == 0)
 		return (-1);							// Error, the string is empty.
 	if (str[0] == ':')					// If there is a prefix. Save prefix + command.
 	{
@@ -49,7 +49,7 @@ int		parseStr(std::string str)
 	}
 	else									// If there isn't a prefix. Save command.
 	{
-		this->_prefix = 0;
+		this->_prefix = nullptr;
 		this->_command = aux;
 	}
 	int i = 0;
@@ -65,7 +65,7 @@ int		parseStr(std::string str)
 // Execute
 int			Command::execute(void)
 {
-	std::list<std::pair<std::string, commandFt>>::iterator it;
+		std::map<std::string, commandFt>::iterator it;
 	for (it = this->_commandList.begin(); it != this->_commandList.end(); ++it)
 		if (it->first == this->_command)
 			return (it->second(this->_server, this->_commander, this->_params, this->_paramsNum));
