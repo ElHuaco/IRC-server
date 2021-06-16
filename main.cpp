@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 11:19:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/15 17:10:48 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 				FD_SET(newfd, &server.getMaster());
 				if (newfd > server.getMax())
 					server.setMax(newfd);
-std::cout << "New connection. " << std::endl;
+				std::cout << "New connection. " << std::endl;
 			}
 			//Si no es nueva conexión, parsea para ver si es un Command y entonces
 			// el command.execute(server, ...) hace su función o se envía el mensaje.

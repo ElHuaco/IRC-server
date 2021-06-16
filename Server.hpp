@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 11:16:28 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/16 11:26:22 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,14 @@ class Server
 //		std::vector<User>		_users;
 //		std::vector<Channel>	_channels;
 		Server(const Server & other);
-		Server	&operator=(const Server &rhs);
+		
 
 	public:
 		//Un constructor con un parametro a default, que es el host:pass:port.
 		// host, port_network son del getaddrinfo(). port es del bind()????
 		Server(void);
 		~Server(void);
+		Server	&operator=(const Server &rhs);
 		void					start(const std::string &port,
 			const std::string &host = std::string(),
 			const std::string &port_network = std::string(),

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 12:56:39 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/16 11:13:57 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 # include "Server.hpp"
 # include "User.hpp"
+# include <map>
 
 typedef int (*commandFt) (Server server, User commander, std::string *params, int paramsNum);
 class Command
@@ -27,7 +28,7 @@ class Command
 		std::string				_command;
 		std::string				_params[5];
 		int						_paramsNum;
-		std::list<std::pair<std::string, commandFt>>	_commandList;
+		std::map<std::string, commandFt>	_commandList;
 
 		Command(void);
 		Command(const Command &other);

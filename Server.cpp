@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/15 11:19:56 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/16 11:32:15 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ Server::Server(void)
 }
 Server::~Server(void)
 {
+}
+
+Server & Server::operator=(const Server &rhs)
+{
+	this->_master = rhs._master;
+	this->_max = rhs._max;
+	this->_listener = rhs._listener;
+	this->_password = rhs._password;
+	return (*this);
 }
 
 void	Server::start(const std::string &port_listen, const std::string &host,

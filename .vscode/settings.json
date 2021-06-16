@@ -59,6 +59,11 @@
 		"typeinfo": "cpp",
 		"unordered_map": "cpp",
 		"utility": "cpp",
-		"vector": "cpp"
+		"vector": "cpp",
+		"__functional_03": "cpp",
+		"__tree": "cpp",
+		"memory_resource": "cpp",
+		"list": "cpp",
+		"map": "cpp"
 	}
 }
