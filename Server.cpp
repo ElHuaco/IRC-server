@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 12:10:28 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:52:31 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	Server::start(const std::string &port_listen, const std::string &host,
 	FD_ZERO(&_master);
 	FD_SET(_listener, &_master);
 	_max = _listener;
+	std::cout << "Server conf finished" << std::endl;
 }
 
 void					Server::setMax(int max)
@@ -124,16 +125,6 @@ User					*Server::getSocketUser(int socket)
 	}
 	return (nullptr);
 }
-static int				max_element(void)
-{
-	int max = 0;
-	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
-	{
-		if ((*it)->getSocket() > max)
-			max = (*it)->getSocket();
-	}
-	return (max);
-}
 void					Server::deleteUser(int fd)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -145,7 +136,15 @@ void					Server::deleteUser(int fd)
 			delete *it;
 			_users.erase(it);
 			if (fd == _max)
-				_max = max_element();
+			{
+				int max = 0;
+				for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+				{
+					if ((*it)->getSocket() > max)
+						max = (*it)->getSocket();
+				}
+				_max = max;
+			}
 			return ;
 		}
 	}
@@ -160,8 +159,16 @@ void					Server::deleteUser(const std::string &nick)
 			FD_CLR((*it)->getSocket(), &_master);
 			delete *it;
 			_users.erase(it);
-			if (fd == _max)
-				_max = max_element();
+			if ((*it)->getSocket() == _max)
+			{
+				int max = 0;
+				for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+				{
+					if ((*it)->getSocket() > max)
+						max = (*it)->getSocket();
+				}
+				_max = max;
+			}
 			return ;
 		}
 	}
