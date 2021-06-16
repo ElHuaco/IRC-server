@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aleon-ca <aleon-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 11:31:38 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/16 11:41:14 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,16 @@ Server::~Server(void)
 //	_channels.clear();
 	std::cout << "Server conf destroyed" << std::endl;
 }
+
+Server & Server::operator=(const Server &rhs)
+{
+	this->_master = rhs._master;
+	this->_max = rhs._max;
+	this->_listener = rhs._listener;
+	this->_password = rhs._password;
+	return (*this);
+}
+
 void	Server::start(const std::string &port_listen, const std::string &host,
 		const std::string &port_network, const std::string &password_network)
 {
