@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/16 13:02:55 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:21:12 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int			Command::execute(void)
 		std::map<std::string, commandFt>::iterator it;
 	for (it = this->_commandList.begin(); it != this->_commandList.end(); ++it)
 		if (it->first == this->_command)
-			return (it->second(this->_server, this->_commander, this->_params, this->_paramsNum));
+			return (it->second());
 	if (it == this->_commandList.end())
 		return (-1);						// Error, bad command.
 }
