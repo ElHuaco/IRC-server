@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 13:03:33 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/17 10:55:47 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include "User.hpp"
+# include "Command.hpp"
 //# include "Channel.hpp"
 
 class Server
@@ -69,6 +70,7 @@ class Server
 		void					setPassword(const std::string &password);
 		std::string				getPassword(void) const;
 //		std::vector <Channel>	getChannels(void) const;
-		void					numeric_reply(int key, User *client);
+		void					error_reply(const std::string &cmd,
+				const std::string &erroneous_arg, int key);
 };
 #endif

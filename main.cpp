@@ -6,13 +6,11 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 13:03:45 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/17 10:55:07 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-//#include "Commands.hpp"
-
 #include <iostream>
 
 //signal_handlers con signal(SIGKILL)
@@ -110,7 +108,8 @@ int main(int argc, char **argv)
 				{
 					Command cmd(info);
 					key = cmd.execute();
-					server.numeric_reply(key, user);
+					server.error_reply(cmd.getCommand(), cmd.getErroneous(),
+						key);
 				}
 				else
 					User.mensaje(info);

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 13:15:14 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/17 11:02:45 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,9 @@ void					Server::addUser(void)
 	if (fcntl(newfd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error(strerror(errno));
 	_users.push_back(User(newfd).clone());
+	//RPL_WELCOME
+	//	buff = ":Welcome to the Internet Relay Network " + nick + "! "
+	//		+ user + "@HOST";
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
@@ -187,15 +190,86 @@ void					Server::deleteChannel(void)
 {
 }
 */
-/*
-void					Server::numeric_reply(int key, User *client)
+void					Server::error_reply(const std::string &cmd,
+		const std::string &arg, int key)
 {
-	char buff[412];
-	if (key == 300)
-		buff = "blablabla\r\n";
-	else if (key == 301)
-		buff = "lololo\r\n";
-	...
-	nbytes = strlen(buff);
-	send(client->getSocket(), buff, nbytes, 0);
-}*/
+	//arg vacío si no se detectó argumento erroneo.
+	//REPLIES:
+	// PASS: ERR_NEEDMOREPARAMS ERR_ALEADYREGISTERED
+	// NICK: ERR_NONICKNAMEGIVEN ERR_NICKNAMEINUSE ERR_UNAVAILRESOURCE
+	//  ERR_ERRONEUSNICKNAME ERR_NICKCOLLISION ERR_RESTRICTED
+	// USER: no nuevos
+	// OPER: RPL_YOUREOPER ERR_NOOPERHOST ERR_PASSWDMISMATCH
+	// QUIT: no nuevos
+	// JOIN: ERR_BANNEDFROMCHAN ERR_INVITEONLYCHAN ERR_BADCHANNELKEY
+	//  ERR_CHANNELISFULL ERR_BADCHANMASK ERR_NOSUCHCHANNEL ERR_TOOMANYCHANNELS
+	//  ERR_TOOMANYTARGETS RPL_TOPIC
+	// PART: ERR_NOTONCHANNEL
+	// TOPIC: ERR_NOTOPIC ERR_CHANOPRIVSNEEDED ERR_NOCHANMODES
+	// NAMES: RPL_NAMEREPLY RPL_ENDOFNAMES
+	// LIST: RPL_LIST RPL_LISTEND
+	// KICK: ERR_USERNOTINCHANNEL
+	// PRIVMSG: ERR_NORECIPIENT ERR_NOTEXTTOSEND ERR_CANNOTSENDTOCHAN
+	//  ERR_NOTOPLEVEL ERR_WILDTOPLEVEL ERR_NOSUCHNICK RPL_AWAY
+	std::string buff(arg);
+	if (key == 401)
+		buff += ":No such nick/channel";
+	else if (key == 403)
+		buff += ":No such channel";
+	else if (key == 404)
+		buff += ":Cannot send to channel";
+	else if (key == 405)
+		buff += ":You have joined too many channels";
+	else if (key == 407)
+		buff += ":Too many recipients/targets";
+	else if (key == 411)
+		buff += ":No recipient given";
+	else if (key == 412)
+		buff += ":No text to send";
+	else if (key == 413)
+		buff += ":No toplevel domain specified";
+	else if (key == 414)
+		buff += ":Wildcard in toplevel domain";
+	else if (key == 461)
+		buff += cmd + ":Not enough parameters";
+	else if (key == 462)
+		buff += ":Unauthorized command (already registered)";
+	else if (key == 431)
+		buff += ":No nickname given";
+	else if (key == 432)
+		buff += ":Erroneous nickname";
+	else if (key == 433)
+		buff += ":Nickname is already in use";
+	else if (key == 436)
+		buff += ":Nickname collision KILL from " + user + "@HOST";
+	else if (key == 437)
+		buff += ":Nick/channel is temporarily unavailable";
+	else if (key == 441)
+		buff += ":They aren't on that channel";
+	else if (key == 442)
+		buff += ":You're not on a channel";
+	else if (key == 464)
+		buff += ":Password incorrect";
+	else if (key == 471)
+		buff += " :Cannot join channel (+l)";
+	else if (key == 473)
+		buff += " :Cannot join channel (+i)";
+	else if (key == 474)
+		buff += " :Cannot join channel (+b)";
+	else if (key == 475)
+		buff += " :Cannot join channel (+k)";
+	else if (key == 476)
+		buff += " :Bad Channel Mask";
+	else if (key == 477)
+		buff += " :Channel doesn't support modes";
+	else if (key == 482)
+		buff += " :You're not channel operator";
+	else if (key == 484)
+		buff += ":Your connection is restricted!";
+	else if (key == 491)
+		buff += ":No O-lines for your host";
+	buff += "\r\n";
+	nbytes = strlen(buff.c_str());
+	if (send(client->getSocket(), buff.c_str(), nbytes, 0) == -1)
+		throw std::runtime_error(strerror(errno));
+}

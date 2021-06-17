@@ -6,17 +6,22 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/06/17 12:21:26 by mmonroy-         ###   ########.fr       */
+=======
+/*   Updated: 2021/06/17 10:28:58 by alejandro        ###   ########.fr       */
+>>>>>>> b5f380771f9c5f054d3252883e88628fb4cd961d
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "Server.hpp"
 # include "User.hpp"
 
 # include <map>
 # include <locale>
+
+class Server;
 
 typedef int (*commandFt) ();
 class Command
@@ -59,3 +64,4 @@ class Command
 		commandFt		ftKICK();
 
 };
+# include "Server.hpp"
