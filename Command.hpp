@@ -6,15 +6,16 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 13:03:47 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/17 10:28:58 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "Server.hpp"
 # include "User.hpp"
 # include <map>
+
+class Server;
 
 typedef int (*commandFt) ();
 class Command
@@ -57,3 +58,4 @@ class Command
 		commandFt		ftKICK();
 
 };
+# include "Server.hpp"
