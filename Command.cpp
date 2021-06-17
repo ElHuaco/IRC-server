@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/17 12:21:34 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/17 13:23:11 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,18 @@ Command::~Command(void)
 // Init
 void		Command::initCommands(void)
 {
- 	this->_commandList.insert(std::pair<std::string, commandFt>("NICK", this->ftNICK()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("USER", this->ftUSER()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("OPER", this->ftOPER()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("QUIT", this->ftQUIT()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("JOIN", this->ftJOIN()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("PART", this->ftPART()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("TOPIC", this->ftTOPIC()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("NAMES", this->ftNAMES()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("LIST", this->ftLIST()));
- 	this->_commandList.insert(std::pair<std::string, commandFt>("KICK", this->ftKICK()));
+	this->_commandList["NICK"] = this->ftNICK;
+	//this->_commandList["USER"] = this->ftUSER;
+ 	/*this->_commandList.insert(std::pair<std::string, int (**)()>("NICK", this->ftNICK()));
+ 	this->_commandList.insert(std::pair<std::string, int>("USER", this->ftUSER()));
+ 	this->_commandList.insert(std::pair<std::string, int>("OPER", this->ftOPER()));
+ 	this->_commandList.insert(std::pair<std::string, int>("QUIT", this->ftQUIT()));
+ 	this->_commandList.insert(std::pair<std::string, int>("JOIN", this->ftJOIN()));
+ 	this->_commandList.insert(std::pair<std::string, int>("PART", this->ftPART()));
+ 	this->_commandList.insert(std::pair<std::string, int>("TOPIC", this->ftTOPIC()));
+ 	this->_commandList.insert(std::pair<std::string, int>("NAMES", this->ftNAMES()));
+ 	this->_commandList.insert(std::pair<std::string, int>("LIST", this->ftLIST()));
+ 	this->_commandList.insert(std::pair<std::string, int>("KICK", this->ftKICK()));*/
 }
 
 // Parser
@@ -74,12 +76,13 @@ int		Command::parseStr(std::string str)
 // Execute
 int			Command::execute(void)
 {
-	std::map<std::string, commandFt>::iterator it;
-	for (it = this->_commandList.begin(); it != this->_commandList.end(); ++it)
+	//std::map<std::string, ftcmd>::iterator it;
+	//ftcmd aux = this->_commandList[this->_command];
+	/*for (it = this->_commandList.begin(); it != this->_commandList.end(); ++it)
 		if (it->first == this->_command)
-			return (it->second());
-	if (it == this->_commandList.end())
-		return (-1);						// Error, bad command.
+			return (it->second());*/
+	//if (it == this->_commandList.end())
+		//return (-1);						// Error, bad command.
 }
 
 // Commands
@@ -109,39 +112,39 @@ int			Command::ftNICK()
 	this->_commander.setNickname(this->_params[0]); 
 	return (0);
 }
-commandFt		ftUSER()
+int		Command::ftUSER()
 {
 	return (0);
 }
-commandFt		ftOPER()
+int		Command::ftOPER()
 {
 	return (0);
 }
-commandFt		ftQUIT()
+int		Command::ftQUIT()
 {
 	return (0);
 }
-commandFt		ftJOIN()
+int		Command::ftJOIN()
 {
 	return (0);
 }
-commandFt		ftPART()
+int		Command::ftPART()
 {
 	return (0);
 }
-commandFt		ftTOPIC()
+int		Command::ftTOPIC()
 {
 	return (0);
 }
-commandFt		ftNAMES()
+int		Command::ftNAMES()
 {
 	return (0);
 }
-commandFt		ftLIST()
+int		Command::ftLIST()
 {
 	return (0);
 }
-commandFt		ftKICK()
+int		Command::ftKICK()
 {
 	return (0);
 }

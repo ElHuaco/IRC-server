@@ -6,11 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/17 12:21:26 by mmonroy-         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/17 10:28:58 by alejandro        ###   ########.fr       */
->>>>>>> b5f380771f9c5f054d3252883e88628fb4cd961d
+/*   Updated: 2021/06/17 13:15:14 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +19,8 @@
 
 class Server;
 
-typedef int (*commandFt) ();
+typedef int ftcmd(void);
+
 class Command
 {
 	private:
@@ -35,7 +32,7 @@ class Command
 		std::string				_command;
 		std::string				_params[5];
 		int						_paramsNum;
-		std::map<std::string, commandFt>	_commandList;
+		std::map<std::string, ftcmd*>	_commandList;
 
 		Command(void);
 		Command(const Command &other);
@@ -53,15 +50,15 @@ class Command
 
 		// Commands
 		int				ftNICK();
-		commandFt		ftUSER();
-		commandFt		ftOPER();
-		commandFt		ftQUIT();
-		commandFt		ftJOIN();
-		commandFt		ftPART();
-		commandFt		ftTOPIC();
-		commandFt		ftNAMES();
-		commandFt		ftLIST();
-		commandFt		ftKICK();
+		int				ftUSER();
+		int				ftOPER();
+		int				ftQUIT();
+		int				ftJOIN();
+		int				ftPART();
+		int				ftTOPIC();
+		int				ftNAMES();
+		int				ftLIST();
+		int				ftKICK();
 
 };
 # include "Server.hpp"
