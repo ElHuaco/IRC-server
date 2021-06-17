@@ -6,11 +6,12 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/16 13:21:12 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/17 12:21:34 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Command.hpp"
+
 
 // Constructor + Destructor
 Command::Command(std::string str, Server server, User commander) : _server(server), _commander(commander)
@@ -73,7 +74,7 @@ int		Command::parseStr(std::string str)
 // Execute
 int			Command::execute(void)
 {
-		std::map<std::string, commandFt>::iterator it;
+	std::map<std::string, commandFt>::iterator it;
 	for (it = this->_commandList.begin(); it != this->_commandList.end(); ++it)
 		if (it->first == this->_command)
 			return (it->second());
@@ -82,8 +83,30 @@ int			Command::execute(void)
 }
 
 // Commands
-commandFt		ftNICK()
+int			Command::ftNICK()
 {
+	// Checking if a nickname has been provided.					(ERR_NONICKNAMEGIVEN)
+	if (this->_paramsNum == 0)
+		return (431);
+
+	// Checking that the nickname isn't erroneus.					(ERR_ERRONEUSNICKNAME)
+	int i = 0;
+	if (!isalpha(this->_params[0][i]))
+		return (432);
+	while (this->_params[0][++i])
+		if (!isalnum(this->_params[0][i]))
+			return (432);
+
+	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
+	std::vector<User *>::iterator it;
+	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
+		if ((*it)->getNickname() == this->_params[0])
+			return (433);
+
+	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION) (436)
+
+	// Changing the nickname
+	this->_commander.setNickname(this->_params[0]); 
 	return (0);
 }
 commandFt		ftUSER()

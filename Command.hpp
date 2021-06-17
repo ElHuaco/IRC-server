@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 13:03:47 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/17 12:21:26 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 # include "Server.hpp"
 # include "User.hpp"
+
 # include <map>
+# include <locale>
 
 typedef int (*commandFt) ();
 class Command
@@ -45,7 +47,7 @@ class Command
 		int				execute();
 
 		// Commands
-		commandFt		ftNICK();
+		int				ftNICK();
 		commandFt		ftUSER();
 		commandFt		ftOPER();
 		commandFt		ftQUIT();
