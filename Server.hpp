@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 12:23:08 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:53:59 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,13 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include "User.hpp"
-# include "Command.hpp"
-//# include "Channel.hpp"
+# include "Channel.hpp"
 
 class Server
 {
 	public:
-		typedef std::vector<User *>::iterator		u_iterator;
-//		typedef std::vector<Channel *>::iterator	c_iterator;
+		typedef std::list<User *>::iterator		u_iterator;
+		typedef std::list<Channel *>::iterator	c_iterator;
 
 	private:
 		fd_set					_master;
@@ -41,28 +40,39 @@ class Server
 		int						_listener;
 		std::string				_password;
 		std::vector<User *>		_users;
-//		std::vector<Channel *>	_channels;
+		std::vector<Channel *>	_channels;
 		
 
 	public:
+		//Coplien
 		Server(void);
 		~Server(void);
 		Server	&operator=(const Server &rhs);
 		Server(const Server & other);
+
+		//Start configuration
 		void					start(const std::string &port,
 			const std::string &host = std::string(),
 			const std::string &port_network = std::string(),
 			const std::string &password_network = std::string());
+
+		//User and channel lists management
 		void					addUser(void);
 		User					*getSocketUser(int socket);
 		std::vector<User *>		getUsers(void) const;
 		void					deleteUser(const std::string &nick);
 		void					deleteUser(int fd);
-//		void					addChannel(void);
-//		void					deleteChannel(const std::string &name);
-		// User tiene método de enviar, según canal o privado
+		void					addChannel(Channel *chann);
+		Channel					*getChannelName(const std::string &str);
+		std::vector <Channel *>	getChannels(void) const;
+		void					deleteChannel(const std::string &name);
+
+		//Bare messages and error replies
 		void					message(int user_socket, char *buff, int bytes); 
-		//Enviar numeric reply
+		void					error_reply(const std::string &cmd,
+				const std::string &erroneous_arg, int key);
+
+		//Get(set)ters
 		void					setMax(int max);
 		int						getMax(void) const;
 		int						getListener(void) const;
@@ -70,8 +80,5 @@ class Server
 		fd_set					&getMaster(void);
 		void					setPassword(const std::string &password);
 		std::string				getPassword(void) const;
-//		std::vector <Channel>	getChannels(void) const;
-		void					error_reply(const std::string &cmd,
-				const std::string &erroneous_arg, int key);
 };
 #endif

@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:30:54 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:44:39 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 # include <list>
 # include <string>
+# include "Channel.hpp"
 
 class Server;
-//# include "Channel.hpp"
 
 class User
 {
@@ -29,7 +29,7 @@ class User
 		std::string				_password;
 		std::string				_hostname;
 		bool					_isOP;
-//		std::list<Channel*>		_channels;
+		std::list<Channel*>		_channels;
 
 		
 	public:
