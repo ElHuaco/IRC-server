@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:16:01 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/18 09:44:59 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 class Server;
 class User;
 
-typedef int ftcmd(void);
+typedef int ftcmd();
 
 class Command
 {
@@ -29,7 +29,7 @@ class Command
 		User					_commander;
 		std::string				_prefix;
 		std::string				_command;
-		std::string				_params[5];
+		std::string				*_params;
 		int						_paramsNum;
 		std::map<std::string, ftcmd*>	_commandList;
 
@@ -41,6 +41,7 @@ class Command
 		~Command(void);
 
 		// Getters + Setters
+		std::string		*getParams() const;
 
 		// Functions
 		void			initCommands();
