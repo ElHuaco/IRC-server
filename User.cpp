@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/16 11:29:37 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/17 12:24:51 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ void					User::setIsOP(bool OP)
 	this->_channels = channels;
 	return;
 }*/
-/*void					User::message(char *buff)
+void					User::message(Server server, char *buff, int nbytes)
 {
-}*/
+	for (int j = 0; j <= server.getMax(); ++j)
+	{
+		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
+			&& j != _socket) //&& pertenece a su canal
+			if (send(j, buff, nbytes, 0) == -1)
+				throw std::runtime_error(strerror(errno));
+	}
+}
