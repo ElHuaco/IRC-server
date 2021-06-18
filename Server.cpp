@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:35:02 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:44:20 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ Server::~Server(void)
 		delete *it2;
 	_channels.clear();
 	std::cout << "Server conf destroyed" << std::endl;
+}
+
+Server::Server(const Server &other)
+{
+	*this = other;
 }
 
 Server & Server::operator=(const Server &rhs)
@@ -97,7 +102,7 @@ int						Server::getListener(void) const
 {
 	return (_listener);
 }
-std::vector<User *>		Server::getUsers(void) const
+std::list<User *>		Server::getUsers(void) const
 {
 	return (_users);
 }
@@ -189,7 +194,7 @@ Channel					*Server::getChannelName(const std::string &str)
 	}
 	return (nullptr);
 }
-std::vector <Channel *>	Server::getChannels(void) const
+std::list <Channel *>	Server::getChannels(void) const
 {
 	return (_channels);
 }
@@ -226,7 +231,7 @@ void					Server::error_reply(const std::string &cmd,
 	// KICK: ERR_USERNOTINCHANNEL
 	// PRIVMSG: ERR_NORECIPIENT ERR_NOTEXTTOSEND ERR_CANNOTSENDTOCHAN
 	//  ERR_NOTOPLEVEL ERR_WILDTOPLEVEL ERR_NOSUCHNICK
-	std::string user = client->getUsername();
+	std::string user = client.getUsername();
 	std::string buff;
 	if (arg != nullptr)
 	{
@@ -293,7 +298,7 @@ void					Server::error_reply(const std::string &cmd,
 	else if (key == 491)
 		buff += ":No O-lines for your host";
 	buff += "\r\n";
-	nbytes = strlen(buff.c_str());
-	if (send(client->getSocket(), buff.c_str(), nbytes, 0) == -1)
+	int nbytes = strlen(buff.c_str());
+	if (send(client.getSocket(), buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
 }

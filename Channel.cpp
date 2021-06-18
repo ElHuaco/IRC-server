@@ -1,6 +1,6 @@
 #include "Channel.hpp"
 
-Channel::Channel(std::string &name, User users, Server server): _name(name), _users(users), _server(server) {}
+Channel::Channel(std::string &name): _name(name) {}
 
 Channel::~Channel() {}
 
@@ -15,23 +15,17 @@ Channel & Channel::operator=(const Channel &rhs)
 	return (*this);
 }
 
-std::string & Channel::getname(void)
+std::string Channel::getName(void) const
 {
 	return (this->_name);
 }
 
 bool Channel::belong_channel(int fd)
 {
-	std::vector<Channel *>::iterator itchannel = this->_server.getChannels().begin();
-	std::vector<User *>::iterator ituser = this->_server.getUsers().begin();
-
-	for (; itchannel != this->_server.getChannels().end(); ++itchannel)
+	for (iterator ituser = _users.begin(); ituser != _users.end(); ++ituser)
 	{
-		for (; ituser != this->_server.getUsers().end(); ++ituser)
-		{
-			if (*ituser.getSocket() == fd)// NO es así pero es la idea
+		if ((*ituser)->getSocket() == fd)// NO es así pero es la idea
 				return (true);
-		}
 	}
 	return (false);
 }
