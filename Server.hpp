@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:05:45 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:09:01 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,7 @@ class Server
 		Server(const Server & other);
 
 		//Start configuration
-		void					start(const std::string &port,
-			const std::string &host = std::string(),
-			const std::string &port_network = std::string(),
-			const std::string &password_network = std::string());
+		void					start(const std::string &port);
 
 		//User and channel lists management
 		void					addUser(void);

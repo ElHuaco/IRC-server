@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:07:38 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:09:38 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ Server & Server::operator=(const Server &rhs)
 	return (*this);
 }
 
-void	Server::start(const std::string &port_listen, const std::string &host,
-		const std::string &port_network, const std::string &password_network)
+void	Server::start(const std::string &port_listen)
 {
-	//TODO?: Código de enviar a host:port_network
 	//Código de escuchar en port_listen
 	struct addrinfo hints, *servinfo;
 	memset(&hints, 0, sizeof hints);
