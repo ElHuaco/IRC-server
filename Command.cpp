@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 11:16:56 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 11:53:38 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,24 +186,41 @@ int		Command::ftQUIT()
 
 int		Command::ftJOIN()
 {
+	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
+	if (this->_paramsNum == 0)
+	{
+		this->_erroneus[0] = this->_command;
+		return (461);
+	}
+
 	return (0);
 }
+
+
 int		Command::ftPART()
 {
 	return (0);
 }
+
+
 int		Command::ftTOPIC()
 {
 	return (0);
 }
+
+
 int		Command::ftNAMES()
 {
 	return (0);
 }
+
+
 int		Command::ftLIST()
 {
 	return (0);
 }
+
+
 int		Command::ftKICK()
 {
 	return (0);
