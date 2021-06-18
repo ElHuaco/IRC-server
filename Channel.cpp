@@ -1,6 +1,6 @@
 #include "Channel.hpp"
 
-Channel::Channel(std::string &name, User users, Server server): _name(name), _users(users), _server(server) {}
+Channel::Channel(std::string &name): _name(name) {}
 
 Channel::~Channel() {}
 
