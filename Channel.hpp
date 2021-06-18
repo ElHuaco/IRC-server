@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:57:49 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 13:02:27 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 15:31:11 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,14 @@ class Channel
 		Channel(const Channel & other);
 		Channel	&operator=(const Channel &rhs);
 
-		std::string getName(void) const;
+		std::string			getName(void) const;
+		std::list <User *>	getListUsers(void) const;
+		std::string			getTopic(void) const;
 
-		Channel		*clone(void) const;
-		bool		belong_channel(int fd);
+		void				setNewUser(User *newuser);
+		void				setTopic(std::string topic);
+
+		Channel				*clone(void) const;
+		bool				belong_channel(int fd);
 };
 # include "User.hpp"
