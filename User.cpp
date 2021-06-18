@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 12:46:45 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:59:37 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ User::User(int fd)
 
 User::~User(void)
 {
+	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+		delete *it;
+	_joinedChannels.clear();
 	return;
 }
 
@@ -29,7 +32,6 @@ User					*User::clone(void) const
 {
 	return (new User(_socket));
 }
-// Getters
 
 int						User::getSocket(void) const
 {
@@ -59,12 +61,6 @@ bool					User::getIsOP(void) const
 {
 	return (this->_isOP);
 }
-/*std::list<Channel*>		User::getChannels(void) const
-{
-	return (this->_joinedChannels);
-}*/
-
-// Setters
 
 void					User::setHopcount(int hopcount)
 {
@@ -91,14 +87,41 @@ void					User::setIsOP(bool OP)
 	this->_isOP = OP;
 	return;
 }
-/*void					User::setChannels(std::list<Channel*> channels)
+
+void					User::addChannel(Channel *chann)
 {
-	this->_joinedChannels = channels;
-	return;
-}*/
+	_joinedChannels.push_back(chann->clone());
+}
+Channel					*User::getChannelName(const std::string &str)
+{
+	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+	{
+		if ((*it)->getName() == str)
+			return (*it);
+	}
+	return (nullptr);
+}
+std::list <Channel *>	User::getChannels(void) const
+{
+	return (_joinedChannels);
+}
+void					User::deleteChannel(const std::string &name)
+{
+	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+	{
+		if ((*it)->getName() == name)
+		{
+			delete (*it);
+			_joinedChannels.erase(it);
+			return ;
+		}
+		
+	}
+}
+
 bool					User::is_in_same_channels(int fd)
 {
-	for (c_iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
 	{
 		if ((*it)->belong_channel(fd) == true)
 			return true;
