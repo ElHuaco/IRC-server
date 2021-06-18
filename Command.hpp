@@ -6,11 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/18 10:35:45 by mmonroy-         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/18 10:05:03 by aleon-ca         ###   ########.fr       */
->>>>>>> 9f1c5223444f7d35dbd7ee4c94dfe8e363aa310c
+/*   Updated: 2021/06/18 11:16:45 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +37,7 @@ class Command
 		Command(const Command &other);
 	public:
 		// Constructor + Destructor
-		Command(std::string str, Server server, User commander); // Prefix, Command and Parameters parser.
+		Command(std::string str, Server &server, User &commander); // Prefix, Command and Parameters parser.
 		~Command(void);
 
 		// Getters + Setters
