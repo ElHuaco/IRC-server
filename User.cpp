@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/17 12:24:51 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:24:13 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // Constructor + Destructor
 
-User::User(int fd) : _socket(fd)
+User::User(int fd) : _socket(fd), _hostname(0), _username(0), _realname(0)
 {
 	return;
 }

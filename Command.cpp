@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 09:57:11 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:35:04 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,36 @@ int			Command::ftNICK()
 	this->_commander.setNickname(this->_params[0]); 
 	return (0);
 }
+
+
 int		Command::ftUSER()
 {
+	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
+	if (this->_paramsNum < 4)
+	{
+		this->_erroneus[0] = this->_command;
+		return (461);
+	}
+		
+	// Checking if the client is already registered.	(ERR_ALREADYRESGISTRED)
+	if (!this->_commander.getUsername().empty())
+		return (462);
+	
+	// Registering, hostname and server parameters are ignored.
+	this->_commander.setUsername(this->_params[0]);
+	this->_commander.setRealname(this->_params[3]);
 	return (0);
 }
+
+
 int		Command::ftOPER()
 {
 	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
+	{
+		this->_erroneus[0] = this->_command;
 		return (461);
+	}
 	
 
 	// Not needed if we dont use other hosts.		(ERR_NOOPERHOST)
