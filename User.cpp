@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 10:01:33 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:55:43 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 // Constructor + Destructor
 
-User::User(int fd) : _socket(fd)
+User::User(int fd)
+: _socket(fd), _hostname(0), _username(0), _realname(0), _isOP(false)
 {
 	return;
 }
@@ -73,6 +74,16 @@ void					User::setHopcount(int hopcount)
 void					User::setNickname(std::string nickname)
 {
 	this->_nickname = nickname;
+	return;
+}
+void					User::setUsername(std::string username)
+{
+	this->_username = username;
+	return;
+}
+void					User::setRealname(std::string realname)
+{
+	this->_realname = realname;
 	return;
 }
 void					User::setIsOP(bool OP)

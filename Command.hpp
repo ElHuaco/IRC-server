@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:05:03 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 11:16:45 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Command
 		Command(const Command &other);
 	public:
 		// Constructor + Destructor
-		Command(std::string str, Server server, User commander); // Prefix, Command and Parameters parser.
+		Command(std::string str, Server &server, User &commander); // Prefix, Command and Parameters parser.
 		~Command(void);
 
 		// Getters + Setters

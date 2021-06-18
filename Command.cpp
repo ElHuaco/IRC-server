@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 09:57:11 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 11:16:56 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 
 // Constructor + Destructor
-Command::Command(std::string str, Server server, User commander) : _server(server), _commander(commander)
+Command::Command(std::string str, Server &server, User &commander) : _server(server), _commander(commander)
 {
 	this->_params = new std::string[5];
 	this->_erroneus = new std::string[5];
@@ -126,27 +126,64 @@ int			Command::ftNICK()
 	this->_commander.setNickname(this->_params[0]); 
 	return (0);
 }
+
+
 int		Command::ftUSER()
 {
+	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
+	if (this->_paramsNum < 4)
+	{
+		this->_erroneus[0] = this->_command;
+		return (461);
+	}
+		
+	// Checking if the client is already registered.	(ERR_ALREADYRESGISTRED)
+	if (!this->_commander.getUsername().empty())
+		return (462);
+	
+	// Registering, hostname and server parameters are ignored.
+	this->_commander.setUsername(this->_params[0]);
+	this->_commander.setRealname(this->_params[3]);
 	return (0);
 }
+
+
 int		Command::ftOPER()
 {
-	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
+	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
+	{
+		this->_erroneus[0] = this->_command;
 		return (461);
-	
+	}
 
-	// Not needed if we dont use other hosts.		(ERR_NOOPERHOST)
+	// Not needed if we dont use other hosts.			(ERR_NOOPERHOST)
 		//return (491);
-	
+
+	// Checking if the password is valid.				(ERR_PASSWDMISMATCH)
+	if (this->_server.getPassword() != this->_params[1])
+		return (464);
+
+	// Searching the user/nick and OP.					(RPL_YOUREOPER)
+	std::vector<User *>::iterator it;
+	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
+		if ((*it)->getNickname() == this->_params[0] || (*it)->getUsername() == this->_params[0])
+		{
+			this->_commander.setIsOP(true);
+			return (381);
+		}
+	// If no user/nick, standar return?
 	return (0);
 }
+
+
 int		Command::ftQUIT()
 {
 	// Client only?
 	return (0);
 }
+
+
 int		Command::ftJOIN()
 {
 	return (0);

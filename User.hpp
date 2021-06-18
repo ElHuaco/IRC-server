@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:59:50 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:42:10 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ class User
 		void					setHopcount(int hopcount);
 		void					setNickname(std::string nickname);
 		void					setIsOP(bool OP);
+		void					setUsername(std::string username);
+		void					setRealname(std::string realname);
 //		void					setChannels(std::list<Channel*>);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
