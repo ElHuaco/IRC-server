@@ -6,18 +6,17 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 13:15:14 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:16:01 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "User.hpp"
-
 # include <map>
 # include <locale>
 
 class Server;
+class User;
 
 typedef int ftcmd(void);
 
@@ -61,4 +60,5 @@ class Command
 		int				ftKICK();
 
 };
+# include "User.hpp"
 # include "Server.hpp"

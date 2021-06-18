@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 12:24:18 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:43:15 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ Server::~Server(void)
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
 		delete *it;
 	_users.clear();
-//	for (c_iterator it2 = _channels.begin(); it2 != _channels.end(); ++it2)
-//		delete *it2;
-//	_channels.clear();
+	for (c_iterator it2 = _channels.begin(); it2 != _channels.end(); ++it2)
+		delete *it2;
+	_channels.clear();
 	std::cout << "Server conf destroyed" << std::endl;
 }
 
@@ -178,18 +178,36 @@ void					Server::deleteUser(const std::string &nick)
 		}
 	}
 }
-/*
-std::vector<Channel *>	Server::getChannels(void) const
+void					Server::addChannel(Channel *chann)
+{
+	_channels.push_back(chann->clone());
+}
+Channel					*Server::getChannelName(const std::string &str)
+{
+	for (c_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if ((*it)->getName() == str)
+			return (*it);
+	}
+	return (nullptr);
+}
+std::vector <Channel *>	Server::getChannels(void) const
 {
 	return (_channels);
 }
-void					Server::addChannel(void)
+void					Server::deleteChannel(const std::string &name)
 {
+	for (c_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if ((*it)->getName() == name)
+		{
+			delete (*it);
+			_channels.erase(it);
+			return ;
+		}
+		
+	}
 }
-void					Server::deleteChannel(void)
-{
-}
-*/
 void					Server::message(int fd, char *buff, int nbytes)
 {
 	this->getSocketUser(fd)->message(*this, buff, nbytes);
@@ -198,23 +216,22 @@ void					Server::error_reply(const std::string &cmd,
 		const std::string &arg, int key)
 {
 	//arg vacío si no se detectó argumento erroneo.
-	//REPLIES:
 	// PASS: ERR_NEEDMOREPARAMS ERR_ALEADYREGISTERED
 	// NICK: ERR_NONICKNAMEGIVEN ERR_NICKNAMEINUSE ERR_UNAVAILRESOURCE
 	//  ERR_ERRONEUSNICKNAME ERR_NICKCOLLISION ERR_RESTRICTED
 	// USER: no nuevos
-	// OPER: RPL_YOUREOPER ERR_NOOPERHOST ERR_PASSWDMISMATCH
+	// OPER: ERR_NOOPERHOST ERR_PASSWDMISMATCH
 	// QUIT: no nuevos
 	// JOIN: ERR_BANNEDFROMCHAN ERR_INVITEONLYCHAN ERR_BADCHANNELKEY
 	//  ERR_CHANNELISFULL ERR_BADCHANMASK ERR_NOSUCHCHANNEL ERR_TOOMANYCHANNELS
-	//  ERR_TOOMANYTARGETS RPL_TOPIC
+	//  ERR_TOOMANYTARGETS
 	// PART: ERR_NOTONCHANNEL
 	// TOPIC: ERR_NOTOPIC ERR_CHANOPRIVSNEEDED ERR_NOCHANMODES
-	// NAMES: RPL_NAMEREPLY RPL_ENDOFNAMES
-	// LIST: RPL_LIST RPL_LISTEND
+	// NAMES: no nuevos
+	// LIST: no nuevos
 	// KICK: ERR_USERNOTINCHANNEL
 	// PRIVMSG: ERR_NORECIPIENT ERR_NOTEXTTOSEND ERR_CANNOTSENDTOCHAN
-	//  ERR_NOTOPLEVEL ERR_WILDTOPLEVEL ERR_NOSUCHNICK RPL_AWAY
+	//  ERR_NOTOPLEVEL ERR_WILDTOPLEVEL ERR_NOSUCHNICK
 	std::string buff(arg);
 	if (key == 401)
 		buff += ":No such nick/channel";
