@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:11:06 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:28:32 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 
 //signal_handlers con signal(SIGKILL)
 
-//bool	is_cmd(const std::string &str);
+static bool	is_cmd(const std::string &str)
+{
+	return (false);
+}
+
 std::string	*ft_argv_parser(int argc, char **argv)
 {
 	if (argc == 3)		// Two arguments case, no need to parse
@@ -90,17 +94,18 @@ int main(int argc, char **argv)
 					server.deleteUser(i);
 				}
 				else
-				{/*
+				{
 					std::string info(buf);
 					if (is_cmd(info) == true)
 					{
-						Command cmd(info);
-						key = cmd.execute();
-						server.error_reply(cmd.getCommand(), cmd.getErroneous(),
-							key);
+						User *client = server.getSocketUser(i);
+						Command cmd(info, server, client);
+						if (key = cmd.execute() > 400)
+							server.error_reply(cmd.getCommand(),
+								cmd.getErroneous(), key, client);
 					}
 					else
-						*/server.message(i, buff, nbytes);
+						server.message(client, buff, nbytes);
 				}
 			}
 		}

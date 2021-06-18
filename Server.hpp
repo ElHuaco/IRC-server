@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:09:01 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:27:30 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ class Server
 		void					deleteChannel(const std::string &name);
 
 		//Bare messages and error replies
-		void					message(int user_socket, char *buff, int bytes); 
+		void					message(User *client, char *buff, int bytes); 
 		void					error_reply(const std::string &cmd,
-				std::string *erroneous_arg, int key);
+				std::string *erroneous_arg, int key, const User &client);
 
 		//Get(set)ters
 		void					setMax(int max);
