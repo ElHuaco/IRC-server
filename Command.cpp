@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 09:29:16 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:57:11 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 Command::Command(std::string str, Server server, User commander) : _server(server), _commander(commander)
 {
 	this->_params = new std::string[5];
+	this->_erroneus = new std::string[5];
 	if (!parseStr(str))
 		return ;					// Parse error
 	initCommands();
@@ -27,6 +28,7 @@ Command::Command(std::string str, Server server, User commander) : _server(serve
 Command::~Command(void)
 {
 	delete[] this->_params;
+	delete[] this->_erroneus;
 	return ;
 }
 
@@ -97,16 +99,25 @@ int			Command::ftNICK()
 	// Checking that the nickname isn't erroneus.					(ERR_ERRONEUSNICKNAME)
 	int i = 0;
 	if (!isalpha(this->_params[0][i]))
+	{
+		this->_erroneus[0] = this->_params[0];
 		return (432);
+	}
 	while (this->_params[0][++i])
 		if (!isalnum(this->_params[0][i]))
-			return (432);
+		{
+			this->_erroneus[0] = this->_params[0];
+			return (431);
+		}
 
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
 	std::vector<User *>::iterator it;
 	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
 		if ((*it)->getNickname() == this->_params[0])
+		{
+			this->_erroneus[0] = this->_params[0];
 			return (433);
+		}
 
 	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION)
 	//return (436);
@@ -165,4 +176,9 @@ int		Command::ftKICK()
 std::string		*Command::getParams(void) const
 {
 	return (this->_params);
+}
+
+std::string		*Command::getErroneus(void) const
+{
+	return (this->_erroneus);
 }
