@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:57:49 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 11:55:14 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:11:17 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ class Channel
 		//un vector de chanops
 		//atributos de commands: mensaje del día, etc.
 		std::string	_name;
-		User		_listUsers;
+		User		_users;
 		Server		_server;
 		//std::map<std::string, ft_command>	_command_list; //Pasar el map de la lista de commands
 		Channel();
 
 	public:
 		//get lista sockets
-		Channel(std::string &name, User list_users, Server server);
+		Channel(std::string &name, User users, Server server);
 		~Channel();
 		Channel(const Channel & other);
 		Channel	&operator=(const Channel &rhs);
