@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/17 13:23:11 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:29:16 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 // Constructor + Destructor
 Command::Command(std::string str, Server server, User commander) : _server(server), _commander(commander)
 {
+	this->_params = new std::string[5];
 	if (!parseStr(str))
-		return ;						// Parse error
+		return ;					// Parse error
 	initCommands();
 //	execute();						// Should I?
 	return;
@@ -25,6 +26,7 @@ Command::Command(std::string str, Server server, User commander) : _server(serve
 
 Command::~Command(void)
 {
+	delete[] this->_params;
 	return ;
 }
 
@@ -32,8 +34,8 @@ Command::~Command(void)
 void		Command::initCommands(void)
 {
 	this->_commandList["NICK"] = this->ftNICK;
-	//this->_commandList["USER"] = this->ftUSER;
- 	/*this->_commandList.insert(std::pair<std::string, int (**)()>("NICK", this->ftNICK()));
+	/*this->_commandList["USER"] = this->ftUSER;
+ 	this->_commandList.insert(std::pair<std::string, int (**)()>("NICK", this->ftNICK()));
  	this->_commandList.insert(std::pair<std::string, int>("USER", this->ftUSER()));
  	this->_commandList.insert(std::pair<std::string, int>("OPER", this->ftOPER()));
  	this->_commandList.insert(std::pair<std::string, int>("QUIT", this->ftQUIT()));
@@ -106,7 +108,8 @@ int			Command::ftNICK()
 		if ((*it)->getNickname() == this->_params[0])
 			return (433);
 
-	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION) (436)
+	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION)
+	//return (436);
 
 	// Changing the nickname
 	this->_commander.setNickname(this->_params[0]); 
@@ -118,10 +121,19 @@ int		Command::ftUSER()
 }
 int		Command::ftOPER()
 {
+	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
+	if (this->_paramsNum < 2)
+		return (461);
+	
+
+	// Not needed if we dont use other hosts.		(ERR_NOOPERHOST)
+		//return (491);
+	
 	return (0);
 }
 int		Command::ftQUIT()
 {
+	// Client only?
 	return (0);
 }
 int		Command::ftJOIN()
@@ -147,4 +159,10 @@ int		Command::ftLIST()
 int		Command::ftKICK()
 {
 	return (0);
+}
+
+// Getters + Setters
+std::string		*Command::getParams(void) const
+{
+	return (this->_params);
 }

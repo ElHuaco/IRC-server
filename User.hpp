@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/16 12:37:08 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/17 15:33:01 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class User
 		std::string				_nickname;
 		std::string				_username;
 		std::string				_realname;
+		std::string				_password;
 		std::string				_hostname;
 		bool					_isOP;
 //		std::list<Channel*>		_channels;
