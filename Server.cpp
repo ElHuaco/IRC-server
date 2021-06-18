@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:27:16 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:35:02 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,10 +205,6 @@ void					Server::deleteChannel(const std::string &name)
 		}
 		
 	}
-}
-void					Server::message(User *client, char *buff, int nbytes)
-{
-	client->message(*this, buff, nbytes);
 }
 void					Server::error_reply(const std::string &cmd,
 	std::string *arg, int key, const User &client)

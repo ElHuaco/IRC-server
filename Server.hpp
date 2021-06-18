@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:27:30 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:33:51 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ class Server
 		std::vector <Channel *>	getChannels(void) const;
 		void					deleteChannel(const std::string &name);
 
-		//Bare messages and error replies
-		void					message(User *client, char *buff, int bytes); 
 		void					error_reply(const std::string &cmd,
 				std::string *erroneous_arg, int key, const User &client);
 
