@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 11:02:45 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/17 12:24:18 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,10 @@ void					Server::deleteChannel(void)
 {
 }
 */
+void					Server::message(int fd, char *buff, int nbytes)
+{
+	this->getSocketUser(fd)->message(*this, buff, nbytes);
+}
 void					Server::error_reply(const std::string &cmd,
 		const std::string &arg, int key)
 {

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 10:55:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/17 12:23:08 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Server
 //		void					addChannel(void);
 //		void					deleteChannel(const std::string &name);
 		// User tiene método de enviar, según canal o privado
+		void					message(int user_socket, char *buff, int bytes); 
 		//Enviar numeric reply
 		void					setMax(int max);
 		int						getMax(void) const;

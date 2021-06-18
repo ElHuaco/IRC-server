@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 10:55:07 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/17 12:41:03 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,28 +92,18 @@ int main(int argc, char **argv)
 					server.deleteUser(i);
 				}
 				else
-				{
-					for (int j = 0; j <= server.getMax(); ++j)
+				{/*
+					std::string info(buf);
+					if (is_cmd(info) == true)
 					{
-						if (FD_ISSET(j, &server.getMaster())
-							&& j != server.getListener() && j != i)
-							if (send(j, buff, nbytes, 0) == -1)
-								throw std::runtime_error(strerror(errno));
+						Command cmd(info);
+						key = cmd.execute();
+						server.error_reply(cmd.getCommand(), cmd.getErroneous(),
+							key);
 					}
+					else
+						*/server.message(i, buff, nbytes);
 				}
-				//parsear xq puede ser mensaje simple en vez de command
-				//recv();
-				/*std::string info(buf);
-				if (is_cmd(info) == true)
-				{
-					Command cmd(info);
-					key = cmd.execute();
-					server.error_reply(cmd.getCommand(), cmd.getErroneous(),
-						key);
-				}
-				else
-					User.mensaje(info);
-				*/
 			}
 		}
 	}

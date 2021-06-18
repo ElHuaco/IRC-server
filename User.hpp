@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 15:33:01 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:30:54 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ class User
 //		void					setChannels(std::list<Channel*>);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
-//		void					message(char *buff);
+		void					message(Server serv, char *buff, int nbytes);
 		//otros métodos de command
 };
 # include "Server.hpp"
