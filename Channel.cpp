@@ -20,7 +20,12 @@ std::string Channel::getName(void) const
 	return (this->_name);
 }
 
-bool Channel::belong_channel(int fd)
+Channel		*Channel::clone(void) const
+{
+	return (new Channel(*this));
+}
+
+bool		Channel::belong_channel(int fd)
 {
 	for (iterator ituser = _users.begin(); ituser != _users.end(); ++ituser)
 	{
