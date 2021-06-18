@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:28:32 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:35:15 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,16 +96,16 @@ int main(int argc, char **argv)
 				else
 				{
 					std::string info(buf);
+					User *client = server.getSocketUser(i);
 					if (is_cmd(info) == true)
 					{
-						User *client = server.getSocketUser(i);
 						Command cmd(info, server, client);
 						if (key = cmd.execute() > 400)
 							server.error_reply(cmd.getCommand(),
-								cmd.getErroneous(), key, client);
+								cmd.getErroneous(), key, *client);
 					}
 					else
-						server.message(client, buff, nbytes);
+						client->message(server, buff, nbytes);
 				}
 			}
 		}
