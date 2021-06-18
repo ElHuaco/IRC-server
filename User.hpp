@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:44:39 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/18 09:59:50 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ class Server;
 
 class User
 {
+	public:
+		typedef std::list<Channel *>::iterator	c_iterator;
+
 	private:
 		int						_socket;
 		int						_hopcount;
@@ -59,5 +62,6 @@ class User
 		//métodos de enviar a secas a otros sockets, comprobando channels
 		void					message(Server serv, char *buff, int nbytes);
 		//otros métodos de command
+		bool					is_in_same_channels(int fd);
 };
 # include "Server.hpp"

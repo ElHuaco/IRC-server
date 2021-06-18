@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/17 12:24:51 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:01:33 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,21 @@ void					User::setIsOP(bool OP)
 	this->_channels = channels;
 	return;
 }*/
+bool					Server::is_in_same_channels(int fd)
+{
+	for (c_iterator it = _channels.begin(); c_iterator != _channels.end(); ++it)
+	{
+		if ((*it)->does_belong(fd) == true)
+			return true;
+	}
+	return false;
+}
 void					User::message(Server server, char *buff, int nbytes)
 {
 	for (int j = 0; j <= server.getMax(); ++j)
 	{
 		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-			&& j != _socket) //&& pertenece a su canal
+			&& j != _socket) //&& this->is_in_same_channels(j)
 			if (send(j, buff, nbytes, 0) == -1)
 				throw std::runtime_error(strerror(errno));
 	}
