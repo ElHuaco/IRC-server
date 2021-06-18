@@ -6,11 +6,12 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:35:15 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:09:57 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Command.hpp"
 #include <iostream>
 
 //signal_handlers con signal(SIGKILL)
@@ -95,12 +96,13 @@ int main(int argc, char **argv)
 				}
 				else
 				{
-					std::string info(buf);
+					std::string info(buff);
 					User *client = server.getSocketUser(i);
 					if (is_cmd(info) == true)
 					{
-						Command cmd(info, server, client);
-						if (key = cmd.execute() > 400)
+						int key;
+						Command cmd(info, server, *client);
+						if ((key = cmd.execute() > 400))
 							server.error_reply(cmd.getCommand(),
 								cmd.getErroneous(), key, *client);
 					}

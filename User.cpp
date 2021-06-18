@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 10:55:43 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:21:59 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,11 @@ void					User::setIsOP(bool OP)
 	this->_channels = channels;
 	return;
 }*/
-bool					Server::is_in_same_channels(int fd)
+bool					User::is_in_same_channels(int fd)
 {
-	for (c_iterator it = _channels.begin(); c_iterator != _channels.end(); ++it)
+	for (c_iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
-		if ((*it)->does_belong(fd) == true)
+		if ((*it)->belong_channel(fd) == true)
 			return true;
 	}
 	return false;

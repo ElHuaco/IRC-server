@@ -6,21 +6,26 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:57:49 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:55:05 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:24:04 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include <map>
+# include <list>
+# include <string>
 
-class Server;
 class User;
 
 class Channel
 {
+	public:
+		typedef std::list<User *>::iterator	iterator;
+
 	private:
-		//lista de int socket fds
+		//lista de usuarios en el canal
+		std::list<User *>		_users;
 		//un vector de chanops
 		//atributos de commands: mensaje del día, etc.
 		std::string	_name;
@@ -34,8 +39,8 @@ class Channel
 		Channel(const Channel & other);
 		Channel	&operator=(const Channel &rhs);
 
-		std::string &getname(void);
+		bool		belong_channel(int fd) const;
+		std::string getName(void) const;
 		Channel		*clone(void) const;
 };
 # include "User.hpp"
-# include "Server.hpp"

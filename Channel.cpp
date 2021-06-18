@@ -15,7 +15,7 @@ Channel & Channel::operator=(const Channel &rhs)
 	return (*this);
 }
 
-std::string & Channel::getname(void)
+std::string Channel::getName(void) const
 {
 	return (this->_name);
 }

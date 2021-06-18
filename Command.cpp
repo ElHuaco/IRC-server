@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 11:16:56 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:25:33 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 Command::Command(std::string str, Server &server, User &commander) : _server(server), _commander(commander)
 {
 	this->_params = new std::string[5];
-	this->_erroneus = new std::string[5];
+	this->_erroneous = new std::string[5];
 	if (!parseStr(str))
 		return ;					// Parse error
 	initCommands();
@@ -28,14 +28,14 @@ Command::Command(std::string str, Server &server, User &commander) : _server(ser
 Command::~Command(void)
 {
 	delete[] this->_params;
-	delete[] this->_erroneus;
+	delete[] this->_erroneous;
 	return ;
 }
 
 // Init
 void		Command::initCommands(void)
 {
-	this->_commandList["NICK"] = this->ftNICK;
+	this->_commandList["NICK"] = this->ftNICK();
 	/*this->_commandList["USER"] = this->ftUSER;
  	this->_commandList.insert(std::pair<std::string, int (**)()>("NICK", this->ftNICK()));
  	this->_commandList.insert(std::pair<std::string, int>("USER", this->ftUSER()));
@@ -96,26 +96,26 @@ int			Command::ftNICK()
 	if (this->_paramsNum == 0)
 		return (431);
 
-	// Checking that the nickname isn't erroneus.					(ERR_ERRONEUSNICKNAME)
+	// Checking that the nickname isn't erroneous.					(ERR_ERRONEUSNICKNAME)
 	int i = 0;
 	if (!isalpha(this->_params[0][i]))
 	{
-		this->_erroneus[0] = this->_params[0];
+		this->_erroneous[0] = this->_params[0];
 		return (432);
 	}
 	while (this->_params[0][++i])
 		if (!isalnum(this->_params[0][i]))
 		{
-			this->_erroneus[0] = this->_params[0];
+			this->_erroneous[0] = this->_params[0];
 			return (431);
 		}
 
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
-	std::vector<User *>::iterator it;
+	std::list<User *>::iterator it;
 	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
 		if ((*it)->getNickname() == this->_params[0])
 		{
-			this->_erroneus[0] = this->_params[0];
+			this->_erroneous[0] = this->_params[0];
 			return (433);
 		}
 
@@ -133,7 +133,7 @@ int		Command::ftUSER()
 	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 4)
 	{
-		this->_erroneus[0] = this->_command;
+		this->_erroneous[0] = this->_command;
 		return (461);
 	}
 		
@@ -153,7 +153,7 @@ int		Command::ftOPER()
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
 	{
-		this->_erroneus[0] = this->_command;
+		this->_erroneous[0] = this->_command;
 		return (461);
 	}
 
@@ -165,7 +165,7 @@ int		Command::ftOPER()
 		return (464);
 
 	// Searching the user/nick and OP.					(RPL_YOUREOPER)
-	std::vector<User *>::iterator it;
+	std::list<User *>::iterator it;
 	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
 		if ((*it)->getNickname() == this->_params[0] || (*it)->getUsername() == this->_params[0])
 		{
@@ -210,12 +210,16 @@ int		Command::ftKICK()
 }
 
 // Getters + Setters
+std::string		Command::getCommand(void) const
+{
+	return (this->_command);
+}
 std::string		*Command::getParams(void) const
 {
 	return (this->_params);
 }
 
-std::string		*Command::getErroneus(void) const
+std::string		*Command::getErroneous(void) const
 {
-	return (this->_erroneus);
+	return (this->_erroneous);
 }

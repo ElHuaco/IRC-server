@@ -6,11 +6,11 @@
 #    By: aleon-ca <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/22 09:25:30 by aleon-ca          #+#    #+#              #
-#    Updated: 2021/06/16 11:31:48 by alejandro        ###   ########.fr        #
+#    Updated: 2021/06/18 12:22:32 by aleon-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.cpp Server.cpp User.cpp
+SRCS = main.cpp Server.cpp User.cpp Channel.cpp Command.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:33:51 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:15:07 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <sys/socket.h>
 # include <sys/select.h>
 # include <netdb.h>
-# include <vector>
+# include <list>
 # include <string>
 # include <iostream>
 # include <exception>
@@ -39,8 +39,8 @@ class Server
 		int						_max;
 		int						_listener;
 		std::string				_password;
-		std::vector<User *>		_users;
-		std::vector<Channel *>	_channels;
+		std::list<User *>		_users;
+		std::list<Channel *>	_channels;
 		
 
 	public:
@@ -56,12 +56,12 @@ class Server
 		//User and channel lists management
 		void					addUser(void);
 		User					*getSocketUser(int socket);
-		std::vector<User *>		getUsers(void) const;
+		std::list<User *>		getUsers(void) const;
 		void					deleteUser(const std::string &nick);
 		void					deleteUser(int fd);
 		void					addChannel(Channel *chann);
 		Channel					*getChannelName(const std::string &str);
-		std::vector <Channel *>	getChannels(void) const;
+		std::list <Channel *>	getChannels(void) const;
 		void					deleteChannel(const std::string &name);
 
 		void					error_reply(const std::string &cmd,
