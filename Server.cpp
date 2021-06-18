@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:43:15 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/18 10:27:16 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ Server & Server::operator=(const Server &rhs)
 	return (*this);
 }
 
-void	Server::start(const std::string &port_listen, const std::string &host,
-		const std::string &port_network, const std::string &password_network)
+void	Server::start(const std::string &port_listen)
 {
-	//TODO?: Código de enviar a host:port_network
 	//Código de escuchar en port_listen
 	struct addrinfo hints, *servinfo;
 	memset(&hints, 0, sizeof hints);
@@ -208,12 +206,12 @@ void					Server::deleteChannel(const std::string &name)
 		
 	}
 }
-void					Server::message(int fd, char *buff, int nbytes)
+void					Server::message(User *client, char *buff, int nbytes)
 {
-	this->getSocketUser(fd)->message(*this, buff, nbytes);
+	client->message(*this, buff, nbytes);
 }
 void					Server::error_reply(const std::string &cmd,
-		const std::string &arg, int key)
+	std::string *arg, int key, const User &client)
 {
 	//arg vacío si no se detectó argumento erroneo.
 	// PASS: ERR_NEEDMOREPARAMS ERR_ALEADYREGISTERED
@@ -232,7 +230,14 @@ void					Server::error_reply(const std::string &cmd,
 	// KICK: ERR_USERNOTINCHANNEL
 	// PRIVMSG: ERR_NORECIPIENT ERR_NOTEXTTOSEND ERR_CANNOTSENDTOCHAN
 	//  ERR_NOTOPLEVEL ERR_WILDTOPLEVEL ERR_NOSUCHNICK
-	std::string buff(arg);
+	std::string user = client->getUsername();
+	std::string buff;
+	if (arg != nullptr)
+	{
+		int i = -1;
+		while (arg[++i].empty() != true)
+			buff += arg[i];
+	}
 	if (key == 401)
 		buff += ":No such nick/channel";
 	else if (key == 403)
@@ -244,17 +249,15 @@ void					Server::error_reply(const std::string &cmd,
 	else if (key == 407)
 		buff += ":Too many recipients/targets";
 	else if (key == 411)
-		buff += ":No recipient given";
+		buff += ":No recipient given (" + cmd + ")";
 	else if (key == 412)
 		buff += ":No text to send";
 	else if (key == 413)
 		buff += ":No toplevel domain specified";
 	else if (key == 414)
 		buff += ":Wildcard in toplevel domain";
-	else if (key == 461)
-		buff += cmd + ":Not enough parameters";
-	else if (key == 462)
-		buff += ":Unauthorized command (already registered)";
+	else if (key == 421)
+		buff += cmd + " :Unknown command";
 	else if (key == 431)
 		buff += ":No nickname given";
 	else if (key == 432)
@@ -269,6 +272,10 @@ void					Server::error_reply(const std::string &cmd,
 		buff += ":They aren't on that channel";
 	else if (key == 442)
 		buff += ":You're not on a channel";
+	else if (key == 461)
+		buff += cmd + ":Not enough parameters";
+	else if (key == 462)
+		buff += ":Unauthorized command (already registered)";
 	else if (key == 464)
 		buff += ":Password incorrect";
 	else if (key == 471)

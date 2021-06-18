@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/17 12:41:03 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:28:32 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 
 //signal_handlers con signal(SIGKILL)
 
-//bool	is_cmd(const std::string &str);
+static bool	is_cmd(const std::string &str)
+{
+	return (false);
+}
+
 std::string	*ft_argv_parser(int argc, char **argv)
 {
 	if (argc == 3)		// Two arguments case, no need to parse
@@ -60,13 +64,11 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		server.setPassword(arg[4]);
-		server.start(arg[3], arg[0], arg[1], arg[2]);
+		std::cout << "host:port_network:password_network is gone!" << std::endl;
 	}
 	fd_set read_fds;
 	while (1)
 	{
-		//Quizá need write_fds para connect()?
 		read_fds = server.getMaster();
 		if (select(server.getMax() + 1, &read_fds, NULL, NULL, NULL) == -1)
 			throw std::runtime_error(strerror(errno));
@@ -80,7 +82,7 @@ int main(int argc, char **argv)
 				std::cout << "New connection. " << std::endl;
 			}
 			//Si no es nueva conexión, parsea para ver si es un Command y 
-			// entonces command.execute(server, ...)  o se envía el mensaje.
+			// entonces command.execute(server, ...) o se envía el mensaje.
 			else
 			{
 				char buff[412];
@@ -92,20 +94,20 @@ int main(int argc, char **argv)
 					server.deleteUser(i);
 				}
 				else
-				{/*
+				{
 					std::string info(buf);
 					if (is_cmd(info) == true)
 					{
-						Command cmd(info);
-						key = cmd.execute();
-						server.error_reply(cmd.getCommand(), cmd.getErroneous(),
-							key);
+						User *client = server.getSocketUser(i);
+						Command cmd(info, server, client);
+						if (key = cmd.execute() > 400)
+							server.error_reply(cmd.getCommand(),
+								cmd.getErroneous(), key, client);
 					}
 					else
-						*/server.message(i, buff, nbytes);
+						server.message(client, buff, nbytes);
 				}
 			}
 		}
 	}
 }
-

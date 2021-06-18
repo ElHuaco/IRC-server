@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:53:59 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:27:30 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,7 @@ class Server
 		Server(const Server & other);
 
 		//Start configuration
-		void					start(const std::string &port,
-			const std::string &host = std::string(),
-			const std::string &port_network = std::string(),
-			const std::string &password_network = std::string());
+		void					start(const std::string &port);
 
 		//User and channel lists management
 		void					addUser(void);
@@ -68,9 +65,9 @@ class Server
 		void					deleteChannel(const std::string &name);
 
 		//Bare messages and error replies
-		void					message(int user_socket, char *buff, int bytes); 
+		void					message(User *client, char *buff, int bytes); 
 		void					error_reply(const std::string &cmd,
-				const std::string &erroneous_arg, int key);
+				std::string *erroneous_arg, int key, const User &client);
 
 		//Get(set)ters
 		void					setMax(int max);
