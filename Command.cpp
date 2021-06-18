@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 11:53:38 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:51:24 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,36 @@ int		Command::ftJOIN()
 		this->_erroneus[0] = this->_command;
 		return (461);
 	}
+	// Limit of channels at one time?
+	
+	// Not needed if we don't have channel modes.		(ERR_INVITEONLYCHAN)	473
+	//													(ERR_BANNEDFROMCHAN)	474
+	//													(ERR_BADCHANNELKEY)		475
+	//													(ERR_BADCHANMASK)		476
 
+	// Not needed if we don't implement a limit.		(ERR_CHANNELISTFULL)	471
+	//													(ERR_TOOMANYCHANNELS)	405
+
+	// Checking if a channel exist and joining it.		(ERR_NOSUCHCHANNEL)
+	//													(RPL_TOPIC)
+	
+	int i = -1;
+	int j = 0;
+	Channel *aux;
+	while (++i < 5)
+	{
+		aux = this->_server.getChannelName(this->_params[i]);
+		if (!aux)
+		{
+			this->_erroneus[j++] = this->_params[i];
+			//return (403);
+		}
+		else
+		{
+			//getTopic.
+			//Meter user en la lista.
+		}
+	}
 	return (0);
 }
 
