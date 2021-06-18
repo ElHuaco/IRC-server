@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:29:20 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:50:43 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Command
 		std::string				_prefix;
 		std::string				_command;
 		std::string				*_params;
+		std::string				*_erroneus;
 		int						_paramsNum;
 		std::map<std::string, ftcmd*>	_commandList;
 
@@ -43,6 +44,7 @@ class Command
 
 		// Getters + Setters
 		std::string		*getParams() const;
+		std::string		*getErroneus() const;
 
 		// Functions
 		void			initCommands();
