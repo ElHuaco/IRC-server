@@ -6,13 +6,12 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:57:49 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:43:31 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/18 09:55:05 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "Command.hpp"
 # include <map>
 
 class Server;
@@ -37,6 +36,6 @@ class Channel
 
 		std::string &getname(void);
 		Channel		*clone(void) const;
-}
+};
 # include "User.hpp"
 # include "Server.hpp"
