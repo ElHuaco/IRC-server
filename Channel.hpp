@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:57:49 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:35:02 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:49:35 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ class Channel
 		Channel(const Channel & other);
 		Channel	&operator=(const Channel &rhs);
 
-		//NEED get(set)ters para la lista de User
 		std::string getName(void) const;
+
 		Channel		*clone(void) const;
 		bool		belong_channel(int fd);
 };

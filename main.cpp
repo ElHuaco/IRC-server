@@ -6,12 +6,12 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:09:57 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:42:54 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "Command.hpp"
+//#include "Command.hpp"
 #include <iostream>
 
 //signal_handlers con signal(SIGKILL)
@@ -100,11 +100,11 @@ int main(int argc, char **argv)
 					User *client = server.getSocketUser(i);
 					if (is_cmd(info) == true)
 					{
-						int key;
-						Command cmd(info, server, *client);
-						if ((key = cmd.execute() > 400))
-							server.error_reply(cmd.getCommand(),
-								cmd.getErroneous(), key, *client);
+//						int key;
+//						Command cmd(info, server, *client);
+//						if ((key = cmd.execute() > 400))
+//							server.error_reply(cmd.getCommand(),
+//								cmd.getErroneous(), key, *client);
 					}
 					else
 						client->message(server, buff, nbytes);

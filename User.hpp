@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 10:42:10 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:49:07 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class User
 		std::string				_password;
 		std::string				_hostname;
 		bool					_isOP;
-		std::list<Channel*>		_channels;
+		std::list<Channel*>		_joinedChannels;
 
 		
 	public:
@@ -59,7 +59,11 @@ class User
 		void					setIsOP(bool OP);
 		void					setUsername(std::string username);
 		void					setRealname(std::string realname);
-//		void					setChannels(std::list<Channel*>);
+		//TODO
+		void					addChannel(Channel *chann);
+		Channel					*getChannelName(const std::string &str);
+		std::list <Channel *>	getChannels(void) const;
+		void					deleteChannel(const std::string &name);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
 		void					message(Server serv, char *buff, int nbytes);

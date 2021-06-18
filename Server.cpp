@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:16:05 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:44:20 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ Server::~Server(void)
 		delete *it2;
 	_channels.clear();
 	std::cout << "Server conf destroyed" << std::endl;
+}
+
+Server::Server(const Server &other)
+{
+	*this = other;
 }
 
 Server & Server::operator=(const Server &rhs)

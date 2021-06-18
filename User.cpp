@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 12:21:59 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 12:46:45 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ bool					User::getIsOP(void) const
 }
 /*std::list<Channel*>		User::getChannels(void) const
 {
-	return (this->_channels);
+	return (this->_joinedChannels);
 }*/
 
 // Setters
@@ -93,12 +93,12 @@ void					User::setIsOP(bool OP)
 }
 /*void					User::setChannels(std::list<Channel*> channels)
 {
-	this->_channels = channels;
+	this->_joinedChannels = channels;
 	return;
 }*/
 bool					User::is_in_same_channels(int fd)
 {
-	for (c_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (c_iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
 	{
 		if ((*it)->belong_channel(fd) == true)
 			return true;
@@ -110,7 +110,7 @@ void					User::message(Server server, char *buff, int nbytes)
 	for (int j = 0; j <= server.getMax(); ++j)
 	{
 		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-			&& j != _socket) //&& this->is_in_same_channels(j)
+			&& j != _socket) //&& this->is_in_same_joinedChannels(j)
 			if (send(j, buff, nbytes, 0) == -1)
 				throw std::runtime_error(strerror(errno));
 	}
