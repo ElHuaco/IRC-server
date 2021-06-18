@@ -6,11 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/18 10:24:13 by mmonroy-         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/18 10:01:33 by aleon-ca         ###   ########.fr       */
->>>>>>> 9f1c5223444f7d35dbd7ee4c94dfe8e363aa310c
+/*   Updated: 2021/06/18 10:39:32 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +73,16 @@ void					User::setHopcount(int hopcount)
 void					User::setNickname(std::string nickname)
 {
 	this->_nickname = nickname;
+	return;
+}
+void					User::setUsername(std::string username)
+{
+	this->_username = username;
+	return;
+}
+void					User::setRealname(std::string realname)
+{
+	this->_realname = realname;
 	return;
 }
 void					User::setIsOP(bool OP)
