@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:43:15 by alejandro        ###   ########.fr       */
+/*   Updated: 2021/06/18 10:07:38 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ void					Server::message(int fd, char *buff, int nbytes)
 	this->getSocketUser(fd)->message(*this, buff, nbytes);
 }
 void					Server::error_reply(const std::string &cmd,
-		const std::string &arg, int key)
+	std::string *arg, int key)
 {
 	//arg vacío si no se detectó argumento erroneo.
 	// PASS: ERR_NEEDMOREPARAMS ERR_ALEADYREGISTERED
@@ -232,7 +232,13 @@ void					Server::error_reply(const std::string &cmd,
 	// KICK: ERR_USERNOTINCHANNEL
 	// PRIVMSG: ERR_NORECIPIENT ERR_NOTEXTTOSEND ERR_CANNOTSENDTOCHAN
 	//  ERR_NOTOPLEVEL ERR_WILDTOPLEVEL ERR_NOSUCHNICK
-	std::string buff(arg);
+	std::string buff;
+	if (arg != nullptr)
+	{
+		int i = -1;
+		while (arg[++i].empty() != true)
+			buff += arg[i];
+	}
 	if (key == 401)
 		buff += ":No such nick/channel";
 	else if (key == 403)

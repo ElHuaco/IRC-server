@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:19:45 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 09:53:59 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:05:45 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ class Server
 		//Bare messages and error replies
 		void					message(int user_socket, char *buff, int bytes); 
 		void					error_reply(const std::string &cmd,
-				const std::string &erroneous_arg, int key);
+				std::string *erroneous_arg, int key);
 
 		//Get(set)ters
 		void					setMax(int max);
