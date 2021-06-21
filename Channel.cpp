@@ -29,8 +29,28 @@ bool		Channel::belong_channel(int fd)
 {
 	for (iterator ituser = _users.begin(); ituser != _users.end(); ++ituser)
 	{
-		if ((*ituser)->getSocket() == fd)// NO es así pero es la idea
+		if ((*ituser)->getSocket() == fd)
 				return (true);
 	}
 	return (false);
+}
+
+std::list <User *> Channel::getListUsers() const
+{
+	return (this->_users);
+}
+
+std::string	Channel::getTopic(void) const
+{
+	return (this->_topic);
+}
+
+void	Channel::setNewUser(User *newuser)
+{
+	this->_users.push_back(newuser->clone());
+}
+
+void	Channel::setTopic(std::string topic)
+{
+	this->_topic = topic;
 }

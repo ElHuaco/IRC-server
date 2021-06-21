@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 11:00:28 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:12:56 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/21 09:07:27 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # include <locale>
 # include "Server.hpp"
 # include "User.hpp"
-
-typedef int ftcmd();
 
 class Command
 {
@@ -31,7 +29,6 @@ class Command
 		std::string				*_params;
 		std::string				*_erroneous;
 		int						_paramsNum;
-		std::map<std::string, ftcmd*>	_commandList;
 
 		Command(void);
 		Command(const Command &other);
@@ -46,7 +43,6 @@ class Command
 		std::string		*getErroneous() const;
 
 		// Functions
-		void			initCommands();
 		int				parseStr(std::string str);
 		int				execute();
 
