@@ -1,21 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   User.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 12:59:37 by aleon-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "User.hpp"
 
 // Constructor + Destructor
 
 User::User(int fd)
-: _socket(fd), _hostname(0), _username(0), _realname(0), _isOP(false)
+: _socket(fd), _isOP(false)
 {
 	return;
 }
@@ -28,8 +16,10 @@ User::~User(void)
 	return;
 }
 
+#include <iostream>
 User					*User::clone(void) const
 {
+	std::cout << "Cloning user..." << std::endl;
 	return (new User(_socket));
 }
 
@@ -128,7 +118,7 @@ bool					User::is_in_same_channels(int fd)
 	}
 	return false;
 }
-void					User::message(Server server, char *buff, int nbytes)
+void					User::message(Server &server, char *buff, int nbytes)
 {
 	for (int j = 0; j <= server.getMax(); ++j)
 	{

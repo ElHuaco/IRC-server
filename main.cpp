@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:42:54 by aleon-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 //#include "Command.hpp"
 #include <iostream>
@@ -79,8 +67,13 @@ int main(int argc, char **argv)
 				continue ;
 			if (i == server.getListener())
 			{
+				#ifdef DEBUG
+					std::cout << "Creating new connection..." << std::endl;
+				#endif
 				server.addUser();
-				std::cout << "New connection. " << std::endl;
+				#ifdef DEBUG
+					std::cout << "New connection registered. " << std::endl;
+				#endif
 			}
 			//Si no es nueva conexión, parsea para ver si es un Command y 
 			// entonces command.execute(server, ...) o se envía el mensaje.

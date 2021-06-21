@@ -11,7 +11,7 @@ Channel::Channel(const Channel & other)
 	*this = other;
 }
 
-Channel & Channel::operator=(const Channel &rhs)
+Channel 				&Channel::operator=(const Channel &rhs)
 {
 	this->_name = rhs._name;
 	return (*this);
@@ -20,12 +20,12 @@ Channel & Channel::operator=(const Channel &rhs)
 
 // Functions
 
-Channel		*Channel::clone(void) const
+Channel					*Channel::clone(void) const
 {
 	return (new Channel(*this));
 }
 
-bool		Channel::belong_channel(int fd)
+bool					Channel::belong_channel(int fd)
 {
 	for (iterator ituser = _users.begin(); ituser != _users.end(); ++ituser)
 	{
@@ -77,7 +77,7 @@ std::string				Channel::getTopic(void) const
 	return (this->_topic);
 }
 
-std::string Channel::getName(void) const
+std::string				Channel::getName(void) const
 {
 	return (this->_name);
 }

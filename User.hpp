@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   User.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:55:35 by aleon-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
 # include <list>
@@ -66,7 +54,7 @@ class User
 		void					deleteChannel(const std::string &name);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
-		void					message(Server serv, char *buff, int nbytes);
+		void					message(Server &serv, char *buff, int nbytes);
 		//otros métodos de command
 		bool					is_in_same_channels(int fd);
 };

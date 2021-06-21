@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:44:20 by aleon-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 
 Server::Server(void)
@@ -23,7 +11,9 @@ Server::~Server(void)
 	for (c_iterator it2 = _channels.begin(); it2 != _channels.end(); ++it2)
 		delete *it2;
 	_channels.clear();
-	std::cout << "Server conf destroyed" << std::endl;
+	#ifdef DEBUG
+		std::cout << "Server conf destroyed" << std::endl;
+	#endif
 }
 
 Server::Server(const Server &other)
@@ -71,7 +61,9 @@ void	Server::start(const std::string &port_listen)
 	FD_ZERO(&_master);
 	FD_SET(_listener, &_master);
 	_max = _listener;
-	std::cout << "Server conf finished" << std::endl;
+	#ifdef DEBUG
+		std::cout << "Server conf finished" << std::endl;
+	#endif
 }
 
 void					Server::setMax(int max)
@@ -116,10 +108,14 @@ void					Server::addUser(void)
 		throw std::runtime_error(strerror(errno));
 	if (fcntl(newfd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error(strerror(errno));
-	_users.push_back(User(newfd).clone());
-	//RPL_WELCOME
-	//	buff = ":Welcome to the Internet Relay Network " + nick + "! "
-	//		+ user + "@HOST";
+	User temp(newfd);
+	_users.push_back(temp.clone());
+	#ifdef DEBUG
+		std::cout << "New User with socket " << temp.getSocket();
+		std::cout << " added." << std::endl;
+	#endif
+	std::string buff = ":Welcome to the Internet Relay Network!";
+	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
