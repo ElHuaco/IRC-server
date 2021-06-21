@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/21 10:19:38 by fjimenez         ###   ########.fr       */
+/*   Updated: 2021/06/21 10:35:54 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,8 +234,13 @@ int		Command::ftTOPIC()
 }
 
 
-int		Command::ftNAMES()
+int		Command::ftNAMES()//List all visible nicknames 
 {
+	std::list<User *> users = this->_server.getUsers();
+	std::list<User *>::iterator u_iter = users.begin();
+
+	for (; u_iter != users.end(); ++u_iter)
+		std::cout << (*u_iter)->getNickname() << std::endl;//Habrá que imprimir con un mensaje formateado
 	return (0);
 }
 
