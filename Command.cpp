@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 13:02:40 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/21 09:07:38 by mmonroy-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ Command::Command(std::string str, Server &server, User &commander) : _server(ser
 	this->_erroneous = new std::string[5];
 	if (!parseStr(str))
 		return ;					// Parse error
-	initCommands();
 //	execute();						// Should I?
 	return;
 }
@@ -30,23 +29,6 @@ Command::~Command(void)
 	delete[] this->_params;
 	delete[] this->_erroneous;
 	return ;
-}
-
-// Init
-void		Command::initCommands(void)
-{
-	this->_commandList["NICK"] = this->ftNICK();
-	/*this->_commandList["USER"] = this->ftUSER;
- 	this->_commandList.insert(std::pair<std::string, int (**)()>("NICK", this->ftNICK()));
- 	this->_commandList.insert(std::pair<std::string, int>("USER", this->ftUSER()));
- 	this->_commandList.insert(std::pair<std::string, int>("OPER", this->ftOPER()));
- 	this->_commandList.insert(std::pair<std::string, int>("QUIT", this->ftQUIT()));
- 	this->_commandList.insert(std::pair<std::string, int>("JOIN", this->ftJOIN()));
- 	this->_commandList.insert(std::pair<std::string, int>("PART", this->ftPART()));
- 	this->_commandList.insert(std::pair<std::string, int>("TOPIC", this->ftTOPIC()));
- 	this->_commandList.insert(std::pair<std::string, int>("NAMES", this->ftNAMES()));
- 	this->_commandList.insert(std::pair<std::string, int>("LIST", this->ftLIST()));
- 	this->_commandList.insert(std::pair<std::string, int>("KICK", this->ftKICK()));*/
 }
 
 // Parser
@@ -80,13 +62,27 @@ int		Command::parseStr(std::string str)
 // Execute
 int			Command::execute(void)
 {
-	//std::map<std::string, ftcmd>::iterator it;
-	//ftcmd aux = this->_commandList[this->_command];
-	/*for (it = this->_commandList.begin(); it != this->_commandList.end(); ++it)
-		if (it->first == this->_command)
-			return (it->second());*/
-	//if (it == this->_commandList.end())
-		//return (-1);						// Error, bad command.
+	if (this->_command == "NICK")
+		return (this->ftNICK());
+	else if (this->_command == "USER")
+		return (this->ftUSER());
+	else if (this->_command == "OPER")
+		return (this->ftOPER());
+	else if (this->_command == "QUIT")
+		return (this->ftQUIT());
+	else if (this->_command == "JOIN")
+		return (this->ftJOIN());
+	else if (this->_command == "PART")
+		return (this->ftPART());
+	else if (this->_command == "TOPIC")
+		return (this->ftTOPIC());
+	else if (this->_command == "NAMES")
+		return (this->ftNAMES());
+	else if (this->_command == "LIST")
+		return (this->ftKICK());
+	else if (this->_command == "KICK")
+		return (this->ftKICK());
+	return (-1);
 }
 
 // Commands
@@ -189,7 +185,7 @@ int		Command::ftJOIN()
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum == 0)
 	{
-		this->_erroneus[0] = this->_command;
+		this->_erroneous[0] = this->_command;
 		return (461);
 	}
 	// Limit of channels at one time?
@@ -213,7 +209,7 @@ int		Command::ftJOIN()
 		aux = this->_server.getChannelName(this->_params[i]);
 		if (!aux)
 		{
-			this->_erroneus[j++] = this->_params[i];
+			this->_erroneous[j++] = this->_params[i];
 			//return (403);
 		}
 		else
