@@ -24,7 +24,7 @@ int		Command::parseStr(std::string str)
 {
 	char *aux;
 	if ((aux = strtok((char*)str.c_str(), " ")) == 0)
-		return (-1);							// Error, the string is empty.
+		return (-1);						// Error, the string is empty.
 	if (str[0] == ':')					// If there is a prefix. Save prefix + command.
 	{
 		this->_prefix = aux;
@@ -34,13 +34,13 @@ int		Command::parseStr(std::string str)
 	}
 	else									// If there isn't a prefix. Save command.
 	{
-		this->_prefix = nullptr;
+		//this->_prefix = nullptr;
 		this->_command = aux;
 	}
 	int i = 0;
 	while (aux != 0 && i < 5)				// While there are parameters, save them.
 	{
-		aux = strtok(0, "0");
+		//aux = strtok(0, "0");
 		this->_params[i++] = aux;
 	}
 	this->_paramsNum = i;
@@ -67,9 +67,11 @@ int			Command::execute(void)
 	else if (this->_command == "NAMES")
 		return (this->ftNAMES());
 	else if (this->_command == "LIST")
-		return (this->ftKICK());
+		return (this->ftLIST());
 	else if (this->_command == "KICK")
 		return (this->ftKICK());
+	else if (this->_command == "PRIVMSG")
+		return (this->ftPRIVMSG());
 	return (-1);
 }
 
@@ -250,6 +252,12 @@ int		Command::ftLIST()//list channels & their topics
 
 
 int		Command::ftKICK()
+{
+	return (0);
+}
+
+
+int		Command::ftPRIVMSG()
 {
 	return (0);
 }

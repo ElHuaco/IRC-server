@@ -7,10 +7,14 @@
 static bool	is_cmd(const std::string &str)
 {
 	int len = str.find(' ');
-	if (str.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, len - 1)
-		!= std::string::npos)
-		return (false);
-	return (true);
+	std::string aux;
+	// if (str.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, len - 1)
+	// 	!= std::string::npos)
+	// 	return (false);
+	aux = str.substr(0, len);
+	if (aux == "JOIN")//Así para todos los commands??
+		return (true);
+	return (false);
 }
 
 std::string	*ft_argv_parser(int argc, char **argv)
@@ -84,7 +88,8 @@ int main(int argc, char **argv)
 			// entonces command.execute(server, ...) o se envía el mensaje.
 			else
 			{
-				char buff[412];
+				char buff[4096];
+				std::memset(buff, 0, sizeof buff);
 				int nbytes;
 				if ((nbytes = recv(i, buff, sizeof buff, 0)) <= 0)
 				{
@@ -101,6 +106,7 @@ int main(int argc, char **argv)
 				}
 				else
 				{
+					
 					std::string info(buff);
 					#ifdef DEBUG
 						std::cout << "Searching for socket client..." << std::endl;
@@ -110,6 +116,7 @@ int main(int argc, char **argv)
 						std::cout << "Found client for socket " << i;
 						std::cout << "." << std::endl;
 					#endif
+					
 					if (is_cmd(info) == true)
 					{
 						int key;
@@ -119,7 +126,9 @@ int main(int argc, char **argv)
 								cmd.getErroneous(), key, *client);
 					}
 					else
+					{
 						client->message(server, buff, nbytes);
+					}
 				}
 			}
 		}

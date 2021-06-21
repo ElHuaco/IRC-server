@@ -45,4 +45,5 @@ class Command
 		int				ftNAMES();
 		int				ftLIST();
 		int				ftKICK();
+		int				ftPRIVMSG();
 };
