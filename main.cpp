@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 13:09:28 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/21 09:36:17 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,13 @@ int main(int argc, char **argv)
 				continue ;
 			if (i == server.getListener())
 			{
-				std::cout << "Creating new connection..." << std::endl;
+				#ifdef DEBUG
+					std::cout << "Creating new connection..." << std::endl;
+				#endif
 				server.addUser();
-				std::cout << "New connection. " << std::endl;
+				#ifdef DEBUG
+					std::cout << "New connection registered. " << std::endl;
+				#endif
 			}
 			//Si no es nueva conexión, parsea para ver si es un Command y 
 			// entonces command.execute(server, ...) o se envía el mensaje.

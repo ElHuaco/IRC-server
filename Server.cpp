@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 13:13:30 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/21 09:34:49 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ Server::~Server(void)
 	for (c_iterator it2 = _channels.begin(); it2 != _channels.end(); ++it2)
 		delete *it2;
 	_channels.clear();
-	std::cout << "Server conf destroyed" << std::endl;
+	#ifdef DEBUG
+		std::cout << "Server conf destroyed" << std::endl;
+	#endif
 }
 
 Server::Server(const Server &other)
@@ -71,7 +73,9 @@ void	Server::start(const std::string &port_listen)
 	FD_ZERO(&_master);
 	FD_SET(_listener, &_master);
 	_max = _listener;
-	std::cout << "Server conf finished" << std::endl;
+	#ifdef DEBUG
+		std::cout << "Server conf finished" << std::endl;
+	#endif
 }
 
 void					Server::setMax(int max)
@@ -116,14 +120,14 @@ void					Server::addUser(void)
 		throw std::runtime_error(strerror(errno));
 	if (fcntl(newfd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error(strerror(errno));
-	std::cout << "Prueba nullptr..." << std::endl;
-	_users.push_back(nullptr);
-	std::cout << "Adding clone to user list..." << std::endl;
 	User temp(newfd);
 	_users.push_back(temp.clone());
-	std::cout << " Done." << std::endl;
-	std::string buff = ":Welcome to the Internet Relay Network!";
-	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
+	#ifdef DEBUG
+		std::cout << "New User with socket " << temp.getSocket();
+		std::cout << " added." << std::endl;
+	#endif
+//	std::string buff = ":Welcome to the Internet Relay Network!";
+//	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;

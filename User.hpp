@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 10:40:36 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:55:35 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/21 09:39:43 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ class User
 		void					deleteChannel(const std::string &name);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
-		void					message(Server serv, char *buff, int nbytes);
+		void					message(Server &serv, char *buff, int nbytes);
 		//otros métodos de command
 		bool					is_in_same_channels(int fd);
 };
