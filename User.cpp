@@ -124,7 +124,16 @@ void					User::message(Server &server, char *buff, int nbytes)
 	{
 		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
 			&& j != _socket) //&& this->is_in_same_joinedChannels(j)
+		{
+			#ifdef DEBUG
+				std::cout << "\tSocket User " << _socket << " sending";
+				std::cout << " message to socket " << j << "." << std::endl;
+			#endif
 			if (send(j, buff, nbytes, 0) == -1)
 				throw std::runtime_error(strerror(errno));
+			#ifdef DEBUG
+				std::cout << "\tMessage [" << buff << "] sent." << std::endl;
+			#endif
+		}
 	}
 }

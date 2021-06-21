@@ -71,6 +71,7 @@ int main(int argc, char **argv)
 					std::cout << "Creating new connection..." << std::endl;
 				#endif
 				server.addUser();
+				//Autentificar??
 				#ifdef DEBUG
 					std::cout << "New connection registered. " << std::endl;
 				#endif
@@ -85,12 +86,26 @@ int main(int argc, char **argv)
 				{
 					if (nbytes != 0)
 						throw std::runtime_error(strerror(errno));
+					#ifdef DEBUG
+						std::cout << "Closing connection..." << std::endl;
+					#endif
 					server.deleteUser(i);
+					#ifdef DEBUG
+						std::cout << "Closed " << i;
+						std::cout << " socket connection." << std::endl;
+					#endif
 				}
 				else
 				{
 					std::string info(buff);
+					#ifdef DEBUG
+						std::cout << "Searching for socket client..." << std::endl;
+					#endif
 					User *client = server.getSocketUser(i);
+					#ifdef DEBUG
+						std::cout << "Found client for socket " << i;
+						std::cout << "." << std::endl;
+					#endif
 					if (is_cmd(info) == true)
 					{
 //						int key;
