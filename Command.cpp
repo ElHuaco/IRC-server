@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/15 10:58:16 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/21 09:07:38 by mmonroy-         ###   ########.fr       */
+/*   Updated: 2021/06/21 10:19:38 by fjimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,8 +240,16 @@ int		Command::ftNAMES()
 }
 
 
-int		Command::ftLIST()
+int		Command::ftLIST()//list channels & their topics
 {
+	std::list<Channel *> channels = this->_server.getChannels();
+	std::list<Channel *>::iterator c_iter = channels.begin();
+
+	for (; c_iter != channels.end(); ++c_iter)
+	{
+		std::cout << (*c_iter)->getName() << std::endl;
+		std::cout << (*c_iter)->getTopic() << std::endl;//Habrá que imprimir con un mensaje formateado
+	}
 	return (0);
 }
 
