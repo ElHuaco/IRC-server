@@ -22,26 +22,20 @@ Command::~Command(void)
 // Parser
 int		Command::parseStr(std::string str)
 {
-	char *aux;
-	if ((aux = strtok((char*)str.c_str(), " ")) == 0)
+	//std::string *aux;
+	if (str.empty())
 		return (-1);						// Error, the string is empty.
-	if (str[0] == ':')					// If there is a prefix. Save prefix + command.
-	{
-		this->_prefix = aux;
-		if ((aux = strtok(0, " ")) == 0)
-			return (-1);						// Error, the string doesn't have a command.
-		this->_command = aux;
-	}
-	else									// If there isn't a prefix. Save command.
-	{
-		//this->_prefix = nullptr;
-		this->_command = aux;
-	}
+	int pos1 = 0;
+	int pos2 = str.find(" ");
+	this->_command = str.substr(pos1, pos2);
 	int i = 0;
-	while (aux != 0 && i < 5)				// While there are parameters, save them.
+	while (i < 5)				// While there are parameters, save them.
 	{
-		//aux = strtok(0, "0");
-		this->_params[i++] = aux;
+		pos1 = pos2;
+		pos2 += str.find(" ", aux + 1);
+		if (pos2 != string::npos)
+			break;
+		this->_params[i++] = str.substr(pos1, pos2);
 	}
 	this->_paramsNum = i;
 	return (0);
