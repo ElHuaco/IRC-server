@@ -41,7 +41,7 @@ void					Channel::addUser(User *user)
 	return ;
 }
 
-void					Channel::getOutUser(User *user)
+void					Channel::deleteUser(User *user)
 {
 	this->_users.remove(user);
 	return ;
@@ -53,7 +53,7 @@ void					Channel::addChanop(User *chanop)
 	return ;
 }
 
-void					Channel::getOutChanop(User *chanop)
+void					Channel::deleteChanop(User *chanop)
 {
 	this->_chanops.remove(chanop);
 	return ;

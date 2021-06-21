@@ -35,9 +35,9 @@ class Channel
 		Channel				*clone(void) const;
 		bool				belong_channel(int fd);
 		void				addUser(User *user);
-		void				getOutUser(User  *user);
+		void				deleteUser(User  *user);
 		void				addChanop(User *chanop);
-		void				getOutChanop(User  *chanop);
+		void				deleteChanop(User  *chanop);
 
 	//	Getters + Setters
 		std::string			getName(void) const;
