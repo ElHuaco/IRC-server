@@ -201,13 +201,19 @@ int		Command::ftJOIN()
 		{
 			Channel *chan = new Channel(this->_params[i]);
 			this->_server.addChannel(chan);
-			//this->_erroneous[j++] = this->_params[i];
-			//return (403);
+			// this->_erroneous[j++] = this->_params[i];
+			// return (403);
 		}
 		else
 		{
-			//getTopic.
-			//Meter user en la lista.
+			std::list<Channel *>::iterator it;
+			for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
+				if ((*it)->getName() == this->_params[i])
+				{
+					this->_commander.addChannel(*it);
+					// Imprimir topic
+					// return (381);
+				}
 		}
 	}
 	return (0);
