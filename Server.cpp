@@ -114,7 +114,7 @@ void					Server::addUser(void)
 		std::cout << "New User with socket " << temp.getSocket();
 		std::cout << " added." << std::endl;
 	#endif
-	std::string buff = ":Welcome to the Internet Relay Network!";
+	std::string buff = ":Welcome to the Internet Relay Network!\r\n";
 	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
