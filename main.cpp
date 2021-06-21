@@ -112,6 +112,7 @@ int main(int argc, char **argv)
 					#endif
 					if (is_cmd(info) == true)
 					{
+						std::cout << "IS COMMAND\n";
 						int key;
 						Command cmd(info, server, *client);
 						if ((key = cmd.execute() > 400))
@@ -119,7 +120,10 @@ int main(int argc, char **argv)
 								cmd.getErroneous(), key, *client);
 					}
 					else
+					{
+						std::cout << "IS MESSAGE\n";
 						client->message(server, buff, nbytes);
+					}
 				}
 			}
 		}
