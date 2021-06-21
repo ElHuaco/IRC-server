@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/21 09:34:49 by alejandro        ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 
 Server::Server(void)
@@ -126,8 +114,8 @@ void					Server::addUser(void)
 		std::cout << "New User with socket " << temp.getSocket();
 		std::cout << " added." << std::endl;
 	#endif
-//	std::string buff = ":Welcome to the Internet Relay Network!";
-//	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
+	std::string buff = ":Welcome to the Internet Relay Network!";
+	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
