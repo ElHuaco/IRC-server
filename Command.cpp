@@ -199,7 +199,7 @@ int		Command::ftJOIN()
 		{
 			Channel *chan = new Channel(this->_params[i]);
 			this->_server.addChannel(chan);
-			this->_erroneous[j++] = this->_params[i];
+			//this->_erroneous[j++] = this->_params[i];
 			//return (403);
 		}
 		else
