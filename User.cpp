@@ -15,11 +15,28 @@ User::~User(void)
 	_joinedChannels.clear();
 	return;
 }
+User::User(const User &other)
+{
+	*this = other;
+}
+User		&User::operator=(const User &rhs)
+{
+	if (this == &rhs)
+		return *this;
+ 	_socket = rhs._socket;
+ 	_hopcount = rhs._hopcount;
+ 	_nickname = rhs._nickname;
+ 	_username = rhs._username;
+ 	_realname = rhs._realname;
+ 	_password = rhs._password;
+ 	_hostname = rhs._hostname;
+ 	_isOP = rhs._isOP;
+	//Hay que clonar los canales en User??
+	return (*this);
+}
 
-#include <iostream>
 User					*User::clone(void) const
 {
-	std::cout << "Cloning user..." << std::endl;
 	return (new User(_socket));
 }
 
@@ -123,7 +140,7 @@ void					User::message(Server &server, char *buff, int nbytes)
 	for (int j = 0; j <= server.getMax(); ++j)
 	{
 		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-			&& j != _socket) //&& this->is_in_same_joinedChannels(j)
+			&& j != _socket && this->is_in_same_channels(j))
 		{
 			#ifdef DEBUG
 				std::cout << "\tSocket User " << _socket << " sending";

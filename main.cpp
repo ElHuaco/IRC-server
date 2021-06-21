@@ -1,12 +1,16 @@
 #include "Server.hpp"
-//#include "Command.hpp"
+#include "Command.hpp"
 #include <iostream>
 
 //signal_handlers con signal(SIGKILL)
 
 static bool	is_cmd(const std::string &str)
 {
-	return (false);
+	int len = str.find(' ');
+	if (str.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, len - 1)
+		!= std::string::npos)
+		return (false);
+	return (true);
 }
 
 std::string	*ft_argv_parser(int argc, char **argv)
@@ -108,11 +112,11 @@ int main(int argc, char **argv)
 					#endif
 					if (is_cmd(info) == true)
 					{
-//						int key;
-//						Command cmd(info, server, *client);
-//						if ((key = cmd.execute() > 400))
-//							server.error_reply(cmd.getCommand(),
-//								cmd.getErroneous(), key, *client);
+						int key;
+						Command cmd(info, server, *client);
+						if ((key = cmd.execute() > 400))
+							server.error_reply(cmd.getCommand(),
+								cmd.getErroneous(), key, *client);
 					}
 					else
 						client->message(server, buff, nbytes);
