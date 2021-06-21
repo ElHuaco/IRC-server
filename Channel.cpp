@@ -1,5 +1,7 @@
 #include "Channel.hpp"
 
+// Constructors  + Destructor + '=' operator
+
 Channel::Channel(std::string &name): _name(name) {}
 
 Channel::~Channel() {}
@@ -15,10 +17,8 @@ Channel & Channel::operator=(const Channel &rhs)
 	return (*this);
 }
 
-std::string Channel::getName(void) const
-{
-	return (this->_name);
-}
+
+// Functions
 
 Channel		*Channel::clone(void) const
 {
@@ -35,22 +35,57 @@ bool		Channel::belong_channel(int fd)
 	return (false);
 }
 
-std::list <User *> Channel::getListUsers() const
+void					Channel::addUser(User *user)
+{
+	this->_users.push_back(user);
+	return ;
+}
+
+void					Channel::getOutUser(User *user)
+{
+	this->_users.remove(user);
+	return ;
+}
+
+void					Channel::addChanop(User *chanop)
+{
+	this->_chanops.push_back(chanop);
+	return ;
+}
+
+void					Channel::getOutChanop(User *chanop)
+{
+	this->_chanops.remove(chanop);
+	return ;
+}
+
+
+//	Getters
+
+std::list <User *>		Channel::getListUsers() const
 {
 	return (this->_users);
 }
 
-std::string	Channel::getTopic(void) const
+std::list <User *>		Channel::getListChanops() const
+{
+	return (this->_chanops);
+}
+
+std::string				Channel::getTopic(void) const
 {
 	return (this->_topic);
 }
 
-void	Channel::setNewUser(User *newuser)
+std::string Channel::getName(void) const
 {
-	this->_users.push_back(newuser->clone());
+	return (this->_name);
 }
 
-void	Channel::setTopic(std::string topic)
+
+//	Setters
+
+void					Channel::setTopic(std::string topic)
 {
 	this->_topic = topic;
 }
