@@ -222,14 +222,27 @@ int		Command::ftTOPIC()
 }
 
 
-int		Command::ftNAMES()
+int		Command::ftNAMES()//List all visible nicknames 
 {
+	std::list<User *> users = this->_server.getUsers();
+	std::list<User *>::iterator u_iter = users.begin();
+
+	for (; u_iter != users.end(); ++u_iter)
+		std::cout << (*u_iter)->getNickname() << std::endl;//Habrá que imprimir con un mensaje formateado
 	return (0);
 }
 
 
-int		Command::ftLIST()
+int		Command::ftLIST()//list channels & their topics
 {
+	std::list<Channel *> channels = this->_server.getChannels();
+	std::list<Channel *>::iterator c_iter = channels.begin();
+
+	for (; c_iter != channels.end(); ++c_iter)
+	{
+		std::cout << (*c_iter)->getName() << std::endl;
+		std::cout << (*c_iter)->getTopic() << std::endl;//Habrá que imprimir con un mensaje formateado
+	}
 	return (0);
 }
 
