@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 09:56:29 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:42:54 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 13:09:28 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int main(int argc, char **argv)
 				continue ;
 			if (i == server.getListener())
 			{
+				std::cout << "Creating new connection..." << std::endl;
 				server.addUser();
 				std::cout << "New connection. " << std::endl;
 			}

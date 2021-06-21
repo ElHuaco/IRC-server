@@ -6,7 +6,7 @@
 /*   By: mmonroy- <mmonroy-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 13:09:22 by mmonroy-          #+#    #+#             */
-/*   Updated: 2021/06/18 12:59:37 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 13:07:13 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ User::~User(void)
 	return;
 }
 
+#include <iostream>
 User					*User::clone(void) const
 {
+	std::cout << "Cloning user..." << std::endl;
 	return (new User(_socket));
 }
 

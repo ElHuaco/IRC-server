@@ -6,7 +6,7 @@
 /*   By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 09:56:15 by aleon-ca          #+#    #+#             */
-/*   Updated: 2021/06/18 12:44:20 by aleon-ca         ###   ########.fr       */
+/*   Updated: 2021/06/18 13:13:30 by aleon-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,14 @@ void					Server::addUser(void)
 		throw std::runtime_error(strerror(errno));
 	if (fcntl(newfd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error(strerror(errno));
-	_users.push_back(User(newfd).clone());
-	//RPL_WELCOME
-	//	buff = ":Welcome to the Internet Relay Network " + nick + "! "
-	//		+ user + "@HOST";
+	std::cout << "Prueba nullptr..." << std::endl;
+	_users.push_back(nullptr);
+	std::cout << "Adding clone to user list..." << std::endl;
+	User temp(newfd);
+	_users.push_back(temp.clone());
+	std::cout << " Done." << std::endl;
+	std::string buff = ":Welcome to the Internet Relay Network!";
+	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
