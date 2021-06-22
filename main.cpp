@@ -120,16 +120,17 @@ std::cout << "Checking " << i << std::endl;
 					
 					if (is_cmd(info) == true)
 					{
-						std::cout << "IS COMMAND\n";
-						int key;
+						#ifdef DEBUG
+							std::cout << "IS COMMAND\n";
+						#endif
 						Command cmd(info, server, *client);
-						if ((key = cmd.execute() > 400))
-							server.error_reply(cmd.getCommand(),
-								cmd.getErroneous(), key, *client);
+						cmd.execute();
 					}
 					else
 					{
-						std::cout << "IS MESSAGE\n";
+						#ifdef DEBUG
+							std::cout << "IS MESSAGE\n";
+						#endif
 						client->message(server, buff, nbytes);
 					}
 				}

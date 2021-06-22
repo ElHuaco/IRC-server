@@ -10,8 +10,8 @@ class Command
 	private:
 		//cadenas prefix, nombre, params
 		//int _num_params
-		Server					_server;
-		User					_commander;
+		Server					&_server;
+		User					&_commander;
 		std::string				_prefix;
 		std::string				_command;
 		std::string				*_params;
@@ -32,18 +32,19 @@ class Command
 
 		// Functions
 		int				parseStr(std::string str);
-		int				execute();
+		void			execute();
+		void			numeric_reply(int key);
 
 		// Commands
-		int				ftNICK();
-		int				ftUSER();
-		int				ftOPER();
-		int				ftQUIT();
-		int				ftJOIN();
-		int				ftPART();
-		int				ftTOPIC();
-		int				ftNAMES();
-		int				ftLIST();
-		int				ftKICK();
-		int				ftPRIVMSG();
+		void				ftNICK();
+		void				ftUSER();
+		void				ftOPER();
+		void				ftQUIT();
+		void				ftJOIN();
+		void				ftPART();
+		void				ftTOPIC();
+		void				ftNAMES();
+		void				ftLIST();
+		void				ftKICK();
+		void				ftPRIVMSG();
 };

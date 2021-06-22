@@ -38,57 +38,59 @@ int		Command::parseStr(std::string str)
 			break;
 		this->_params[i++] = str.substr(pos1, pos2 - pos1);
 	}
+	#ifdef DEBUG
+		std::cout << "Ended parser." << std::endl;
+	#endif
 	this->_paramsNum = i;
 	return (0);
 }
 
 // Execute
-int			Command::execute(void)
+void		Command::execute(void)
 {
 	if (this->_command == "NICK")
-		return (this->ftNICK());
+		this->ftNICK();
 	else if (this->_command == "USER")
-		return (this->ftUSER());
+		this->ftUSER();
 	else if (this->_command == "OPER")
-		return (this->ftOPER());
+		this->ftOPER();
 	else if (this->_command == "QUIT")
-		return (this->ftQUIT());
+		this->ftQUIT();
 	else if (this->_command == "JOIN")
-		return (this->ftJOIN());
+		this->ftJOIN();
 	else if (this->_command == "PART")
-		return (this->ftPART());
+		this->ftPART();
 	else if (this->_command == "TOPIC")
-		return (this->ftTOPIC());
+		this->ftTOPIC();
 	else if (this->_command == "NAMES")
-		return (this->ftNAMES());
+		this->ftNAMES();
 	else if (this->_command == "LIST")
-		return (this->ftLIST());
+		this->ftLIST();
 	else if (this->_command == "KICK")
-		return (this->ftKICK());
+		this->ftKICK();
 	else if (this->_command == "PRIVMSG")
-		return (this->ftPRIVMSG());
-	return (421);
+		this->ftPRIVMSG();
 }
 
 // Commands
-int			Command::ftNICK()
+void			Command::ftNICK()
 {
 	// Checking if a nickname has been provided.					(ERR_NONICKNAMEGIVEN)
 	if (this->_paramsNum == 0)
-		return (431);
+		this->numeric_reply(431);
 
 	// Checking that the nickname isn't erroneous.					(ERR_ERRONEUSNICKNAME)
 	int i = 0;
 	if (!isalpha(this->_params[0][i]))
 	{
 		this->_erroneous[0] = this->_params[0];
-		return (432);
+		this->numeric_reply(432);
 	}
 	while (this->_params[0][++i])
 		if (!isalnum(this->_params[0][i]))
 		{
 			this->_erroneous[0] = this->_params[0];
-			return (431);
+			this->numeric_reply(431);
 		}
 
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
@@ -97,53 +99,51 @@ int			Command::ftNICK()
 		if ((*it)->getNickname() == this->_params[0])
 		{
 			this->_erroneous[0] = this->_params[0];
-			return (433);
+			this->numeric_reply(433);
 		}
 
 	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION)
-	//return (436);
+	//this->numeric_reply(436);
 
 	// Changing the nickname
 	this->_commander.setNickname(this->_params[0]); 
-	return (0);
 }
 
 
-int		Command::ftUSER()
+void		Command::ftUSER()
 {
 	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 4)
 	{
 		this->_erroneous[0] = this->_command;
-		return (461);
+		this->numeric_reply(461);
 	}
 		
 	// Checking if the client is already registered.	(ERR_ALREADYRESGISTRED)
 	if (!this->_commander.getUsername().empty())
-		return (462);
+		this->numeric_reply(462);
 	
 	// Registering, hostname and server parameters are ignored.
 	this->_commander.setUsername(this->_params[0]);
 	this->_commander.setRealname(this->_params[3]);
-	return (0);
 }
 
 
-int		Command::ftOPER()
+void		Command::ftOPER()
 {
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
 	{
 		this->_erroneous[0] = this->_command;
-		return (461);
+		this->numeric_reply(461);
 	}
 
 	// Not needed if we dont use other hosts.			(ERR_NOOPERHOST)
-		//return (491);
+		//this->numeric_reply(491);
 
 	// Checking if the password is valid.				(ERR_PASSWDMISMATCH)
 	if (this->_server.getPassword() != this->_params[1])
-		return (464);
+		this->numeric_reply(464);
 
 	// Searching the user/nick and OP.					(RPL_YOUREOPER)
 	std::list<User *>::iterator it;
@@ -151,21 +151,19 @@ int		Command::ftOPER()
 		if ((*it)->getNickname() == this->_params[0] || (*it)->getUsername() == this->_params[0])
 		{
 			this->_commander.setIsOP(true);
-			return (381);
+			this->numeric_reply(381);
 		}
 	// If no user/nick, standar return?
-	return (0);
 }
 
 
-int		Command::ftQUIT()
+void		Command::ftQUIT()
 {
 	// Client only?
-	return (0);
 }
 
 
-int		Command::ftJOIN()
+void		Command::ftJOIN()
 {
 	#ifdef DEBUG
 		std::cout << "Entered JOIN..." << std::endl;
@@ -174,7 +172,7 @@ int		Command::ftJOIN()
 	if (this->_paramsNum == 0)
 	{
 		this->_erroneous[0] = this->_command;
-		return (461);
+		this->numeric_reply(461);
 	}
 	// Limit of channels at one time?
 	
@@ -202,10 +200,11 @@ int		Command::ftJOIN()
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
 			//Mensaje, RPL_TOPIC, RPL_USERLIST
-			//std::string mess = "Joined channel.";
-			//send(_commander.getSocket(), mess.c_str(), strlen(mess.c_str()), 0);
+			//send("JOIN");
+			//numeric_reply(332);
+			//numeric_reply(353);
 			// this->_erroneous[j++] = this->_params[i];
-			// return (403);
+			// this->numeric_reply(403);
 		}
 		else
 		{
@@ -215,38 +214,34 @@ int		Command::ftJOIN()
 				{
 					this->_commander.addChannel(*it);
 					// Imprimir topic
-					// return (381);
+					// this->numeric_reply(381);
 				}
 		}
 	}
-	return (0);
 }
 
 
-int		Command::ftPART()
+void		Command::ftPART()
 {
-	return (0);
 }
 
 
-int		Command::ftTOPIC()
+void		Command::ftTOPIC()
 {
-	return (0);
 }
 
 
-int		Command::ftNAMES()//List all visible nicknames 
+void		Command::ftNAMES()//List all visible nicknames 
 {
 	std::list<User *> users = this->_server.getUsers();
 	std::list<User *>::iterator u_iter = users.begin();
 
 	for (; u_iter != users.end(); ++u_iter)
 		std::cout << (*u_iter)->getNickname() << std::endl;//Habrá que imprimir con un mensaje formateado
-	return (0);
 }
 
 
-int		Command::ftLIST()//list channels & their topics
+void		Command::ftLIST()//list channels & their topics
 {
 	std::list<Channel *> channels = this->_server.getChannels();
 	std::list<Channel *>::iterator c_iter = channels.begin();
@@ -256,19 +251,16 @@ int		Command::ftLIST()//list channels & their topics
 		std::cout << (*c_iter)->getName() << std::endl;
 		std::cout << (*c_iter)->getTopic() << std::endl;//Habrá que imprimir con un mensaje formateado
 	}
-	return (0);
 }
 
 
-int		Command::ftKICK()
+void		Command::ftKICK()
 {
-	return (0);
 }
 
 
-int		Command::ftPRIVMSG()
+void		Command::ftPRIVMSG()
 {
-	return (0);
 }
 
 // Getters + Setters
@@ -284,4 +276,79 @@ std::string		*Command::getParams(void) const
 std::string		*Command::getErroneous(void) const
 {
 	return (this->_erroneous);
+}
+
+void			Command::numeric_reply(int key)
+{
+	std::string buff = ":127.0.0.1 " + std::to_string(key);
+	if (_erroneous != nullptr)
+	{
+		int i = -1;
+		while (_erroneous[++i].empty() == false)
+			buff += _erroneous[i];
+	}
+	if (key == 401)
+		buff += ":No such nick/channel";
+	else if (key == 403)
+		buff += ":No such channel";
+	else if (key == 404)
+		buff += ":Cannot send to channel";
+	else if (key == 405)
+		buff += ":You have joined too many channels";
+	else if (key == 407)
+		buff += ":Too many recipients/targets";
+	else if (key == 411)
+		buff += ":No recipient given (" + _command + ")";
+	else if (key == 412)
+		buff += ":No text to send";
+	else if (key == 413)
+		buff += ":No toplevel domain specified";
+	else if (key == 414)
+		buff += ":Wildcard in toplevel domain";
+	else if (key == 421)
+		buff += _command + " :Unknown command";
+	else if (key == 431)
+		buff += ":No nickname given";
+	else if (key == 432)
+		buff += ":Erroneous nickname";
+	else if (key == 433)
+		buff += ":Nickname is already in use";
+	else if (key == 436)
+		buff += ":Nickname collision KILL from " + _commander.getNickname()
+			+ "@HOST";
+	else if (key == 437)
+		buff += ":Nick/channel is temporarily unavailable";
+	else if (key == 441)
+		buff += ":They aren't on that channel";
+	else if (key == 442)
+		buff += ":You're not on a channel";
+	else if (key == 461)
+		buff += _command + ":Not enough parameters";
+	else if (key == 462)
+		buff += ":Unauthorized command (already registered)";
+	else if (key == 464)
+		buff += ":Password incorrect";
+	else if (key == 471)
+		buff += " :Cannot join channel (+l)";
+	else if (key == 473)
+		buff += " :Cannot join channel (+i)";
+	else if (key == 474)
+		buff += " :Cannot join channel (+b)";
+	else if (key == 475)
+		buff += " :Cannot join channel (+k)";
+	else if (key == 476)
+		buff += " :Bad Channel Mask";
+	else if (key == 477)
+		buff += " :Channel doesn't support modes";
+	else if (key == 482)
+		buff += " :You're not channel operator";
+	else if (key == 484)
+		buff += ":Your connection is restricted!";
+	else if (key == 491)
+		buff += ":No O-lines for your host";
+	buff += _commander.getNickname();
+	buff += "\r\n";
+	int nbytes = strlen(buff.c_str());
+	if (send(_commander.getSocket(), buff.c_str(), nbytes, 0) == -1)
+		throw std::runtime_error(strerror(errno));
 }
