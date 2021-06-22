@@ -22,36 +22,29 @@ Command::~Command(void)
 // Parser
 int		Command::parseStr(std::string str)
 {
-	std::cout << "STR = \"" << str << "\"\n";
 	if (str.empty())
 		return (-1);						// Error, the string is empty.
 	int pos1 = 0;
 	int pos2 = str.find(" ");
-	std::cout << "Pos1 = " << pos1 << "\nPos2 = " << pos2 << "\n";
 	this->_command = str.substr(pos1, pos2);
-	std::cout << "Command = \"" << this->_command << "\"\n";
 	int i = 0;
 	while (i < 5)				// While there are parameters, save them.
 	{
 		pos1 = pos2 + 1;
 		pos2 = str.find(" ", pos1);
 		if (pos2 == std::string::npos)
-			pos2 = str.find("\n", pos1);
+			pos2 = str.find("\n", pos1) - 1;
 		if (pos2 <= pos1)
 			break;
-		std::cout << "Pos1 = " << pos1 << "\nPos2 = " << pos2 << "\n";
 		this->_params[i++] = str.substr(pos1, pos2 - pos1);
-		std::cout << i << " Parameter = \"" << this->_params[i - 1] << "\"\n";
 	}
 	this->_paramsNum = i;
-	std::cout << "End of Parser\n";
 	return (0);
 }
 
 // Execute
 int			Command::execute(void)
 {
-	return (1);
 	if (this->_command == "NICK")
 		return (this->ftNICK());
 	else if (this->_command == "USER")
