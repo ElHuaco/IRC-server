@@ -243,15 +243,30 @@ void		Command::ftNAMES()//List all visible nicknames
 
 void		Command::ftLIST()//list channels & their topics
 {
-	std::list<Channel *> channels = this->_server.getChannels();
-	std::list<Channel *>::iterator c_iter = channels.begin();
+	// std::list<Channel *> channels = this->_server.getChannels();
+	// std::list<Channel *>::iterator c_iter = channels.begin();
 
-	for (; c_iter != channels.end(); ++c_iter)
+	std::string aux;
+	aux.append(":127.0.0.1 322 ");
+	aux.append("#");
+	aux.append("Name channel ");
+	aux.append("NunUsers ");
+	aux.append("[topic]\n");
+
+	for (int j = 0; j <= this->_server.getMax(); ++j)
 	{
-		std::cout << "#" << (*c_iter)->getName() << "\t" \
-			<< this->_server.getNumUsers() << "\t" \
-			<< (*c_iter)->getTopic() << std::endl;
+		if (FD_ISSET(j, &this->_server.getMaster()))
+		{
+			send(j, aux.c_str(), strlen(aux.c_str()), 0);//asi funciona pero hay que mejorar
+		}
 	}
+
+	// for (; c_iter != channels.end(); ++c_iter)
+	// {
+	// 	std::cout << "#" << (*c_iter)->getName() << "\t" \
+	// 		<< this->_server.getNumUsers() << "\t" \
+	// 		<< (*c_iter)->getTopic() << std::endl;
+	// }
 }
 
 
