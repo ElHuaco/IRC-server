@@ -30,14 +30,14 @@ class Server
 		std::list<User *>		_users;
 		std::list<Channel *>	_channels;
 		int						_numusers;
+		Server	&operator=(const Server &rhs);
+		Server(const Server & other);
 		
 
 	public:
 		//Coplien
 		Server(void);
 		~Server(void);
-		Server	&operator=(const Server &rhs);
-		Server(const Server & other);
 
 		//Start configuration
 		void					start(const std::string &port);
@@ -52,9 +52,6 @@ class Server
 		Channel					*getChannelName(const std::string &str);
 		std::list <Channel *>	getChannels(void) const;
 		void					deleteChannel(const std::string &name);
-
-		void					error_reply(const std::string &cmd,
-				std::string *erroneous_arg, int key, const User &client);
 
 		//Get(set)ters
 		void					setMax(int max);
