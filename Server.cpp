@@ -114,7 +114,7 @@ void					Server::addUser(void)
 		std::cout << "New User with socket " << temp.getSocket();
 		std::cout << " added." << std::endl;
 	#endif
-	std::string buff = ":Welcome to the Internet Relay Network!\r\n";
+	std::string buff = "Welcome to the Internet Relay Network!\r\n";
 	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
@@ -297,4 +297,19 @@ void					Server::error_reply(const std::string &cmd,
 	int nbytes = strlen(buff.c_str());
 	if (send(client.getSocket(), buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
+}
+
+bool		Server::are_in_same_channels(int sender, int receiver)
+{
+	User *u1;
+	User *u2;
+	if ((u1 = this->getSocketUser(sender)) == nullptr ||
+		(u2 = this->getSocketUser(receiver)) == nullptr)
+		return false;
+	for (c_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if (u1->is_in_channel(*it) && u2->is_in_channel(*it))
+			return true;
+	}
+	return false;
 }

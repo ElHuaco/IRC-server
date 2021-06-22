@@ -40,7 +40,6 @@ class User
 		std::string				getRealname() const;
 		std::string				getHostname() const;
 		bool					getIsOP() const;
-//		std::list<Channel*>		getChannels() const;
 
 		void					setHopcount(int hopcount);
 		void					setNickname(std::string nickname);
@@ -50,12 +49,11 @@ class User
 
 		void					addChannel(Channel *chann);
 		Channel					*getChannelName(const std::string &str);
-		std::list <Channel *>	getChannels(void) const;
+		std::list <Channel *>	&getListChannels(void);
 		void					deleteChannel(const std::string &name);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
 		void					message(Server &serv, char *buff, int nbytes);
-		//otros métodos de command
-		bool					is_in_same_channels(int fd);
+		bool					is_in_channel(Channel *chan);
 };
 # include "Server.hpp"

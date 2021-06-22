@@ -25,28 +25,6 @@ Channel					*Channel::clone(void) const
 	return (new Channel(*this));
 }
 
-bool					Channel::belong_channel(int fd)
-{
-	for (iterator ituser = _users.begin(); ituser != _users.end(); ++ituser)
-	{
-		if ((*ituser)->getSocket() == fd)
-				return (true);
-	}
-	return (false);
-}
-
-void					Channel::addUser(User *user)
-{
-	this->_users.push_back(user);
-	return ;
-}
-
-void					Channel::deleteUser(User *user)
-{
-	this->_users.remove(user);
-	return ;
-}
-
 void					Channel::addChanop(User *chanop)
 {
 	this->_chanops.push_back(chanop);
@@ -61,11 +39,6 @@ void					Channel::deleteChanop(User *chanop)
 
 
 //	Getters
-
-std::list <User *>		Channel::getListUsers() const
-{
-	return (this->_users);
-}
 
 std::list <User *>		Channel::getListChanops() const
 {

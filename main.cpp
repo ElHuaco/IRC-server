@@ -86,7 +86,7 @@ std::cout << "Checking " << i << std::endl;
 			// entonces command.execute(server, ...) o se envía el mensaje.
 			else
 			{
-				char buff[4096];
+				char buff[512];
 				std::memset(buff, 0, sizeof buff);
 				int nbytes;
 				if ((nbytes = recv(i, buff, sizeof buff, 0)) <= 0)
@@ -136,4 +136,7 @@ std::cout << "Checking " << i << std::endl;
 			}
 		}
 	}
+#ifdef DEBUG
+	std::cout << "Exited the main loop." << std::endl;
+#endif
 }

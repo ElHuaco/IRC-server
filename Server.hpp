@@ -63,5 +63,7 @@ class Server
 		fd_set					&getMaster(void);
 		void					setPassword(const std::string &password);
 		std::string				getPassword(void) const;
+		//Message
+		bool					are_in_same_channels(int sender, int receiver);
 };
 #endif
