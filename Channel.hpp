@@ -15,13 +15,11 @@ class Channel
 
 	private:
 		//lista de usuarios en el canal
-		std::list<User *>		_users;
 		std::list<User *>		_chanops;
 		//un vector de chanops
 		//atributos de commands: mensaje del día, etc.
 		std::string	_name;
 		std::string _topic;
-		//std::map<std::string, ft_command>	_command_list; //Pasar el map de la lista de commands
 		Channel();
 
 	public:
@@ -33,15 +31,11 @@ class Channel
 
 	//	Functions
 		Channel				*clone(void) const;
-		bool				belong_channel(int fd);
-		void				addUser(User *user);
-		void				deleteUser(User  *user);
 		void				addChanop(User *chanop);
 		void				deleteChanop(User  *chanop);
 
 	//	Getters + Setters
 		std::string			getName(void) const;
-		std::list <User *>	getListUsers(void) const;
 		std::list <User *>	getListChanops(void) const;
 		std::string			getTopic(void) const;
 

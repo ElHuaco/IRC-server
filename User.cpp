@@ -10,8 +10,6 @@ User::User(int fd)
 
 User::~User(void)
 {
-	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
-		delete *it;
 	_joinedChannels.clear();
 	return;
 }
@@ -31,7 +29,8 @@ User		&User::operator=(const User &rhs)
  	_password = rhs._password;
  	_hostname = rhs._hostname;
  	_isOP = rhs._isOP;
-	//Hay que clonar los canales en User??
+	//Hay que clonar los canales en User?
+	//	NO, SOLO SERVER ALLOCA LA LISTA
 	return (*this);
 }
 
@@ -97,7 +96,8 @@ void					User::setIsOP(bool OP)
 
 void					User::addChannel(Channel *chann)
 {
-	_joinedChannels.push_back(chann->clone());
+	if (chann != nullptr)
+		_joinedChannels.push_back(chann);
 }
 Channel					*User::getChannelName(const std::string &str)
 {
@@ -108,7 +108,7 @@ Channel					*User::getChannelName(const std::string &str)
 	}
 	return (nullptr);
 }
-std::list <Channel *>	User::getChannels(void) const
+std::list <Channel *>	&User::getListChannels(void)
 {
 	return (_joinedChannels);
 }
@@ -118,7 +118,6 @@ void					User::deleteChannel(const std::string &name)
 	{
 		if ((*it)->getName() == name)
 		{
-			delete (*it);
 			_joinedChannels.erase(it);
 			return ;
 		}
@@ -126,21 +125,22 @@ void					User::deleteChannel(const std::string &name)
 	}
 }
 
-bool					User::is_in_same_channels(int fd)
+bool					User::is_in_channel(Channel *chan)
 {
 	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
 	{
-		if ((*it)->belong_channel(fd) == true)
+		if (*it == chan)
 			return true;
 	}
 	return false;
 }
+
 void					User::message(Server &server, char *buff, int nbytes)
 {
 	for (int j = 0; j <= server.getMax(); ++j)
 	{
 		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-			&& j != _socket && this->is_in_same_channels(j))
+			&& j != _socket && server.are_in_same_channels(_socket, j))
 		{
 			#ifdef DEBUG
 				std::cout << "\tSocket User " << _socket << " sending";
