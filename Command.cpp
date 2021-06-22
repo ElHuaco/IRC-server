@@ -36,7 +36,7 @@ int		Command::parseStr(std::string str)
 		pos1 = pos2 + 1;
 		pos2 = str.find(" ", pos1);
 		if (pos2 == std::string::npos)
-			pos2 = str.find("\n", pos1);
+			pos2 = str.find("\r", pos1);
 		if (pos2 <= pos1)
 			break;
 		std::cout << "Pos1 = " << pos1 << "\nPos2 = " << pos2 << "\n";
@@ -51,7 +51,6 @@ int		Command::parseStr(std::string str)
 // Execute
 int			Command::execute(void)
 {
-	return (1);
 	if (this->_command == "NICK")
 		return (this->ftNICK());
 	else if (this->_command == "USER")
@@ -74,7 +73,7 @@ int			Command::execute(void)
 		return (this->ftKICK());
 	else if (this->_command == "PRIVMSG")
 		return (this->ftPRIVMSG());
-	return (-1);
+	return (421);
 }
 
 // Commands
@@ -174,6 +173,9 @@ int		Command::ftQUIT()
 
 int		Command::ftJOIN()
 {
+	#ifdef DEBUG
+		std::cout << "Entered JOIN..." << std::endl;
+	#endif
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum == 0)
 	{
@@ -201,9 +203,13 @@ int		Command::ftJOIN()
 		aux = this->_server.getChannelName(this->_params[i]);
 		if (!aux)
 		{
-			Channel *chan = new Channel(this->_params[i]);
-			this->_server.addChannel(chan);
-			this->_commander.addChannel(chan);
+			aux = new Channel(_params[i]);
+			this->_server.addChannel(aux);
+			delete aux;
+			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
+			//Mensaje, RPL_TOPIC, RPL_USERLIST
+			//std::string mess = "Joined channel.";
+			//send(_commander.getSocket(), mess.c_str(), strlen(mess.c_str()), 0);
 			// this->_erroneous[j++] = this->_params[i];
 			// return (403);
 		}

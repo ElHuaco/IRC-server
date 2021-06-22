@@ -179,7 +179,8 @@ void					Server::deleteUser(const std::string &nick)
 }
 void					Server::addChannel(Channel *chann)
 {
-	_channels.push_back(chann->clone());
+	if (chann != nullptr)
+		_channels.push_back(chann->clone());
 }
 Channel					*Server::getChannelName(const std::string &str)
 {
