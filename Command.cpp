@@ -22,7 +22,6 @@ Command::~Command(void)
 // Parser
 int		Command::parseStr(std::string str)
 {
-	//std::string *aux;
 	if (str.empty())
 		return (-1);						// Error, the string is empty.
 	int pos1 = 0;
@@ -32,8 +31,8 @@ int		Command::parseStr(std::string str)
 	while (i < 5)				// While there are parameters, save them.
 	{
 		pos1 = pos2;
-		pos2 += str.find(" ", aux + 1);
-		if (pos2 != string::npos)
+		pos2 += str.find(" ", pos1 + 1);
+		if (pos2 != std::string::npos)
 			break;
 		this->_params[i++] = str.substr(pos1, pos2);
 	}
