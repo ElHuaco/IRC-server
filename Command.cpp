@@ -241,7 +241,7 @@ int		Command::ftNAMES()//List all visible nicknames
 	std::list<User *>::iterator u_iter = users.begin();
 
 	for (; u_iter != users.end(); ++u_iter)
-		std::cout << (*u_iter)->getNickname() << std::endl;//Habrá que imprimir con un mensaje formateado
+		std::cout << "Users on #Channel:" << (*u_iter)->getNickname() << " ";
 	return (0);
 }
 
@@ -253,8 +253,8 @@ int		Command::ftLIST()//list channels & their topics
 
 	for (; c_iter != channels.end(); ++c_iter)
 	{
-		std::cout << (*c_iter)->getName() << std::endl;
-		std::cout << (*c_iter)->getTopic() << std::endl;//Habrá que imprimir con un mensaje formateado
+		std::cout << "#" << (*c_iter)->getName() << "\t" \
+			<< this->_server.getNumUsers() << (*c_iter)->getTopic() << std::endl;
 	}
 	return (0);
 }

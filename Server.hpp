@@ -29,6 +29,7 @@ class Server
 		std::string				_password;
 		std::list<User *>		_users;
 		std::list<Channel *>	_channels;
+		int						_numusers;
 		
 
 	public:
@@ -63,6 +64,7 @@ class Server
 		fd_set					&getMaster(void);
 		void					setPassword(const std::string &password);
 		std::string				getPassword(void) const;
+		int						getNumUsers(void) const;
 		//Message
 		bool					are_in_same_channels(int sender, int receiver);
 };

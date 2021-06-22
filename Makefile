@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aleon-ca <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: fjimenez <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/22 09:25:30 by aleon-ca          #+#    #+#              #
-#    Updated: 2021/06/21 12:25:37 by alejandro        ###   ########.fr        #
+#    Updated: 2021/06/22 13:22:49 by fjimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ OBJS = $(SRCS:.cpp=.o)
 
 NAME = ircserv
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -std=c++98 -Wall -Wextra -Werror
 CLANG = clang++ $(FLAGS) 
 
 RM = rm -f

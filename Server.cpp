@@ -27,6 +27,7 @@ Server & Server::operator=(const Server &rhs)
 	this->_max = rhs._max;
 	this->_listener = rhs._listener;
 	this->_password = rhs._password;
+	this->_numusers = rhs._numusers;
 	return (*this);
 }
 
@@ -119,6 +120,7 @@ void					Server::addUser(void)
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
+	this->_numusers++;
 }
 User					*Server::getSocketUser(int socket)
 {
@@ -139,6 +141,7 @@ void					Server::deleteUser(int fd)
 			FD_CLR(fd, &_master);
 			delete *it;
 			_users.erase(it);
+			this->_numusers--;
 			if (fd == _max)
 			{
 				int max = 0;
@@ -163,6 +166,7 @@ void					Server::deleteUser(const std::string &nick)
 			FD_CLR((*it)->getSocket(), &_master);
 			delete *it;
 			_users.erase(it);
+			this->_numusers--;
 			if ((*it)->getSocket() == _max)
 			{
 				int max = 0;
@@ -298,6 +302,11 @@ void					Server::error_reply(const std::string &cmd,
 	int nbytes = strlen(buff.c_str());
 	if (send(client.getSocket(), buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
+}
+
+int			Server::getNumUsers(void) const
+{
+	return (this->_numusers);
 }
 
 bool		Server::are_in_same_channels(int sender, int receiver)
