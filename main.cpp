@@ -6,15 +6,12 @@
 
 static bool	is_cmd(const std::string &str)
 {
-	int len = str.find(' ');
-	std::string aux;
-	// if (str.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, len - 1)
-	// 	!= std::string::npos)
-	// 	return (false);
-	aux = str.substr(0, len);
-	if (aux == "JOIN")//Así para todos los commands??
-		return (true);
-	return (false);
+	size_t len = str.find(' ');
+	std::string aux = (len != std::string::npos) ? str.substr(0, len - 1) : str;
+	 if (aux.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	 	!= std::string::npos)
+	 	return (false);
+	return (true);
 }
 
 std::string	*ft_argv_parser(int argc, char **argv)
@@ -71,6 +68,7 @@ int main(int argc, char **argv)
 			throw std::runtime_error(strerror(errno));
 		for (int i = 0; i <= server.getMax(); ++i)
 		{
+std::cout << "Checking " << i << std::endl;
 			if (FD_ISSET(i, &read_fds) == false)
 				continue ;
 			if (i == server.getListener())
@@ -108,6 +106,9 @@ int main(int argc, char **argv)
 				{
 					
 					std::string info(buff);
+					#ifdef DEBUG
+						std::cout << "Recv->" << info << std::endl;
+					#endif
 					#ifdef DEBUG
 						std::cout << "Searching for socket client..." << std::endl;
 					#endif
