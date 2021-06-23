@@ -16,20 +16,6 @@ Server::~Server(void)
 	#endif
 }
 
-//Server::Server(const Server &other)
-//{
-//	*this = other;
-//}
-//
-//Server & Server::operator=(const Server &rhs)
-//{
-//	this->_master = rhs._master;
-//	this->_max = rhs._max;
-//	this->_listener = rhs._listener;
-//	this->_password = rhs._password;
-//	return (*this);
-//}
-
 void	Server::start(const std::string &port_listen)
 {
 	//Código de escuchar en port_listen
@@ -114,8 +100,6 @@ void					Server::addUser(void)
 		std::cout << "New User with socket " << temp.getSocket();
 		std::cout << " added." << std::endl;
 	#endif
-	std::string buff = "Welcome to the Internet Relay Network!\r\n";
-	send(newfd, buff.c_str(), strlen(buff.c_str()), 0);
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;

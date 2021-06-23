@@ -2,8 +2,9 @@
 
 # include <map>
 # include <locale>
-# include "Server.hpp"
-# include "User.hpp"
+
+class Server;
+class User;
 
 class Command
 {
@@ -48,3 +49,5 @@ class Command
 		void				ftKICK();
 		void				ftPRIVMSG();
 };
+# include "Server.hpp"
+# include "User.hpp"

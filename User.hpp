@@ -20,6 +20,7 @@ class User
 		std::string				_password;
 		std::string				_hostname;
 		bool					_isOP;
+		bool					_isWelcomed;
 		std::list<Channel*>		_joinedChannels;
 
 		
@@ -40,10 +41,12 @@ class User
 		std::string				getRealname() const;
 		std::string				getHostname() const;
 		bool					getIsOP() const;
+		bool					isWelcomed() const;
 
 		void					setHopcount(int hopcount);
 		void					setNickname(std::string nickname);
 		void					setIsOP(bool OP);
+		void					setWelcomed(bool is_it);
 		void					setUsername(std::string username);
 		void					setRealname(std::string realname);
 
