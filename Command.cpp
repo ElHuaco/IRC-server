@@ -424,8 +424,9 @@ void		Command::ftPRIVMSG()
 		for (it1 = this->_server.getUsers().begin(); it1 != this->_server.getUsers().end(); ++it1)
 			if ((*it1)->getNickname() == *(it))
 			{
-				// send message to user
+				(*it1)->message(this->_server, this->_params[1].c_str(), this->_params[1].length());
 				find = true;
+				break;
 			}
 	// Check if its a Channel Name.
 		if (find == false)
@@ -434,8 +435,9 @@ void		Command::ftPRIVMSG()
 			for (it2 = this->_server.getChannels().begin(); it2 != this->_server.getChannels().end(); ++it2)
 				if ((*it2)->getName() == *(it))
 				{
-					// send message to server}
+					//(*it2)->channelMessage(this->_server, this->_params[1].c_str(), this->_params[1].length());
 					find = true;
+					break;
 				}
 		}
 		if (find == false)

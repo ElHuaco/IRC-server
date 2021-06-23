@@ -56,7 +56,7 @@ class User
 		void					deleteChannel(const std::string &name);
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
-		void					message(Server &serv, char *buff, int nbytes);
+		void					message(Server &serv, const char *buff, int nbytes);
 		bool					is_in_channel(Channel *chan);
 };
 # include "Server.hpp"
