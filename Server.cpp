@@ -80,7 +80,7 @@ int						Server::getListener(void) const
 {
 	return (_listener);
 }
-std::list<User *>		Server::getUsers(void) const
+std::list<User *>		&Server::getUsers(void)
 {
 	return (_users);
 }
@@ -184,7 +184,7 @@ Channel					*Server::getChannelName(const std::string &str)
 	}
 	return (nullptr);
 }
-std::list <Channel *>	Server::getChannels(void) const
+std::list <Channel *>	&Server::getChannels(void)
 {
 	return (_channels);
 }
