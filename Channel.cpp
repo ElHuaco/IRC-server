@@ -27,6 +27,13 @@ Channel					*Channel::clone(void) const
 
 void					Channel::addChanop(User *chanop)
 {
+	if (chanop == nullptr)
+		return ;
+	for (iterator it = _chanops.begin(); it != _chanops.end(); ++it)
+	{
+		if ((*it)->getNickname() == chanop->getNickname())
+			return ;
+	}
 	this->_chanops.push_back(chanop);
 	return ;
 }

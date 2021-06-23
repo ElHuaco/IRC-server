@@ -178,7 +178,7 @@ void		Command::ftUSER()
 			+ " RPL_MYINFO\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 		ack = ":ft_irc 004 " + _commander.getNickname()
-			+ " tokens are supported by this server\r\n";
+			+ " tokens are not supported by this server\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 		_commander.setWelcomed(true);
 	}
@@ -248,6 +248,8 @@ void		Command::ftJOIN()
 	Channel *aux;
 	while (++i < 5)
 	{
+		if (_params[i].empty() == true)
+			continue ;
 		aux = this->_server.getChannelName(this->_params[i]);
 		if (!aux)
 		{
@@ -256,11 +258,6 @@ void		Command::ftJOIN()
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
 			//Mensaje JOIN, RPL_TOPIC, RPL_USERLIST
-			std::string buff = ":" + _commander.getNickname() + "@"
-				+ _commander.getUsername() + "!127.0.0.1 JOIN "
-				+ _params[i] + "\r\n";
-			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-			return ;
 			//numeric_reply(332);
 			//numeric_reply(353);
 			// this->_erroneous[j++] = this->_params[i];
@@ -277,7 +274,10 @@ void		Command::ftJOIN()
 					// this->numeric_reply(381);
 				}
 		}
+		std::string buff = ": JOIN " + _params[i] + "\r\n";
+		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 	}
+	return ;
 }
 
 
