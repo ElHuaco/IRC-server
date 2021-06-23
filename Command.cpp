@@ -200,7 +200,7 @@ void		Command::ftUSER()
 		ack = ":ft_irc 004 " + _commander.getNickname()
 			+ " RPL_MYINFO\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
-		ack = ":ft_irc 004 " + _commander.getNickname()
+		ack = ":ft_irc 005 " + _commander.getNickname()
 			+ " tokens are not supported by this server\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 		_commander.setWelcomed(true);
