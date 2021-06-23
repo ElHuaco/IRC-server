@@ -1,5 +1,4 @@
 #include "Server.hpp"
-#include "Command.hpp"
 #include <iostream>
 
 //signal_handlers con signal(SIGKILL)
@@ -104,7 +103,8 @@ std::cout << "Checking " << i << std::endl;
 				}
 				else
 				{
-					
+					for (int k = 0; k < 512; ++k)
+						ntohs(buff[k]);
 					std::string info(buff);
 					#ifdef DEBUG
 						std::cout << "Recv->" << info << std::endl;

@@ -15,6 +15,7 @@
 # include <fcntl.h>
 # include "User.hpp"
 # include "Channel.hpp"
+#include "Command.hpp"
 
 class Server
 {

@@ -139,7 +139,9 @@ void			Command::ftNICK()
 	//this->numeric_reply(436);
 
 	// Changing the nickname
-	this->_commander.setNickname(this->_params[0]); 
+	this->_commander.setNickname(this->_params[0]);
+	std::string ack = ": NICK " + _params[0] + "\r\n";
+	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 }
 
 
@@ -159,6 +161,27 @@ void		Command::ftUSER()
 	// Registering, hostname and server parameters are ignored.
 	this->_commander.setUsername(this->_params[0]);
 	this->_commander.setRealname(this->_params[3]);
+	std::string ack = ": USER " + _params[0] + " 0 * " + _params[3] + "\r\n";
+	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+	if (_commander.isWelcomed() == false)
+	{
+		ack = ":ft_irc 001 " + _commander.getNickname()
+			+ " Welcome to the Internet Relay Network!\r\n";
+		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		ack = ":ft_irc 002 " + _commander.getNickname()
+			+ " Your host is ft_irc\r\n";
+		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		ack = ":ft_irc 003 " + _commander.getNickname()
+			+ " This server was created long ago\r\n";
+		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		ack = ":ft_irc 004 " + _commander.getNickname()
+			+ " RPL_MYINFO\r\n";
+		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		ack = ":ft_irc 004 " + _commander.getNickname()
+			+ " tokens are supported by this server\r\n";
+		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		_commander.setWelcomed(true);
+	}
 }
 
 
@@ -232,8 +255,12 @@ void		Command::ftJOIN()
 			this->_server.addChannel(aux);
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
-			//Mensaje, RPL_TOPIC, RPL_USERLIST
-			//send("JOIN");
+			//Mensaje JOIN, RPL_TOPIC, RPL_USERLIST
+			std::string buff = ":" + _commander.getNickname() + "@"
+				+ _commander.getUsername() + "!127.0.0.1 JOIN "
+				+ _params[i] + "\r\n";
+			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+			return ;
 			//numeric_reply(332);
 			//numeric_reply(353);
 			// this->_erroneous[j++] = this->_params[i];
@@ -334,7 +361,8 @@ std::string		*Command::getErroneous(void) const
 
 void			Command::numeric_reply(int key)
 {
-	std::string buff = ":127.0.0.1 " + std::to_string(key);
+	std::string buff = ":127.0.0.1 " + std::to_string(key) + " "
+		+ _commander.getNickname() + " ";
 	if (_erroneous != nullptr)
 	{
 		int i = -1;
@@ -360,7 +388,7 @@ void			Command::numeric_reply(int key)
 	else if (key == 414)
 		buff += ":Wildcard in toplevel domain";
 	else if (key == 421)
-		buff += _command + " :Unknown command";
+		buff += _command + ":Unknown command";
 	else if (key == 431)
 		buff += ":No nickname given";
 	else if (key == 432)
@@ -377,30 +405,29 @@ void			Command::numeric_reply(int key)
 	else if (key == 442)
 		buff += ":You're not on a channel";
 	else if (key == 461)
-		buff += _command + ":Not enough parameters";
+		buff += ":Not enough parameters";
 	else if (key == 462)
 		buff += ":Unauthorized command (already registered)";
 	else if (key == 464)
 		buff += ":Password incorrect";
 	else if (key == 471)
-		buff += " :Cannot join channel (+l)";
+		buff += ":Cannot join channel (+l)";
 	else if (key == 473)
-		buff += " :Cannot join channel (+i)";
+		buff += ":Cannot join channel (+i)";
 	else if (key == 474)
-		buff += " :Cannot join channel (+b)";
+		buff += ":Cannot join channel (+b)";
 	else if (key == 475)
-		buff += " :Cannot join channel (+k)";
+		buff += ":Cannot join channel (+k)";
 	else if (key == 476)
-		buff += " :Bad Channel Mask";
+		buff += ":Bad Channel Mask";
 	else if (key == 477)
-		buff += " :Channel doesn't support modes";
+		buff += ":Channel doesn't support modes";
 	else if (key == 482)
-		buff += " :You're not channel operator";
+		buff += ":You're not channel operator";
 	else if (key == 484)
 		buff += ":Your connection is restricted!";
 	else if (key == 491)
 		buff += ":No O-lines for your host";
-	buff += _commander.getNickname();
 	buff += "\r\n";
 	int nbytes = strlen(buff.c_str());
 	if (send(_commander.getSocket(), buff.c_str(), nbytes, 0) == -1)
