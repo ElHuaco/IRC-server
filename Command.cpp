@@ -337,10 +337,48 @@ void		Command::ftKICK()
 
 void		Command::ftPRIVMSG()
 {
-	std::vector<std::string> subParams = this->parseParam(this->_params[0]); 
+	// Check number of params
+	if (this->_paramsNum == 0)
+	{
+		this->numeric_reply(411);
+		return;
+	}
+	if (this->_paramsNum == 1)
+	{
+		this->numeric_reply(412);
+		return;
+	}
+
+	// Parse first parameter
+	std::vector<std::string> targets = this->parseParam(this->_params[0]);
+
+	// Send message
 	std::vector<std::string>::iterator it;
-	for (it = subParams.begin(); it != subParams.end(); ++it)
-		std::cout << "Subparam = " << *(it) << std::endl;
+	for (it = targets.begin(); it != targets.end(); ++it)
+	{
+		bool find = false;
+	// Check if its a User nickname
+		std::list<User *>::iterator it1;
+		for (it1 = this->_server.getUsers().begin(); it1 != this->_server.getUsers().end(); ++it1)
+			if ((*it1)->getNickname() == *(it))
+			{
+				// send message to user
+				find = true;
+			}
+	// Check if its a Channel Name.
+		if (find == false)
+		{
+			std::list<Channel *>::iterator it2;
+			for (it2 = this->_server.getChannels().begin(); it2 != this->_server.getChannels().end(); ++it2)
+				if ((*it2)->getName() == *(it))
+				{
+					// send message to server}
+					find = true;
+				}
+		}
+		if (find == false)
+			this->numeric_reply(401);
+	}
 	return;
 }
 
