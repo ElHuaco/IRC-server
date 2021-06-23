@@ -104,8 +104,14 @@ void					User::setWelcomed(bool isit)
 }
 void					User::addChannel(Channel *chann)
 {
-	if (chann != nullptr)
-		_joinedChannels.push_back(chann);
+	if (chann == nullptr)
+		return ;
+	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+	{
+		if ((*it)->getName() == chann->getName())
+			return ;
+	}
+	_joinedChannels.push_back(chann);
 }
 Channel					*User::getChannelName(const std::string &str)
 {
