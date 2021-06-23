@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 			throw std::runtime_error(strerror(errno));
 		for (int i = 0; i <= server.getMax(); ++i)
 		{
-std::cout << "Checking " << i << std::endl;
+std::cout << "Main loop is checking " << i << std::endl;
 			if (FD_ISSET(i, &read_fds) == false)
 				continue ;
 			if (i == server.getListener())
