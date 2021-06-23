@@ -19,30 +19,63 @@ Command::~Command(void)
 	return ;
 }
 
-// Parser
+// String/buff parser
 int		Command::parseStr(std::string str)
 {
+
+	#ifdef DEBUG
+		std::cout << "Buff = \"" << str << "\"" << std::endl;
+	#endif
 	if (str.empty())
 		return (-1);						// Error, the string is empty.
 	int pos1 = 0;
 	int pos2 = str.find(" ");
 	this->_command = str.substr(pos1, pos2);
+	#ifdef DEBUG
+		std::cout << "Command = \"" << str << "\"" << std::endl;
+	#endif
 	int i = 0;
 	while (i < 5)				// While there are parameters, save them.
 	{
 		pos1 = pos2 + 1;
 		pos2 = str.find(" ", pos1);
 		if (pos2 == std::string::npos)
-			pos2 = str.find("\n", pos1) - 1;
+			pos2 = str.find("\r\n", pos1);
 		if (pos2 <= pos1)
 			break;
 		this->_params[i++] = str.substr(pos1, pos2 - pos1);
+		#ifdef DEBUG
+			std::cout << i << " parameter = \"" << this->_params[i - 1] << "\"" << std::endl;
+		#endif
 	}
 	#ifdef DEBUG
 		std::cout << "Ended parser." << std::endl;
 	#endif
 	this->_paramsNum = i;
 	return (0);
+}
+
+// Parameter parser
+std::vector<std::string>	Command::parseParam(std::string param)
+{
+	int pos1 = 0;
+	int pos2 = param.find(",", pos1);
+	std::vector<std::string> rst;
+	rst.push_back(param.substr(pos1, pos2));
+	while (1)
+	{
+		pos1 = pos2 + 1;
+		pos2 = param.find(",", pos1);
+		if (pos2 == std::string::npos)
+			pos2 = param.length();
+		if (pos2 <= pos1)
+			break;
+		rst.push_back(param.substr(pos1, pos2 - pos1));
+	}
+	#ifdef DEBUG
+		std::cout << "End of sub parser" << std::endl;
+	#endif
+	return (rst);
 }
 
 // Execute
@@ -304,6 +337,11 @@ void		Command::ftKICK()
 
 void		Command::ftPRIVMSG()
 {
+	std::vector<std::string> subParams = this->parseParam(this->_params[0]); 
+	std::vector<std::string>::iterator it;
+	for (it = subParams.begin(); it != subParams.end(); ++it)
+		std::cout << "Subparam = " << *(it) << std::endl;
+	return;
 }
 
 // Getters + Setters

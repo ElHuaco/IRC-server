@@ -1,6 +1,6 @@
 #pragma once
 
-# include <map>
+# include <vector>
 # include <locale>
 
 class Server;
@@ -32,9 +32,10 @@ class Command
 		std::string		*getErroneous() const;
 
 		// Functions
-		int				parseStr(std::string str);
-		void			execute();
-		void			numeric_reply(int key);
+		int							parseStr(std::string str);
+		std::vector<std::string>	parseParam(std::string param);
+		void						execute();
+		void						numeric_reply(int key);
 
 		// Commands
 		void				ftNICK();
