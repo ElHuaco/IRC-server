@@ -149,7 +149,7 @@ bool					User::is_in_channel(Channel *chan)
 	return false;
 }
 
-void					User::message(Server &server, char *buff, int nbytes)
+void					User::message(Server &server, const char *buff, int nbytes)
 {
 	for (int j = 0; j <= server.getMax(); ++j)
 	{
