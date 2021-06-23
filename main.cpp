@@ -76,7 +76,6 @@ std::cout << "Main loop is checking " << i << std::endl;
 					std::cout << "Creating new connection..." << std::endl;
 				#endif
 				server.addUser();
-				//Autentificar??
 				#ifdef DEBUG
 					std::cout << "New connection registered. " << std::endl;
 				#endif
@@ -103,8 +102,6 @@ std::cout << "Main loop is checking " << i << std::endl;
 				}
 				else
 				{
-					for (int k = 0; k < 512; ++k)
-						ntohs(buff[k]);
 					std::string info(buff);
 					#ifdef DEBUG
 						std::cout << "Recv->" << info << std::endl;
