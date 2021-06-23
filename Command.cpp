@@ -103,6 +103,9 @@ void		Command::execute(void)
 		this->ftKICK();
 	else if (this->_command == "PRIVMSG")
 		this->ftPRIVMSG();
+	else
+		this->numeric_reply(421);
+	return ;
 }
 
 // Commands
@@ -110,7 +113,10 @@ void			Command::ftNICK()
 {
 	// Checking if a nickname has been provided.					(ERR_NONICKNAMEGIVEN)
 	if (this->_paramsNum == 0)
+	{
 		this->numeric_reply(431);
+		return ;
+	}
 
 	// Checking that the nickname isn't erroneous.					(ERR_ERRONEUSNICKNAME)
 	int i = 0;
@@ -118,12 +124,14 @@ void			Command::ftNICK()
 	{
 		this->_erroneous[0] = this->_params[0];
 		this->numeric_reply(432);
+		return ;
 	}
 	while (this->_params[0][++i])
 		if (!isalnum(this->_params[0][i]))
 		{
 			this->_erroneous[0] = this->_params[0];
 			this->numeric_reply(431);
+			return ;
 		}
 
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
@@ -133,6 +141,7 @@ void			Command::ftNICK()
 		{
 			this->_erroneous[0] = this->_params[0];
 			this->numeric_reply(433);
+			return ;
 		}
 
 	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION)
@@ -142,6 +151,7 @@ void			Command::ftNICK()
 	this->_commander.setNickname(this->_params[0]);
 	std::string ack = ": NICK " + _params[0] + "\r\n";
 	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+	return ;
 }
 
 
@@ -152,11 +162,15 @@ void		Command::ftUSER()
 	{
 		this->_erroneous[0] = this->_command;
 		this->numeric_reply(461);
+		return ;
 	}
 		
 	// Checking if the client is already registered.	(ERR_ALREADYRESGISTRED)
 	if (!this->_commander.getUsername().empty())
+	{
 		this->numeric_reply(462);
+		return ;
+	}
 	
 	// Registering, hostname and server parameters are ignored.
 	this->_commander.setUsername(this->_params[0]);
@@ -182,6 +196,7 @@ void		Command::ftUSER()
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 		_commander.setWelcomed(true);
 	}
+	return ;
 }
 
 
@@ -192,6 +207,7 @@ void		Command::ftOPER()
 	{
 		this->_erroneous[0] = this->_command;
 		this->numeric_reply(461);
+		return ;
 	}
 
 	// Not needed if we dont use other hosts.			(ERR_NOOPERHOST)
@@ -199,7 +215,10 @@ void		Command::ftOPER()
 
 	// Checking if the password is valid.				(ERR_PASSWDMISMATCH)
 	if (this->_server.getPassword() != this->_params[1])
+	{
 		this->numeric_reply(464);
+		return ;
+	}
 
 	// Searching the user/nick and OP.					(RPL_YOUREOPER)
 	std::list<User *>::iterator it;
@@ -229,6 +248,7 @@ void		Command::ftJOIN()
 	{
 		this->_erroneous[0] = this->_command;
 		this->numeric_reply(461);
+		return ;
 	}
 	// Limit of channels at one time?
 	
@@ -265,16 +285,11 @@ void		Command::ftJOIN()
 		}
 		else
 		{
-			std::list<Channel *>::iterator it;
-			for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
-				if ((*it)->getName() == this->_params[i])
-				{
-					this->_commander.addChannel(*it);
-					// Imprimir topic
-					// this->numeric_reply(381);
-				}
+			this->_commander.addChannel(aux);
+			// Imprimir topic
+			// this->numeric_reply(381);
 		}
-		std::string buff = ": JOIN " + _params[i] + "\r\n";
+		std::string buff = ":" + _commander.getNickname() + " JOIN " + _params[i] + "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 	}
 	return ;
@@ -377,7 +392,10 @@ void		Command::ftPRIVMSG()
 				}
 		}
 		if (find == false)
+		{
 			this->numeric_reply(401);
+			return ;
+		}
 	}
 	return;
 }
