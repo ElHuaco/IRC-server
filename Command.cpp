@@ -111,6 +111,9 @@ void		Command::execute(void)
 // Commands
 void			Command::ftNICK()
 {
+	#ifdef DEBUG
+	std::cout << "Nick execution" << std::endl;
+	#endif
 	// Checking if a nickname has been provided.					(ERR_NONICKNAMEGIVEN)
 	if (this->_paramsNum == 0)
 	{
@@ -134,15 +137,30 @@ void			Command::ftNICK()
 			return ;
 		}
 
+	#ifdef DEBUG
+	std::cout << "While starts" << std::endl;
+	#endif
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
-	std::list<User *>::iterator it;
-	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
+	std::list<User *>::iterator it = this->_server.getUsers().begin();
+	i = 0;
+	//for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
+	while (it != this->_server.getUsers().end())
+	{
+	#ifdef DEBUG
+	std::cout << "Loop " << i++ << " = \"";
+	std::cout << (*it)->getNickname() << "\"" << std::endl;
+	#endif
 		if ((*it)->getNickname() == this->_params[0])
 		{
 			this->_erroneous[0] = this->_params[0];
 			this->numeric_reply(433);
 			return ;
 		}
+		it++;
+	}
+	#ifdef DEBUG
+	std::cout << "While ended" << std::endl;
+	#endif
 
 	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION)
 	//this->numeric_reply(436);
@@ -151,6 +169,9 @@ void			Command::ftNICK()
 	this->_commander.setNickname(this->_params[0]);
 	std::string ack = ": NICK " + _params[0] + "\r\n";
 	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+	#ifdef DEBUG
+		std::cout << "Nick returns" << std::endl;
+	#endif
 	return ;
 }
 
