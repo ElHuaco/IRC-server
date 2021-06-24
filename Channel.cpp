@@ -45,13 +45,11 @@ void					Channel::deleteChanop(User *chanop)
 }
 void					Channel::chanMessage(Server &serv, const char *buff, int nbytes)
 {
-	std::list<User *>::iterator it1;
-	for (it1 = serv.getUsers().begin(); it1 != serv.getUsers().end(); ++it1)
+	std::list<User *>::iterator it;
+	for (it = serv.getUsers().begin(); it != serv.getUsers().end(); ++it)
 	{
-		std::list<Channel *>::iterator it2;
-		for (it2 = (*it1)->getListChannels().begin(); it2 != (*it1)->getListChannels().end(); ++it2)
-			if ((*it2)->getName() == this->_name)
-				(*it1)->message(serv, buff, nbytes);
+		if ((*it)->is_in_channel(this))
+			(*it)->message(serv, buff, nbytes);
 	}
 	return ;
 }

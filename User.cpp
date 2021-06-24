@@ -156,7 +156,7 @@ void					User::message(Server &server, const char *buff, int nbytes)
 	for (int j = 0; j <= server.getMax(); ++j)
 	{
 		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-			&& j != _socket && server.are_in_same_channels(_socket, j))
+			&& j != _socket)
 		{
 			#ifdef DEBUG
 				std::cout << "\tSocket User " << _socket << " sending";
