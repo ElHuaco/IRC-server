@@ -410,7 +410,8 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 			this->numeric_reply(331);
 		else									// There is a topic.
 		{
-			this->numeric_reply(332, aux->getTopic());
+			this->_erroneous[5] = aux->getTopic();
+			this->numeric_reply(332);
 			this->_erroneous[1] = aux->getWhoTopicNick();
 			this->_erroneous[2] = aux->getWhoTopicSetat();
 			this->numeric_reply(333);
@@ -422,8 +423,10 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 		{
 			aux->setTopic(this->_params[1]);		// Topic changed.
 			aux->setWhoTopicNick(this->_commander.getNickname());
-			std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-			aux->setWhoTopicSetat(time);
+			std::stringstream time;
+			time << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+			aux->setWhoTopicSetat(time.str());
+			this->_erroneous[5] = aux->getTopic();
 			this->numeric_reply(332);
 // -------- IMPORTANT -------- //
 // Should reply with the new topic to every member of the channel.
@@ -585,82 +588,122 @@ std::string		*Command::getErroneous(void) const
 	return (this->_erroneous);
 }
 
-void			Command::numeric_reply(int key, std::string extra = nullptr)
+void			Command::numeric_reply(int key)
 {
+	// Save in buff standar protocol for msg + <client>.
 	std::string buff = ":127.0.0.1 " + std::to_string(key) + " "
 		+ _commander.getNickname() + " ";
+	// Save in buff <extra data> before the specific msg.
 	if (_erroneous != nullptr)
 	{
 		int i = -1;
 		while (_erroneous[++i].empty() == false)
 			buff += _erroneous[i];
 	}
-	if (key == 331)		// RPLY_NOTOPIC
-		buff += ":No topic is set";
-	else if (key == 332)		// RPLY_NOTOPIC
-		buff += ":" + extra;
-	else if (key == 332)		// RPLY_NOTOPIC
-		;
-	else if (key == 401)
-		buff += ":No such nick/channel";
-	else if (key == 403)
-		buff += ":No such channel";
-	else if (key == 404)
-		buff += ":Cannot send to channel";
-	else if (key == 405)
-		buff += ":You have joined too many channels";
-	else if (key == 407)
-		buff += ":Too many recipients/targets";
-	else if (key == 411)
-		buff += ":No recipient given (" + _command + ")";
-	else if (key == 412)
-		buff += ":No text to send";
-	else if (key == 413)
-		buff += ":No toplevel domain specified";
-	else if (key == 414)
-		buff += ":Wildcard in toplevel domain";
-	else if (key == 421)
-		buff += _command + ":Unknown command";
-	else if (key == 431)
-		buff += ":No nickname given";
-	else if (key == 432)
-		buff += ":Erroneous nickname";
-	else if (key == 433)
-		buff += ":Nickname is already in use";
-	else if (key == 436)
-		buff += ":Nickname collision KILL from " + _commander.getNickname()
-			+ "@HOST";
-	else if (key == 437)
-		buff += ":Nick/channel is temporarily unavailable";
-	else if (key == 441)
-		buff += ":They aren't on that channel";
-	else if (key == 442)
-		buff += ":You're not on that channel";
-	else if (key == 461)
-		buff += ":Not enough parameters";
-	else if (key == 462)
-		buff += ":Unauthorized command (already registered)";
-	else if (key == 464)
-		buff += ":Password incorrect";
-	else if (key == 471)
-		buff += ":Cannot join channel (+l)";
-	else if (key == 473)
-		buff += ":Cannot join channel (+i)";
-	else if (key == 474)
-		buff += ":Cannot join channel (+b)";
-	else if (key == 475)
-		buff += ":Cannot join channel (+k)";
-	else if (key == 476)
-		buff += ":Bad Channel Mask";
-	else if (key == 477)
-		buff += ":Channel doesn't support modes";
-	else if (key == 482)
-		buff += ":You're not channel operator";
-	else if (key == 484)
-		buff += ":Your connection is restricted!";
-	else if (key == 491)
-		buff += ":No O-lines for your host";
+	// Select correct msg reply.
+	switch (key)		// This is my new favourite toy.
+	{
+		case 331:		// RPLY_NOTOPIC
+			buff += ":No topic is set";
+			break;
+		case 332:		// RPLY_TOPIC
+			buff += ":" + this->_erroneous[4];
+			break;
+		case 333:		// RPLY_TOPICWHOTIME
+			break;
+		case 401:		// ERR_
+			buff += ":No such nick/channel";
+			break;
+		case 403:		// ERR_
+			buff += ":No such channel";
+			break;
+		case 404:		// ERR_
+			buff += ":Cannot send to channel";
+			break;
+		case 405:		// ERR_
+			buff += ":You have joined too many channels";
+			break;
+		case 407:		// ERR_
+			buff += ":Too many recipients/targets";
+			break;
+		case 411:		// ERR_
+			buff += ":No recipient given (" + _command + ")";
+			break;
+		case 412:		// ERR_
+			buff += ":No text to send";
+			break;
+		case 413:		// ERR_
+			buff += ":No toplevel domain specified";
+			break;
+		case 414:		// ERR_
+			buff += ":Wildcard in toplevel domain";
+			break;
+		case 421:		// ERR_
+			buff += _command + ":Unknown command";
+			break;
+		case 431:		// ERR_
+			buff += ":No nickname given";
+			break;
+		case 432:		// ERR_
+			buff += ":Erroneous nickname";
+			break;
+		case 433:		// ERR_
+			buff += ":Nickname is already in use";
+			break;
+		case 436:		// ERR_
+			buff += ":Nickname collision KILL from " + _commander.getNickname() + "@HOST";
+			break;
+		case 437:		// ERR_
+			buff += ":Nick/channel is temporarily unavailable";
+			break;
+		case 441:		// ERR_
+			buff += ":They aren't on that channel";
+			break;
+		case 442:		// ERR_
+			buff += ":You're not on that channel";
+			break;
+		case 461:		// ERR_
+			buff += ":Not enough parameters";
+			break;
+		case 462:		// ERR_
+			buff += ":Unauthorized command (already registered)";
+			break;
+		case 464:		// ERR_
+			buff += ":Password incorrect";
+			break;
+		case 471:		// ERR_
+			buff += ":Cannot join channel (+l)";
+			break;
+		case 473:		// ERR_
+			buff += ":Cannot join channel (+i)";
+			break;
+		case 474:		// ERR_
+			buff += ":Cannot join channel (+b)";
+			break;
+		case 475:		// ERR_
+			buff += ":Cannot join channel (+k)";
+			break;
+		case 476:		// ERR_
+			buff += ":Bad Channel Mask";
+			break;
+		case 477:		// ERR_
+			buff += ":Channel doesn't support modes";
+			break;
+		case 482:		// ERR_
+			buff += ":You're not channel operator";
+			break;
+		case 484:		// ERR_
+			buff += ":Your connection is restricted!";
+			break;
+		case 491:		// ERR_
+			buff += ":No O-lines for your host";
+			break;
+		default:
+			break;
+	}
+	// End of msg.
 	buff += "\r\n";
+	// Send the msg.
 	int nbytes = strlen(buff.c_str());
 	if (send(_commander.getSocket(), buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
