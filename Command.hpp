@@ -49,6 +49,7 @@ class Command
 		void				ftLIST();
 		void				ftKICK();
 		void				ftPRIVMSG();
+		void				ftMODE();
 };
 # include "Server.hpp"
 # include "User.hpp"

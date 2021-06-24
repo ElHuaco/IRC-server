@@ -103,6 +103,8 @@ void		Command::execute(void)
 		this->ftKICK();
 	else if (this->_command == "PRIVMSG")
 		this->ftPRIVMSG();
+	else if (this->_command == "MODE")
+		this->ftMODE();
 	else
 		this->numeric_reply(421);
 	return ;
@@ -319,14 +321,21 @@ void		Command::ftJOIN()
 			buff += aux->getName() + " " + aux->getTopic() + "\r\n";
 			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
-		buff = ":127.0.0.1 353 = " + _params[i];
-			for (std::list<User *>::iterator it = _server.getUsers().begin();
-				it != _server.getUsers().end(); ++it)
-				if ((*it)->is_in_channel(aux) == true)
-					buff += " :" + (*it)->getNickname();
-		buff += "\r\f";
+		buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + _params[i]
+			+ " :";
+		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
+			u_iter != _server.getUsers().end(); ++u_iter)
+		{
+			if ((*u_iter)->is_in_channel(aux) == true)
+				buff += (*u_iter)->getNickname() + " ";
+		}
+		buff += "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-		std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
+std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
+		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
+			" :End of /NAMES list\r\n";
+		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 	}
 	return ;
 }
@@ -346,22 +355,43 @@ void		Command::ftNAMES()//List all visible nicknames
 {
 	std::list<User *> users = this->_server.getUsers();
 	std::list<User *>::iterator u_iter = users.begin();
-	std::string buff = ":127.0.0.1 353 ";
+	Channel *chan;
+	std::string buff;
 	int	i = -1;
 	while (++i < 5)
 	{
 		if (_params[i].empty() == true)
-			continue;
-		buff += "= " + _params[i] + " :";
-		for (; u_iter != users.end(); ++u_iter)
-			if ((*u_iter)->is_in_channel(_server.getChannelName(_params[i])) == true)
-				buff += (*u_iter)->getNickname() + " ";
+			continue ;
+		if ((chan = _server.getChannelName(_params[i])) != nullptr)
+		{
+			buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + _params[i]
+				+ " :";
+			for (; u_iter != users.end(); ++u_iter)
+			{
+std::cout << "\t\t_params[i]: " << _params[i] << std::endl;
+std::cout << "\t\tIs " << (*u_iter)->getSocket() << " in channel " << _server.getChannelName(_params[i])->getName() << "? " << std::boolalpha << (*u_iter)->is_in_channel(_server.getChannelName(_params[i])) << std::endl;
+				if ((*u_iter)->is_in_channel(chan) == true)
+					buff += (*u_iter)->getNickname() + " ";
+			}
+			buff += "\r\n";
+			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
+		}
+		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
+			" :End of /NAMES list\r\n";
+		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 	}
-	buff += "\r\f";
-	send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 	return ;
 }
 
+void		Command::ftMODE()
+{
+	//RPL_CHANNELMODEIS
+	std::string buff = ":127.0.0.1 324 " + _commander.getNickname() + " "
+		+ _params[0] + " b,k,l,imnpst\r\n";
+	send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+}
 
 void		Command::ftLIST()//list channels & their topics
 {
@@ -413,6 +443,10 @@ void		Command::ftPRIVMSG()
 
 	// Parse first parameter
 	std::vector<std::string> targets = this->parseParam(this->_params[0]);
+std::cout << "\t\tSize: " << targets.size() << std::endl;
+for (std::vector<std::string>::iterator sit = targets.begin();
+	sit != targets.end(); ++sit)
+std::cout << "\t\tTarget: " << *sit << std::endl;
 
 	//RFC message
 	std::string buff = ":" + _commander.getNickname() + " PRIVMSG";
@@ -423,13 +457,15 @@ void		Command::ftPRIVMSG()
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
-		buff += " " + *it + " " + _params[1] + "\r\f";
+		buff += " " + *it + " " + _params[1] + "\r\n";
 		User *client = _server.getUserNick(*it);
 		Channel *chan;
 		if (client != nullptr)
 		{
 std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
 			send(client->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+std::cout << "\t\tSocket " << _commander.getSocket();
+std::cout << " Sent: \"" << buff << "\"" << std::endl;
 		}
 		else if ((chan = _server.getChannelName(*it)) != nullptr)
 		{
@@ -443,13 +479,13 @@ std::cout <<"\t\tSending to channel " << chan->getName() << "..." << std::endl;
 std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
 std::cout << chan->getName() << std::endl;
 					send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+std::cout << "\t\tSocket " << _commander.getSocket();
+std::cout << " Sent: \"" << buff << "\"" << std::endl;
 				}
 			}
 		}
 		else
 			this->numeric_reply(401);
-		std::cout << "\t\tSocket " << _commander.getSocket();
-		std::cout << " Sent: \"" << buff << "\"" << std::endl;
 	}
 	return;
 }
