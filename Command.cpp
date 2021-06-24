@@ -58,10 +58,9 @@ int		Command::parseStr(std::string str)
 // Parameter parser
 std::vector<std::string>	Command::parseParam(std::string param)
 {
-	int pos1 = 0;
-	int pos2 = param.find(",", pos1);
+	int pos1;
+	int pos2 = -1;
 	std::vector<std::string> rst;
-	rst.push_back(param.substr(pos1, pos2));
 	while (1)
 	{
 		pos1 = pos2 + 1;
@@ -423,6 +422,7 @@ void		Command::ftPRIVMSG()
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
+std::cout << "Privmsg target = \"" << (*it) << "\"" << std::endl;
 		buff += " " + *it + " " + _params[1] + "\r\f";
 		User *client = _server.getUserNick(*it);
 		Channel *chan;
