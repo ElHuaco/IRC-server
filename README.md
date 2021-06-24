@@ -1,5 +1,13 @@
 # ft_irc
  The goal of this project is to make you write your own IRC server. To do so, you will follow the real IRC RFC and test your work with real IRC clients. Internet is ruled by solid and standards protocols that allow a strong interaction between every connected computer. It’s always good to know about it.
+ 
+ Steps
+ -------------
+   1. [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html//index.html)
+   2. [Beej's cheesy chat example](https://beej.us/guide/bgnet/examples/selectserver.c)
+   3. [RFC for Human beings](https://modern.ircdocs.horse/)
+   4. ????
+   5. Profit
 
 ¿Qué es el IRC?
 ---------------
