@@ -7,6 +7,7 @@
 # include <string>
 
 class User;
+class Server;
 
 class Channel
 {
@@ -44,3 +45,4 @@ class Channel
 
 };
 # include "User.hpp"
+# include "Server.hpp"
