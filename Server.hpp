@@ -46,6 +46,7 @@ class Server
 		//User and channel lists management
 		void					addUser(void);
 		User					*getSocketUser(int socket);
+		User					*getUserNick(const std::string &str);
 		std::list<User *>		&getUsers(void);
 		void					deleteUser(const std::string &nick);
 		void					deleteUser(int fd);

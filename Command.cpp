@@ -319,11 +319,11 @@ void		Command::ftJOIN()
 			buff += aux->getName() + " " + aux->getTopic() + "\r\n";
 			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
-		buff = ":127.0.0.1 353 = " + _params[i] + " :";
+		buff = ":127.0.0.1 353 = " + _params[i];
 			for (std::list<User *>::iterator it = _server.getUsers().begin();
 				it != _server.getUsers().end(); ++it)
 				if ((*it)->is_in_channel(aux) == true)
-					buff += (*it)->getNickname() + " :";
+					buff += " :" + (*it)->getNickname();
 		buff += "\r\f";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
@@ -414,36 +414,42 @@ void		Command::ftPRIVMSG()
 	// Parse first parameter
 	std::vector<std::string> targets = this->parseParam(this->_params[0]);
 
+	//RFC message
+	std::string buff = ":" + _commander.getNickname() + " PRIVMSG";
+
+	//TODO: ERR_CANNOTSENDTOCHAN(404)
+
 	// Send message
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
-		bool find = false;
-	// Check if its a User nickname
-		std::list<User *>::iterator it1;
-		for (it1 = this->_server.getUsers().begin(); it1 != this->_server.getUsers().end(); ++it1)
-			if ((*it1)->getNickname() == *(it))
+		buff += " " + *it + " " + _params[1] + "\r\f";
+		User *client = _server.getUserNick(*it);
+		Channel *chan;
+		if (client != nullptr)
+		{
+std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
+			send(client->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		}
+		else if ((chan = _server.getChannelName(*it)) != nullptr)
+		{
+std::cout <<"\t\tSending to channel " << chan->getName() << "..." << std::endl;
+			for (std::list<User *>::iterator u_it = _server.getUsers().begin();
+				u_it != _server.getUsers().end(); ++u_it)
 			{
-				(*it1)->message(this->_server, this->_params[1].c_str(), this->_params[1].length());
-				find = true;
-				break;
-			}
-	// Check if its a Channel Name.
-		if (find == false)
-		{
-			std::list<Channel *>::iterator it2;
-				if ((*it2)->getName() == *(it))
+				if ((*u_it)->getNickname() != _commander.getNickname() &&
+					(*u_it)->is_in_channel(chan))
 				{
-					(*it2)->chanMessage(this->_server, this->_params[1].c_str(), this->_params[1].length());
-					find = true;
-					break;
+std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
+std::cout << chan->getName() << std::endl;
+					send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 				}
+			}
 		}
-		if (find == false)
-		{
+		else
 			this->numeric_reply(401);
-			return ;
-		}
+		std::cout << "\t\tSocket " << _commander.getSocket();
+		std::cout << " Sent: \"" << buff << "\"" << std::endl;
 	}
 	return;
 }

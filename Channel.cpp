@@ -43,16 +43,16 @@ void					Channel::deleteChanop(User *chanop)
 	this->_chanops.remove(chanop);
 	return ;
 }
-void					Channel::chanMessage(Server &serv, const char *buff, int nbytes)
-{
-	std::list<User *>::iterator it;
-	for (it = serv.getUsers().begin(); it != serv.getUsers().end(); ++it)
-	{
-		if ((*it)->is_in_channel(this))
-			(*it)->message(serv, buff, nbytes);
-	}
-	return ;
-}
+//void					Channel::chanMessage(Server &serv, const char *buff, int nbytes)
+//{
+//	std::list<User *>::iterator it;
+//	for (it = serv.getUsers().begin(); it != serv.getUsers().end(); ++it)
+//	{
+//		if ((*it)->is_in_channel(this))
+//			send((*it)->getSocket(), buff, nbytes, 0);
+//	}
+//	return ;
+//}
 
 
 //	Getters

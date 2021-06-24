@@ -33,7 +33,7 @@ class Channel
 		Channel				*clone(void) const;
 		void				addChanop(User *chanop);
 		void				deleteChanop(User  *chanop);
-		void				chanMessage(Server &serv, const char *buff, int nbytes);
+//		void				chanMessage(Server &serv, const char *buff, int nbytes);
 
 	//	Getters + Setters
 		std::string			getName(void) const;

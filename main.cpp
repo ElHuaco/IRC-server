@@ -3,15 +3,15 @@
 
 //signal_handlers con signal(SIGKILL)
 
-static bool	is_cmd(const std::string &str)
-{
-	size_t len = str.find(' ');
-	std::string aux = (len != std::string::npos) ? str.substr(0, len - 1) : str;
-	 if (aux.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	 	!= std::string::npos)
-	 	return (false);
-	return (true);
-}
+//static bool	is_cmd(const std::string &str)
+//{
+//	size_t len = str.find(' ');
+//	std::string aux = (len != std::string::npos) ? str.substr(0, len - 1) : str;
+//	 if (aux.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+//	 	!= std::string::npos)
+//	 	return (false);
+//	return (true);
+//}
 
 std::string	*ft_argv_parser(int argc, char **argv)
 {
@@ -113,23 +113,9 @@ std::cout << "Main loop is checking " << i << std::endl;
 					#ifdef DEBUG
 						std::cout << "Found client for socket " << i;
 						std::cout << "." << std::endl;
-					#endif
-					
-					if (is_cmd(info) == true)
-					{
-						#ifdef DEBUG
-							std::cout << "IS COMMAND\n";
-						#endif
-						Command cmd(info, server, *client);
-						cmd.execute();
-					}
-					else
-					{
-						#ifdef DEBUG
-							std::cout << "IS MESSAGE\n";
-						#endif
-						client->message(server, buff, nbytes);
-					}
+					#endif		
+					Command cmd(info, server, *client);
+					cmd.execute();
 				}
 			}
 		}

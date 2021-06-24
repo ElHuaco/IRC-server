@@ -114,6 +114,15 @@ User					*Server::getSocketUser(int socket)
 	}
 	return (nullptr);
 }
+User					*Server::getUserNick(const std::string &str)
+{
+	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it)->getNickname() == str)
+			return (*it);
+	}
+	return (nullptr);
+}
 void					Server::deleteUser(int fd)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)

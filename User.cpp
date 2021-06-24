@@ -151,22 +151,22 @@ bool					User::is_in_channel(Channel *chan)
 	return false;
 }
 
-void					User::message(Server &server, const char *buff, int nbytes)
-{
-	for (int j = 0; j <= server.getMax(); ++j)
-	{
-		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
-			&& j != _socket)
-		{
-			#ifdef DEBUG
-				std::cout << "\tSocket User " << _socket << " sending";
-				std::cout << " message to socket " << j << "." << std::endl;
-			#endif
-			if (send(j, buff, nbytes, 0) == -1)
-				throw std::runtime_error(strerror(errno));
-			#ifdef DEBUG
-				std::cout << "\tMessage [" << buff << "] sent." << std::endl;
-			#endif
-		}
-	}
-}
+//void					User::message(Server &server, const char *buff, int nbytes)
+//{
+//	for (int j = 0; j <= server.getMax(); ++j)
+//	{
+//		if (FD_ISSET(j, &server.getMaster()) && j != server.getListener()
+//			&& j != _socket)
+//		{
+//			#ifdef DEBUG
+//				std::cout << "\tSocket User " << _socket << " sending";
+//				std::cout << " message to socket " << j << "." << std::endl;
+//			#endif
+//			if (send(j, buff, nbytes, 0) == -1)
+//				throw std::runtime_error(strerror(errno));
+//			#ifdef DEBUG
+//				std::cout << "\tMessage [" << buff << "] sent." << std::endl;
+//			#endif
+//		}
+//	}
+//}
