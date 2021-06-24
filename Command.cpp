@@ -296,6 +296,7 @@ void		Command::ftJOIN()
 		if (!aux)
 		{
 			aux = new Channel(_params[i]);
+			aux->getListChanops().push_back(&this->_commander);
 			this->_server.addChannel(aux);
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
@@ -345,12 +346,53 @@ void		Command::ftPART()
 }
 
 
-void		Command::ftTOPIC()
+void		Command::ftTOPIC()		// Prints topic of a channel.
 {
+	// Check number of parameters.
+	if (this->_paramsNum < 1)
+	{
+		this->numeric_reply(461);
+		return;
+	}
+
+	Channel *aux = this->_server.getChannelName(this->_params[0]);
+	
+	// Check if the channel exist.
+	if (!aux)
+		this->numeric_reply(403);
+
+	// Check if the commander is on the channel.
+	else if (!this->_commander.is_in_channel(aux))
+		this->numeric_reply(442);
+
+	// Check if the commander will change the Topic or just recive it.
+	else if (this->_paramsNum == 1)		// Wants to know the topic.
+	{
+		if (aux->getTopic().empty())			// There is no topic.
+			this->numeric_reply(331);
+		else									// There is a topic.
+		{
+			this->numeric_reply(332);
+			this->numeric_reply(333);
+		}
+	}
+	else if (this->_paramsNum >= 2)		// Wants to change the topic.
+	{
+		if (aux->isChanop(&this->_commander))	// Commander is a channel operator.
+		{
+			aux->setTopic(this->_params[1]);		// Topic changed.
+			this->numeric_reply(332);
+// -------- IMPORTANT -------- //
+// Should reply with the new topic to every member of the channel.
+		}
+		else									// Commander is not a channel operator.
+			this->numeric_reply(482);
+	}
+	return;
 }
 
 
-void		Command::ftNAMES()//List all visible nicknames 
+void		Command::ftNAMES()		// List all visible nicknames.
 {
 	std::list<User *> users = this->_server.getUsers();
 	std::list<User *>::iterator u_iter = users.begin();
@@ -443,7 +485,7 @@ void		Command::ftPRIVMSG()
 	// Parse first parameter
 	std::vector<std::string> targets = this->parseParam(this->_params[0]);
 std::cout << "\t\tSize: " << targets.size() << std::endl;
-for (std::vector<std::string>::iterator sit = targets.begin();
+	for (std::vector<std::string>::iterator sit = targets.begin();
 	sit != targets.end(); ++sit)
 std::cout << "\t\tTarget: " << *sit << std::endl;
 
@@ -457,35 +499,27 @@ std::cout << "\t\tTarget: " << *sit << std::endl;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
 		buff += " " + *it + " " + _params[1] + "\r\n";
-		//
-		std::cout << "\t\tPrivmsg target = \"" << (*it) << "\"" << std::endl;
-		//
+std::cout << "\t\tPrivmsg target = \"" << (*it) << "\"" << std::endl;
 		User *client;
 		Channel *chan;
 		if ((*it)[0] != '#' && (client = _server.getUserNick(*it)) != nullptr)
 		{
-			//
-			std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
-			//
+std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
 			send(client->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 std::cout << "\t\tSocket " << _commander.getSocket();
 std::cout << " Sent: \"" << buff << "\"" << std::endl;
 		}
 		else if ((*it)[0] == '#' && (chan = _server.getChannelName(*it)) != nullptr)
-		{
-			//
-			std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
-			//
+		{	
+std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
 			for (std::list<User *>::iterator u_it = _server.getUsers().begin();
 				u_it != _server.getUsers().end(); ++u_it)
 			{
 				if ((*u_it)->getNickname() != _commander.getNickname() &&
 					(*u_it)->is_in_channel(chan))
 				{
-					//
-					std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
-					//
-					std::cout << chan->getName() << std::endl;
+std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
+std::cout << chan->getName() << std::endl;
 					send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 std::cout << "\t\tSocket " << _commander.getSocket();
 std::cout << " Sent: \"" << buff << "\"" << std::endl;
@@ -493,11 +527,11 @@ std::cout << " Sent: \"" << buff << "\"" << std::endl;
 			}
 		}
 		else
+		{
 			this->numeric_reply(401);
-		//
-		std::cout << "\t\tSocket " << _commander.getSocket();
-		std::cout << " Sent: \"" << buff << "\"" << std::endl;
-		//
+std::cout << "\t\tSocket " << _commander.getSocket();
+std::cout << " Sent: \"" << buff << "\"" << std::endl;
+		}
 	}
 	return;
 }

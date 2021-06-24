@@ -27,13 +27,8 @@ Channel					*Channel::clone(void) const
 
 void					Channel::addChanop(User *chanop)
 {
-	if (chanop == nullptr)
+	if (chanop == nullptr || this->isChanop(chanop))
 		return ;
-	for (iterator it = _chanops.begin(); it != _chanops.end(); ++it)
-	{
-		if ((*it)->getNickname() == chanop->getNickname())
-			return ;
-	}
 	this->_chanops.push_back(chanop);
 	return ;
 }
@@ -43,6 +38,17 @@ void					Channel::deleteChanop(User *chanop)
 	this->_chanops.remove(chanop);
 	return ;
 }
+
+bool					Channel::isChanop(User *chanop)
+{
+	for (iterator it = _chanops.begin(); it != _chanops.end(); ++it)
+	{
+		if ((*it) == chanop)
+			return (true);
+	}
+	return (false);
+}
+
 //void					Channel::chanMessage(Server &serv, const char *buff, int nbytes)
 //{
 //	std::list<User *>::iterator it;
