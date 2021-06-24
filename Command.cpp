@@ -480,30 +480,28 @@ void		Command::ftMODE()
 
 void		Command::ftLIST()//list channels & their topics
 {
-	// std::list<Channel *> channels = this->_server.getChannels();
-	// std::list<Channel *>::iterator c_iter = channels.begin();
+	std::list<Channel *> channels = this->_server.getChannels();
+	std::list<Channel *>::iterator c_iter = channels.begin();
+	std::string buff;
 
-	std::string aux;
-	aux.append(":127.0.0.1 322 ");
-	aux.append("#");
-	aux.append("Name channel ");
-	aux.append("NunUsers ");
-	aux.append("[topic]\n");
-
-	for (int j = 0; j <= this->_server.getMax(); ++j)
+	for (; c_iter != channels.end(); ++c_iter)
 	{
-		if (FD_ISSET(j, &this->_server.getMaster()))
-		{
-			send(j, aux.c_str(), strlen(aux.c_str()), 0);//asi funciona pero hay que mejorar
-		}
+		buff.append(":127.0.0.1 322 ");
+		buff.append("#");
+		buff.append((*c_iter)->getName());//si no pones esto no funciona
+		buff.append(" ");
+		buff.append((*c_iter)->getName());
+		buff.append(" ");
+		//buff.append(itoa(this->_server.getNumUsers()));//no funciona itoa <stdlib.h> ft_itoa??
+		buff.append("2");//Numero de prueba
+		buff.append(" ");
+		buff.append((*c_iter)->getTopic());
+		buff.append("\r\n");
+		// buff = ":127.0.0.1 322 " + (*c_iter)->getName() + " 6 "
+		//  		+ (*c_iter)->getTopic() + "\r\n";
+		std::cout << "buff: " << buff << std::endl;
+		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 	}
-
-	// for (; c_iter != channels.end(); ++c_iter)
-	// {
-	// 	std::cout << "#" << (*c_iter)->getName() << "\t" \
-	// 		<< this->_server.getNumUsers() << "\t" \
-	// 		<< (*c_iter)->getTopic() << std::endl;
-	// }
 }
 
 
