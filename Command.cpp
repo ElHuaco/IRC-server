@@ -201,18 +201,23 @@ void		Command::ftUSER()
 	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 	if (_commander.isWelcomed() == false)
 	{
+		//numeric_reply 001
 		ack = ":ft_irc 001 " + _commander.getNickname()
 			+ " Welcome to the Internet Relay Network!\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		//numeric_reply 002
 		ack = ":ft_irc 002 " + _commander.getNickname()
 			+ " Your host is ft_irc\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		//numeric_reply 003
 		ack = ":ft_irc 003 " + _commander.getNickname()
 			+ " This server was created long ago\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		//numeric_reply 004
 		ack = ":ft_irc 004 " + _commander.getNickname()
 			+ " RPL_MYINFO\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		//numeric_reply 005
 		ack = ":ft_irc 005 " + _commander.getNickname()
 			+ " tokens are not supported by this server\r\n";
 		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
@@ -300,11 +305,6 @@ void		Command::ftJOIN()
 			this->_server.addChannel(aux);
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
-			//Mensaje JOIN, RPL_TOPIC, RPL_USERLIST
-			//numeric_reply(332);
-			//numeric_reply(353);
-			// this->_erroneous[j++] = this->_params[i];
-			// this->numeric_reply(403);
 		}
 		else
 		{
@@ -317,12 +317,14 @@ void		Command::ftJOIN()
 		std::string buff = ":" + _commander.getNickname() + " JOIN "
 			+ _params[i] + "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		//numeric_reply 332;
 		if (aux->getTopic().empty() == false)
 		{
 			buff = ":127.0.0.1 332 " + _commander.getNickname() + " ";
 			buff += aux->getName() + " " + aux->getTopic() + "\r\n";
 			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
+		//numeric_reply 353;
 		buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + _params[i]
 			+ " :";
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
@@ -333,11 +335,11 @@ void		Command::ftJOIN()
 		}
 		buff += "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
+		//numeric_reply 366
 		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
 			" :End of /NAMES list\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
+		//server reply to other users on channel
 		buff = ":" + _commander.getNickname() + " JOIN " + _params[i] + "\r\n";
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
 			u_iter != _server.getUsers().end(); ++u_iter)
@@ -439,6 +441,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 			continue ;
 		if ((chan = _server.getChannelName(_params[i])) != nullptr)
 		{
+			//numeric_reply 353
 			buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + _params[i]
 				+ " :";
 			for (; u_iter != users.end(); ++u_iter)
@@ -449,6 +452,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 			buff += "\r\n";
 			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
+		//numeric_reply 366
 		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
 			" :End of /NAMES list\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
