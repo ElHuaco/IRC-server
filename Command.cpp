@@ -422,34 +422,44 @@ void		Command::ftPRIVMSG()
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
-std::cout << "Privmsg target = \"" << (*it) << "\"" << std::endl;
+		//
+		std::cout << "\t\tPrivmsg target = \"" << (*it) << "\"" << std::endl;
+		//
 		buff += " " + *it + " " + _params[1] + "\r\f";
-		User *client = _server.getUserNick(*it);
+		User *client;
 		Channel *chan;
-		if (client != nullptr)
+		if ((*it)[0] != '#' && (client = _server.getUserNick(*it)) != nullptr)
 		{
-std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
+			//
+			std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
+			//
 			send(client->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
-		else if ((chan = _server.getChannelName(*it)) != nullptr)
+		else if ((*it)[0] == '#' && (chan = _server.getChannelName(*it)) != nullptr)
 		{
-std::cout <<"\t\tSending to channel " << chan->getName() << "..." << std::endl;
+			//
+			std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
+			//
 			for (std::list<User *>::iterator u_it = _server.getUsers().begin();
 				u_it != _server.getUsers().end(); ++u_it)
 			{
 				if ((*u_it)->getNickname() != _commander.getNickname() &&
 					(*u_it)->is_in_channel(chan))
 				{
-std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
-std::cout << chan->getName() << std::endl;
+					//
+					std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
+					//
+					std::cout << chan->getName() << std::endl;
 					send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 				}
 			}
 		}
 		else
 			this->numeric_reply(401);
+		//
 		std::cout << "\t\tSocket " << _commander.getSocket();
 		std::cout << " Sent: \"" << buff << "\"" << std::endl;
+		//
 	}
 	return;
 }
