@@ -307,6 +307,8 @@ void		Command::ftJOIN()
 		}
 		else
 		{
+			if (_commander.is_in_channel(aux) == true)
+				continue ;
 			this->_commander.addChannel(aux);
 			// Imprimir topic
 			// this->numeric_reply(381);
@@ -335,6 +337,14 @@ std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 			" :End of /NAMES list\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
+		buff = ":" + _commander.getNickname() + " JOIN " + _params[i] + "\r\n";
+		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
+			u_iter != _server.getUsers().end(); ++u_iter)
+		{
+			if ((*u_iter)->getNickname() != _commander.getNickname() &&
+				(*u_iter)->is_in_channel(aux) == true)
+				send((*u_iter)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		}
 	}
 	return ;
 }
@@ -342,6 +352,30 @@ std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 
 void		Command::ftPART()
 {
+	std::vector<std::string> targets = this->parseParam(_params[0]);
+	for (std::vector<std::string>::iterator it = targets.begin();
+		it != targets.end(); ++it)
+	{
+		if (it->empty() == true)
+			continue ;
+		Channel *chan = _server.getChannelName(*it);
+		if (chan == nullptr)
+		{
+			this->numeric_reply(403);
+			continue ;
+		}
+		if (_commander.is_in_channel(chan) == false)
+		{
+			this->numeric_reply(442);
+			continue ;
+		}
+		std::string buff = ":" + _commander.getNickname() + " PART "
+			+ *it + " " + _params[1] + "\r\n";
+		for (std::list<User *>::iterator it2 = _server.getUsers().begin();
+			it2 != _server.getUsers().end(); ++it2)
+			send((*it2)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		_commander.deleteChannel(*it);
+	}
 }
 
 
@@ -450,8 +484,6 @@ std::cout << "\t\tTarget: " << *sit << std::endl;
 	//RFC message
 	std::string buff = ":" + _commander.getNickname() + " PRIVMSG";
 
-	//TODO: ERR_CANNOTSENDTOCHAN(404)
-
 	// Send message
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
@@ -476,6 +508,11 @@ std::cout << " Sent: \"" << buff << "\"" << std::endl;
 			//
 			std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
 			//
+			if (_commander.is_in_channel(chan) == false)
+			{
+				this->numeric_reply(404);
+				continue ;
+			}
 			for (std::list<User *>::iterator u_it = _server.getUsers().begin();
 				u_it != _server.getUsers().end(); ++u_it)
 			{
@@ -494,10 +531,6 @@ std::cout << " Sent: \"" << buff << "\"" << std::endl;
 		}
 		else
 			this->numeric_reply(401);
-		//
-		std::cout << "\t\tSocket " << _commander.getSocket();
-		std::cout << " Sent: \"" << buff << "\"" << std::endl;
-		//
 	}
 	return;
 }
@@ -561,7 +594,7 @@ void			Command::numeric_reply(int key)
 	else if (key == 441)
 		buff += ":They aren't on that channel";
 	else if (key == 442)
-		buff += ":You're not on a channel";
+		buff += ":You're not on that channel";
 	else if (key == 461)
 		buff += ":Not enough parameters";
 	else if (key == 462)
