@@ -33,7 +33,8 @@ class Channel
 	//	Functions
 		Channel				*clone(void) const;
 		void				addChanop(User *chanop);
-		void				deleteChanop(User  *chanop);
+		void				deleteChanop(User *chanop);
+		bool				isChanop(User *chanop);
 //		void				chanMessage(Server &serv, const char *buff, int nbytes);
 
 	//	Getters + Setters
