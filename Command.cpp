@@ -409,7 +409,7 @@ void		Command::ftPRIVMSG()
 			for (it2 = this->_server.getChannels().begin(); it2 != this->_server.getChannels().end(); ++it2)
 				if ((*it2)->getName() == *(it))
 				{
-					//(*it2)->channelMessage(this->_server, this->_params[1].c_str(), this->_params[1].length());
+					(*it2)->chanMessage(this->_server, this->_params[1].c_str(), this->_params[1].length());
 					find = true;
 					break;
 				}
