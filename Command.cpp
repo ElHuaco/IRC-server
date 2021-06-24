@@ -39,7 +39,7 @@ int		Command::parseStr(std::string str)
 	{
 		pos1 = pos2 + 1;
 		pos2 = str.find(" ", pos1);
-		if (pos2 == std::string::npos)
+		if (pos2 == std::string::npos || str[pos1] == ':')
 			pos2 = str.find("\r\n", pos1);
 		if (pos2 <= pos1)
 			break;
