@@ -310,8 +310,23 @@ void		Command::ftJOIN()
 			// Imprimir topic
 			// this->numeric_reply(381);
 		}
-		std::string buff = ":" + _commander.getNickname() + " JOIN " + _params[i] + "\r\n";
+		std::string buff = ":" + _commander.getNickname() + " JOIN "
+			+ _params[i] + "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		if (aux->getTopic().empty() == false)
+		{
+			buff = ":127.0.0.1 332 " + _commander.getNickname() + " ";
+			buff += aux->getName() + " " + aux->getTopic() + "\r\n";
+			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		}
+		buff = ":127.0.0.1 353 = " + _params[i] + " :";
+			for (std::list<User *>::iterator it = _server.getUsers().begin();
+				it != _server.getUsers().end(); ++it)
+				if ((*it)->is_in_channel(aux) == true)
+					buff += (*it)->getNickname() + " :";
+		buff += "\r\f";
+		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 	}
 	return ;
 }
@@ -331,9 +346,20 @@ void		Command::ftNAMES()//List all visible nicknames
 {
 	std::list<User *> users = this->_server.getUsers();
 	std::list<User *>::iterator u_iter = users.begin();
-
-	for (; u_iter != users.end(); ++u_iter)
-		std::cout << "Users on #Channel: " <<(*u_iter)->getNickname() << " ";
+	std::string buff = ":127.0.0.1 353 ";
+	int	i = -1;
+	while (++i < 5)
+	{
+		if (_params[i].empty() == true)
+			continue;
+		buff += "= " + _params[i] + " :";
+		for (; u_iter != users.end(); ++u_iter)
+			if ((*u_iter)->is_in_channel(_server.getChannelName(_params[i])) == true)
+				buff += (*u_iter)->getNickname() + " ";
+	}
+	buff += "\r\f";
+	send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	return ;
 }
 
 

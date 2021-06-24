@@ -141,6 +141,8 @@ void					User::deleteChannel(const std::string &name)
 
 bool					User::is_in_channel(Channel *chan)
 {
+	if (chan == nullptr)
+		return false;
 	for (iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
 	{
 		if (*it == chan)
