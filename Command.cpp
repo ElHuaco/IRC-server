@@ -443,19 +443,15 @@ void		Command::ftNAMES()		// List all visible nicknames.
 				+ " :";
 			for (; u_iter != users.end(); ++u_iter)
 			{
-std::cout << "\t\t_params[i]: " << _params[i] << std::endl;
-std::cout << "\t\tIs " << (*u_iter)->getSocket() << " in channel " << _server.getChannelName(_params[i])->getName() << "? " << std::boolalpha << (*u_iter)->is_in_channel(_server.getChannelName(_params[i])) << std::endl;
 				if ((*u_iter)->is_in_channel(chan) == true)
 					buff += (*u_iter)->getNickname() + " ";
 			}
 			buff += "\r\n";
 			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 		}
 		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
 			" :End of /NAMES list\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-std::cout << "\t\tSent: \"" << buff << "\"" << std::endl;
 	}
 	return ;
 }
@@ -518,10 +514,6 @@ void		Command::ftPRIVMSG()
 
 	// Parse first parameter
 	std::vector<std::string> targets = this->parseParam(this->_params[0]);
-std::cout << "\t\tSize: " << targets.size() << std::endl;
-	for (std::vector<std::string>::iterator sit = targets.begin();
-	sit != targets.end(); ++sit)
-std::cout << "\t\tTarget: " << *sit << std::endl;
 
 	//RFC message
 	std::string buff = ":" + _commander.getNickname() + " PRIVMSG";
@@ -531,47 +523,38 @@ std::cout << "\t\tTarget: " << *sit << std::endl;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
 		buff += " " + *it + " " + _params[1] + "\r\n";
+		//
 std::cout << "\t\tPrivmsg target = \"" << (*it) << "\"" << std::endl;
+		//
 		User *client;
 		Channel *chan;
 		if ((*it)[0] != '#' && (client = _server.getUserNick(*it)) != nullptr)
 		{
+			//
 std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
+			//
 			send(client->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-std::cout << "\t\tSocket " << _commander.getSocket();
-std::cout << " Sent: \"" << buff << "\"" << std::endl;
 		}
 		else if ((*it)[0] == '#' && (chan = _server.getChannelName(*it)) != nullptr)
 		{
 			//
-			std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
+std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
 			//
 			if (_commander.is_in_channel(chan) == false)
 			{
 				this->numeric_reply(404);
 				continue ;
 			}
-		{	
 			for (std::list<User *>::iterator u_it = _server.getUsers().begin();
 				u_it != _server.getUsers().end(); ++u_it)
 			{
 				if ((*u_it)->getNickname() != _commander.getNickname() &&
 					(*u_it)->is_in_channel(chan))
-				{
-std::cout << "\t\tSent to user " << (*u_it)->getNickname() << " on channel ";
-std::cout << chan->getName() << std::endl;
 					send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-std::cout << "\t\tSocket " << _commander.getSocket();
-std::cout << " Sent: \"" << buff << "\"" << std::endl;
-				}
 			}
 		}
 		else
-		{
 			this->numeric_reply(401);
-std::cout << "\t\tSocket " << _commander.getSocket();
-std::cout << " Sent: \"" << buff << "\"" << std::endl;
-		}
 	}
 	return;
 }
