@@ -351,11 +351,13 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 	// Check number of parameters.
 	if (this->_paramsNum < 1)
 	{
+		this->_erroneous[0] = this->_command;
 		this->numeric_reply(461);
 		return;
 	}
 
 	Channel *aux = this->_server.getChannelName(this->_params[0]);
+	this->_erroneous[0] = this->_params[0];
 	
 	// Check if the channel exist.
 	if (!aux)
@@ -372,7 +374,9 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 			this->numeric_reply(331);
 		else									// There is a topic.
 		{
-			this->numeric_reply(332);
+			this->numeric_reply(332, aux->getTopic());
+			this->_erroneous[1] = aux->getWhoTopicNick();
+			this->_erroneous[2] = aux->getWhoTopicSetat();
 			this->numeric_reply(333);
 		}
 	}
@@ -381,6 +385,9 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 		if (aux->isChanop(&this->_commander))	// Commander is a channel operator.
 		{
 			aux->setTopic(this->_params[1]);		// Topic changed.
+			aux->setWhoTopicNick(this->_commander.getNickname());
+			std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+			aux->setWhoTopicSetat(time);
 			this->numeric_reply(332);
 // -------- IMPORTANT -------- //
 // Should reply with the new topic to every member of the channel.
@@ -551,7 +558,7 @@ std::string		*Command::getErroneous(void) const
 	return (this->_erroneous);
 }
 
-void			Command::numeric_reply(int key)
+void			Command::numeric_reply(int key, std::string extra = nullptr)
 {
 	std::string buff = ":127.0.0.1 " + std::to_string(key) + " "
 		+ _commander.getNickname() + " ";
@@ -561,7 +568,13 @@ void			Command::numeric_reply(int key)
 		while (_erroneous[++i].empty() == false)
 			buff += _erroneous[i];
 	}
-	if (key == 401)
+	if (key == 331)		// RPLY_NOTOPIC
+		buff += ":No topic is set";
+	else if (key == 332)		// RPLY_NOTOPIC
+		buff += ":" + extra;
+	else if (key == 332)		// RPLY_NOTOPIC
+		;
+	else if (key == 401)
 		buff += ":No such nick/channel";
 	else if (key == 403)
 		buff += ":No such channel";

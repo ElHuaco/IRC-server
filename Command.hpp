@@ -2,6 +2,8 @@
 
 # include <vector>
 # include <locale>
+# include <ctime>
+# include <chrono>
 
 class Server;
 class User;
@@ -35,7 +37,7 @@ class Command
 		int							parseStr(std::string str);
 		std::vector<std::string>	parseParam(std::string param);
 		void						execute();
-		void						numeric_reply(int key);
+		void						numeric_reply(int key, std::string extra);
 
 		// Commands
 		void				ftNICK();
