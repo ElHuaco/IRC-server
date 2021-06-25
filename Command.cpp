@@ -112,9 +112,6 @@ void		Command::execute(void)
 // Commands
 void			Command::ftNICK()
 {
-	#ifdef DEBUG
-	std::cout << "Nick execution" << std::endl;
-	#endif
 	// Checking if a nickname has been provided.					(ERR_NONICKNAMEGIVEN)
 	if (this->_paramsNum == 0)
 	{
@@ -123,45 +120,26 @@ void			Command::ftNICK()
 	}
 
 	// Checking that the nickname isn't erroneous.					(ERR_ERRONEUSNICKNAME)
-	int i = 0;
-	if (!isalpha(this->_params[0][i]))
-	{
-		this->_erroneous[0] = this->_params[0];
-		this->numeric_reply(432);
-		return ;
-	}
+	this->_erroneous[0] = this->_params[0];
+	int i = -1;
 	while (this->_params[0][++i])
-		if (!isalnum(this->_params[0][i]))
+		if (!isalnum(this->_params[0][i]) || !isalpha(this->_params[0][0]))
 		{
-			this->_erroneous[0] = this->_params[0];
-			this->numeric_reply(431);
+			this->numeric_reply(432);
 			return ;
 		}
 
-	#ifdef DEBUG
-	std::cout << "While starts" << std::endl;
-	#endif
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
 	std::list<User *>::iterator it = this->_server.getUsers().begin();
-	i = 0;
-	//for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
 	while (it != this->_server.getUsers().end())
 	{
-	#ifdef DEBUG
-	std::cout << "Loop " << i++ << " = \"";
-	std::cout << (*it)->getNickname() << "\"" << std::endl;
-	#endif
 		if ((*it)->getNickname() == this->_params[0])
 		{
-			this->_erroneous[0] = this->_params[0];
 			this->numeric_reply(433);
 			return ;
 		}
 		it++;
 	}
-	#ifdef DEBUG
-	std::cout << "While ended" << std::endl;
-	#endif
 
 	// Not needed if we dont have server to server connection.		(ERR_NICKCOLLISION)
 	//this->numeric_reply(436);
@@ -170,9 +148,6 @@ void			Command::ftNICK()
 	this->_commander.setNickname(this->_params[0]);
 	std::string ack = ": NICK " + _params[0] + "\r\n";
 	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
-	#ifdef DEBUG
-		std::cout << "Nick returns" << std::endl;
-	#endif
 	return ;
 }
 
@@ -250,12 +225,12 @@ void		Command::ftOPER()
 	// Searching the user/nick and OP.					(RPL_YOUREOPER)
 	std::list<User *>::iterator it;
 	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
-		if ((*it)->getNickname() == this->_params[0] || (*it)->getUsername() == this->_params[0])
+		if ((*it)->getNickname() == this->_params[0])
 		{
 			this->_commander.setIsOP(true);
 			this->numeric_reply(381);
 		}
-	// If no user/nick, standar return?
+	return;
 }
 
 
@@ -355,23 +330,37 @@ void		Command::ftJOIN()
 
 void		Command::ftPART()
 {
-	std::vector<std::string> targets = this->parseParam(_params[0]);
-	for (std::vector<std::string>::iterator it = targets.begin();
-		it != targets.end(); ++it)
+	// Check number of parameters.
+	if (this->_paramsNum < 1)
 	{
+		this->numeric_reply(461);
+		return;
+	}
+
+	// Loop for all the channels given.
+	std::vector<std::string> targets = this->parseParam(_params[0]);
+	for (std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
+	{
+		this->_erroneous[0] = (*it);
 		if (it->empty() == true)
 			continue ;
+
+		// Check if channel exist.
 		Channel *chan = _server.getChannelName(*it);
 		if (chan == nullptr)
 		{
 			this->numeric_reply(403);
 			continue ;
 		}
+
+		// Check if the commander/user is in the channel.
 		if (_commander.is_in_channel(chan) == false)
 		{
 			this->numeric_reply(442);
 			continue ;
 		}
+
+		// Warn all the users of the channel + commander leaves the channel.
 		std::string buff = ":" + _commander.getNickname() + " PART "
 			+ *it + " " + _params[1] + "\r\n";
 		for (std::list<User *>::iterator it2 = _server.getUsers().begin();
@@ -379,6 +368,7 @@ void		Command::ftPART()
 			send((*it2)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		_commander.deleteChannel(*it);
 	}
+	return;
 }
 
 
@@ -387,7 +377,6 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 	// Check number of parameters.
 	if (this->_paramsNum < 1)
 	{
-		this->_erroneous[0] = this->_command;
 		this->numeric_reply(461);
 		return;
 	}
@@ -440,32 +429,41 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 
 void		Command::ftNAMES()		// List all visible nicknames.
 {
-	std::list<User *> users = this->_server.getUsers();
-	std::list<User *>::iterator u_iter = users.begin();
-	Channel *chan;
-	std::string buff;
-	int	i = -1;
-	while (++i < 5)
+	// If there is no arguments an "end of the list" reply is returned.
+	if (this->_paramsNum < 1)
 	{
-		if (_params[i].empty() == true)
+		this->_erroneous[0] = ("*");
+		this->numeric_reply(366);
+		return ;
+	}
+	std::list<User *> users = this->_server.getUsers();
+	Channel *chan;
+
+	// Loop for each channel.
+	std::vector<std::string> targets = this->parseParam(_params[0]);
+	for (std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
+	{
+		this->_erroneous[0] = (*it);
+		if ((*it).empty() == true)
 			continue ;
-		if ((chan = _server.getChannelName(_params[i])) != nullptr)
-		{
-			//numeric_reply 353
-			buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + _params[i]
-				+ " :";
-			for (; u_iter != users.end(); ++u_iter)
-			{
+		
+		// Check if the channel exists.
+		if ((chan = _server.getChannelName(*it)) != nullptr)	// It exists.
+			// List all the users of the channel.
+			for (std::list<User *>::iterator u_iter = users.begin(); u_iter != users.end(); ++u_iter)
 				if ((*u_iter)->is_in_channel(chan) == true)
-					buff += (*u_iter)->getNickname() + " ";
-			}
-			buff += "\r\n";
-			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+				{
+					this->_erroneous[4] = (*u_iter)->getNickname();
+					this->numeric_reply(353);
+				}
+		else													// There isn't such channel.
+		{
+			this->numeric_reply(401);
+			continue ;
 		}
-		//numeric_reply 366
-		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
-			" :End of /NAMES list\r\n";
-		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+
+		// End of the list of names.
+		this->numeric_reply(366);
 	}
 	return ;
 }
@@ -512,7 +510,7 @@ void		Command::ftKICK()
 
 void		Command::ftPRIVMSG()
 {
-	// Check number of params
+	// Check number of params.
 	if (this->_paramsNum == 0)
 	{
 		this->numeric_reply(411);
@@ -524,36 +522,30 @@ void		Command::ftPRIVMSG()
 		return;
 	}
 
-	// Parse first parameter
+	// Parse first parameter.
 	std::vector<std::string> targets = this->parseParam(this->_params[0]);
 
-	//RFC message
+	//RFC message.
 	std::string buff = ":" + _commander.getNickname() + " PRIVMSG";
 
-	// Send message
+	// Send message.
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
 		buff += " " + *it + " " + _params[1] + "\r\n";
-		//
-std::cout << "\t\tPrivmsg target = \"" << (*it) << "\"" << std::endl;
-		//
 		User *client;
 		Channel *chan;
+
+		// Send to a user.
 		if ((*it)[0] != '#' && (client = _server.getUserNick(*it)) != nullptr)
-		{
-			//
-std::cout << "\t\tSending to client " << client->getNickname() << "..." << std::endl;
-			//
 			send(client->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-		}
+		
+		// Send to a server.
 		else if ((*it)[0] == '#' && (chan = _server.getChannelName(*it)) != nullptr)
 		{
-			//
-std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
-			//
 			if (_commander.is_in_channel(chan) == false)
 			{
+				this->_erroneous[0] = (*it);
 				this->numeric_reply(404);
 				continue ;
 			}
@@ -565,8 +557,13 @@ std::cout << "\t\tSending to channel " << chan->getName() << "..." << std::endl;
 					send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 			}
 		}
+
+		// There is not such server/user.
 		else
+		{
+			this->_erroneous[0] = (*it);
 			this->numeric_reply(401);
+		}
 	}
 	return;
 }
@@ -609,6 +606,15 @@ void			Command::numeric_reply(int key)
 			break;
 		case 333:		// RPLY_TOPICWHOTIME
 			break;
+		case 353:		// RPLY_NAMREPLY
+			buff += ":End of /NAMES list";
+			break;
+		case 366:		// 
+			buff += ":" + this->_erroneous[4];
+			break;
+		case 381:		// RPLY_YOUROPER
+			buff += ":You are now an IRC operator";
+			break;
 		case 401:		// ERR_
 			buff += ":No such nick/channel";
 			break;
@@ -637,7 +643,7 @@ void			Command::numeric_reply(int key)
 			buff += ":Wildcard in toplevel domain";
 			break;
 		case 421:		// ERR_
-			buff += _command + ":Unknown command";
+			buff += this->_command + ":Unknown command";
 			break;
 		case 431:		// ERR_
 			buff += ":No nickname given";
@@ -661,7 +667,7 @@ void			Command::numeric_reply(int key)
 			buff += ":You're not on that channel";
 			break;
 		case 461:		// ERR_
-			buff += ":Not enough parameters";
+			buff += this->_command + ":Not enough parameters";
 			break;
 		case 462:		// ERR_
 			buff += ":Unauthorized command (already registered)";
