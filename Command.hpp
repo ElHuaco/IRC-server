@@ -40,6 +40,7 @@ class Command
 		std::vector<std::string>	parseParam(std::string param);
 		void						execute();
 		void						numeric_reply(int key, std::string rply="", int socket=0);
+		std::string					ft_itoa(int num);
 
 		// Commands
 		void				ftNICK();
