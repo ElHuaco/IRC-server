@@ -290,32 +290,32 @@ void		Command::ftJOIN()
 	// Checking if a channel exist and joining it.		(ERR_NOSUCHCHANNEL)
 	//													(RPL_TOPIC)
 	
-	int i = -1;
 	int j = 0;
 	Channel *aux;
-	while (++i < 5)
+	std::vector<std::string> targets = this->parseParam(_params[0]);
+	std::vector<std::string>::iterator it = targets.begin();
+	for (; it != targets.end(); ++it)
 	{
-		if (_params[i].empty() == true)
+		if (it->empty() == true || (it->at(0) != '&' && it->at(0) != '#'
+			&& it->at(0) != '+' && it->at(0) != '!'))
 			continue ;
-		aux = this->_server.getChannelName(this->_params[i]);
+		aux = this->_server.getChannelName(*it);
 		if (!aux)
 		{
-			aux = new Channel(_params[i]);
+			aux = new Channel(*it);
 			aux->getListChanops().push_back(&this->_commander);
 			this->_server.addChannel(aux);
 			delete aux;
-			this->_commander.addChannel(this->_server.getChannelName(_params[i]));
+			this->_commander.addChannel(this->_server.getChannelName(*it));
 		}
 		else
 		{
 			if (_commander.is_in_channel(aux) == true)
 				continue ;
 			this->_commander.addChannel(aux);
-			// Imprimir topic
-			// this->numeric_reply(381);
 		}
 		std::string buff = ":" + _commander.getNickname() + " JOIN "
-			+ _params[i] + "\r\n";
+			+ *it + "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		//numeric_reply 332;
 		if (aux->getTopic().empty() == false)
@@ -325,7 +325,7 @@ void		Command::ftJOIN()
 			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
 		//numeric_reply 353;
-		buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + _params[i]
+		buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + *it
 			+ " :";
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
 			u_iter != _server.getUsers().end(); ++u_iter)
@@ -336,11 +336,11 @@ void		Command::ftJOIN()
 		buff += "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		//numeric_reply 366
-		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + _params[i] +
+		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + *it +
 			" :End of /NAMES list\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		//server reply to other users on channel
-		buff = ":" + _commander.getNickname() + " JOIN " + _params[i] + "\r\n";
+		buff = ":" + _commander.getNickname() + " JOIN " + *it + "\r\n";
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
 			u_iter != _server.getUsers().end(); ++u_iter)
 		{
@@ -507,6 +507,56 @@ void		Command::ftLIST()//list channels & their topics
 
 void		Command::ftKICK()
 {
+	if (_paramsNum < 2)
+	{
+		this->numeric_reply(461);
+		return ;
+	}
+	if (_commander.getIsOP() == false)
+	{
+		this->numeric_reply(482);
+		return ;
+	}
+	std::vector<std::string> from = this->parseParam(_params[0]);
+	std::vector<std::string> targets = this->parseParam(_params[1]);
+	if (from.size() != 1) //No implementado parejas channel-user
+		return ;
+	Channel *aux = _server.getChannelName(from.at(0));
+	if (aux == nullptr)
+	{
+		this->numeric_reply(403);
+		return ;
+	}
+	if (_commander.is_in_channel(aux) == false)
+	{
+		this->numeric_reply(442);
+		return ;
+	}
+	for (std::vector<std::string>::iterator it = targets.begin();
+		it != targets.end(); ++it)
+	{
+		User *kicked = _server.getUserNick(*it);
+		if (kicked->is_in_channel(aux) == false)
+		{
+			this->numeric_reply(441);
+			continue ;
+		}
+		//Enviar PART al afectado y modificar sus atributos
+		std::string buff = ":" + _commander.getNickname() + " KICK "
+			+ from.at(0) + " " + *it + " " + _params[2] + "\r\n";
+		kicked->deleteChannel(from.at(0));
+		send(kicked->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		buff = ":" + kicked->getNickname() + " PART "
+			+ from.at(0) + " :Kicked by an operator!\r\n";
+		send(kicked->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		//Enviar al resto de users en el canal el KICK message
+		buff = ":" + _commander.getNickname() + " KICK "
+			+ from.at(0) + " " + *it + " " + _params[2] + "\r\n";
+		for (std::list<User *>::iterator it2 = _server.getUsers().begin();
+			it2 != _server.getUsers().end(); ++it2)
+			if ((*it2)->is_in_channel(aux) == true)
+				send((*it2)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	}
 }
 
 
@@ -608,6 +658,9 @@ void			Command::numeric_reply(int key)
 			buff += ":" + this->_erroneous[4];
 			break;
 		case 333:		// RPLY_TOPICWHOTIME
+			break;
+		case 381:
+			buff += ":You are now an IRC operator";
 			break;
 		case 401:		// ERR_
 			buff += ":No such nick/channel";
