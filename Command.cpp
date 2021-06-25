@@ -282,18 +282,18 @@ void		Command::ftJOIN()
 		if (aux->getTopic().empty() == false)
 		{
 			this->_erroneous[0] = aux->getName();
-			this->_erroneous[4] = aux->getTopic();
-			this->numeric_reply(332);
+			this->numeric_reply(332, aux->getTopic());
 		}
 		//numeric_reply 353;
 		this->_erroneous[0] = "= " + *it;
+		std::string rply;
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
 			u_iter != _server.getUsers().end(); ++u_iter)
 		{
 			if ((*u_iter)->is_in_channel(aux) == true)
-				this->_erroneous[4] += (*u_iter)->getNickname() + " ";
+				rply += (*u_iter)->getNickname() + " ";
 		}
-		this->numeric_reply(353);
+		this->numeric_reply(353, rply);
 		//numeric_reply 366
 		this->numeric_reply(366);
 		//server reply to other users on channel
