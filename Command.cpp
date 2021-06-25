@@ -45,6 +45,8 @@ int		Command::parseStr(std::string str)
 			pos2 = str.find("\r\n", pos1);
 		if (pos2 <= pos1)
 			break;
+		if (str[pos1] == ':')
+			pos1++;
 		this->_params[i++] = str.substr(pos1, pos2 - pos1);
 		#ifdef DEBUG
 			std::cout << i << " parameter = \"" << this->_params[i - 1] << "\"" << std::endl;
@@ -377,7 +379,7 @@ void		Command::ftPART()
 void		Command::ftTOPIC()		// Prints topic of a channel.
 {
 	// Check number of parameters.
-	if (this->_paramsNum < 1)
+	if (this->_paramsNum < 1 || this->_params[0].empty())
 	{
 		this->numeric_reply(461);
 		return;
@@ -401,8 +403,7 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 			this->numeric_reply(331);
 		else									// There is a topic.
 		{
-			this->_erroneous[5] = aux->getTopic();
-			this->numeric_reply(332);
+			this->numeric_reply(332, aux->getTopic());
 			this->_erroneous[1] = aux->getWhoTopicNick();
 			this->_erroneous[2] = aux->getWhoTopicSetat();
 			this->numeric_reply(333);
@@ -410,17 +411,19 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 	}
 	else if (this->_paramsNum >= 2)		// Wants to change the topic.
 	{
-		if (aux->isChanop(&this->_commander))	// Commander is a channel operator.
+		if (aux->isChanop(&this->_commander) || this->_commander.getIsOP())	// Commander is a channel operator.
 		{
+			if (this->_params[1] == "\"\"")
+				this->_params[1].clear();
 			aux->setTopic(this->_params[1]);		// Topic changed.
 			aux->setWhoTopicNick(this->_commander.getNickname());
 			std::stringstream time;
 			time << std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 			aux->setWhoTopicSetat(time.str());
-			this->_erroneous[5] = aux->getTopic();
-			this->numeric_reply(332);
-// -------- IMPORTANT -------- //
-// Should reply with the new topic to every member of the channel.
+			for (std::list<User *>::iterator u_iter = this->_server.getUsers().begin();
+			u_iter != this->_server.getUsers().end(); ++u_iter)
+				if ((*u_iter)->is_in_channel(aux))
+					this->numeric_reply(332, aux->getTopic(), (*u_iter)->getSocket());
 		}
 		else									// Commander is not a channel operator.
 			this->numeric_reply(482);
@@ -445,25 +448,29 @@ void		Command::ftNAMES()		// List all visible nicknames.
 	std::vector<std::string> targets = this->parseParam(_params[0]);
 	for (std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
 	{
-		this->_erroneous[0] = "= " + (*it);
 		if ((*it).empty() == true)
 			continue ;
 		
 		// Check if the channel exists.
 		if ((chan = _server.getChannelName(*it)) != nullptr)	// It exists.
 		{
+			this->_erroneous[0] = "= " + (*it);
+			std::string	rply;
 			// List all the users of the channel.
 			for (std::list<User *>::iterator u_iter = users.begin(); u_iter != users.end(); ++u_iter)
 				if ((*u_iter)->is_in_channel(chan) == true)
 				{
-					this->_erroneous[4] += (*u_iter)->getNickname() + " ";
+					rply += (*u_iter)->getNickname() + " ";
 				}
-			this->numeric_reply(353);
+			this->numeric_reply(353, rply);
 			this->numeric_reply(366);
-			this->_erroneous[4].clear();
+			rply.clear();
 		}
 		else													// There isn't such channel.
+		{
+			this->_erroneous[0] = (*it);
 			this->numeric_reply(401);
+		}
 	}
 	return ;
 }
@@ -633,7 +640,7 @@ std::string		*Command::getErroneous(void) const
 	return (this->_erroneous);
 }
 
-void			Command::numeric_reply(int key)
+void			Command::numeric_reply(int key, std::string rply, int socket)
 {
 	// Save in buff standar protocol for msg + <client>.
 	std::string buff = ":127.0.0.1 " + std::to_string(key) + " "
@@ -652,12 +659,12 @@ void			Command::numeric_reply(int key)
 			buff += ":No topic is set";
 			break;
 		case 332:		// RPLY_TOPIC
-			buff += ":" + this->_erroneous[4];
+			buff += ":" + rply;
 			break;
 		case 333:		// RPLY_TOPICWHOTIME
 			break;
 		case 353:		// RPLY_NAMREPLY
-			buff += ":" + this->_erroneous[4];
+			buff += ":" + rply;
 			break;
 		case 366:		// RPLY_ENDOFNAMES
 			buff += ":End of /NAMES list";
@@ -693,7 +700,7 @@ void			Command::numeric_reply(int key)
 			buff += ":Wildcard in toplevel domain";
 			break;
 		case 421:		// ERR_
-			buff += this->_command + ":Unknown command";
+			buff += this->_command + " :Unknown command";
 			break;
 		case 431:		// ERR_
 			buff += ":No nickname given";
@@ -717,7 +724,7 @@ void			Command::numeric_reply(int key)
 			buff += ":You're not on that channel";
 			break;
 		case 461:		// ERR_
-			buff += this->_command + ":Not enough parameters";
+			buff += this->_command + " :Not enough parameters";
 			break;
 		case 462:		// ERR_
 			buff += ":Unauthorized command (already registered)";
@@ -759,6 +766,8 @@ void			Command::numeric_reply(int key)
 	buff += "\r\n";
 	// Send the msg.
 	int nbytes = strlen(buff.c_str());
-	if (send(_commander.getSocket(), buff.c_str(), nbytes, 0) == -1)
+	if (!socket)
+		socket = _commander.getSocket();
+	if (send(socket, buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
 }

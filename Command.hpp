@@ -39,7 +39,7 @@ class Command
 		int							parseStr(std::string str);
 		std::vector<std::string>	parseParam(std::string param);
 		void						execute();
-		void						numeric_reply(int key);
+		void						numeric_reply(int key, std::string rply="", int socket=0);
 
 		// Commands
 		void				ftNICK();

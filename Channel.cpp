@@ -41,7 +41,8 @@ void					Channel::deleteChanop(User *chanop)
 
 bool					Channel::isChanop(User *chanop)
 {
-	for (iterator it = _chanops.begin(); it != _chanops.end(); ++it)
+	return (true);
+	for (std::list<User *>::iterator it = _chanops.begin(); it != _chanops.end(); ++it)
 	{
 		if ((*it) == chanop)
 			return (true);
