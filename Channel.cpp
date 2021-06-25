@@ -78,10 +78,28 @@ std::string				Channel::getName(void) const
 	return (this->_name);
 }
 
+std::string				Channel::getWhoTopicNick(void) const
+{
+	return (this->_whoTopicNick);
+}
+std::string				Channel::getWhoTopicSetat(void) const
+{
+	return (this->_whoTopicSetat);
+}
 
 //	Setters
 
 void					Channel::setTopic(std::string topic)
 {
 	this->_topic = topic;
+}
+
+void					Channel::setWhoTopicNick(std::string str)
+{
+	this->_whoTopicNick = str;
+}
+
+void					Channel::setWhoTopicSetat(std::string str)
+{
+	this->_whoTopicSetat = str;
 }

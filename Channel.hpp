@@ -21,6 +21,8 @@ class Channel
 		//atributos de commands: mensaje del día, etc.
 		std::string	_name;
 		std::string _topic;
+		std::string	_whoTopicNick;
+		std::string _whoTopicSetat;
 		Channel();
 
 	public:
@@ -41,8 +43,12 @@ class Channel
 		std::string			getName(void) const;
 		std::list <User *>	getListChanops(void) const;
 		std::string			getTopic(void) const;
+		std::string			getWhoTopicNick(void) const;
+		std::string			getWhoTopicSetat(void) const;
 
 		void				setTopic(std::string topic);
+		void				setWhoTopicNick(std::string str);
+		void				setWhoTopicSetat(std::string str);
 
 };
 # include "User.hpp"
