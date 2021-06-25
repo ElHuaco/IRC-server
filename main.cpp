@@ -67,18 +67,18 @@ int main(int argc, char **argv)
 			throw std::runtime_error(strerror(errno));
 		for (int i = 0; i <= server.getMax(); ++i)
 		{
-std::cout << "Main loop is checking " << i << std::endl;
+//std::cout << "Main loop is checking " << i << std::endl;
 			if (FD_ISSET(i, &read_fds) == false)
 				continue ;
 			if (i == server.getListener())
 			{
-				#ifdef DEBUG
-					std::cout << "Creating new connection..." << std::endl;
-				#endif
+//				#ifdef DEBUG
+//					std::cout << "Creating new connection..." << std::endl;
+//				#endif
 				server.addUser();
-				#ifdef DEBUG
-					std::cout << "New connection registered. " << std::endl;
-				#endif
+//				#ifdef DEBUG
+//					std::cout << "New connection registered. " << std::endl;
+//				#endif
 			}
 			//Si no es nueva conexión, parsea para ver si es un Command y 
 			// entonces command.execute(server, ...) o se envía el mensaje.
@@ -92,36 +92,36 @@ std::cout << "Main loop is checking " << i << std::endl;
 					//Tratar envío de EOF con ^D
 					if (nbytes != 0)
 						throw std::runtime_error(strerror(errno));
-					#ifdef DEBUG
-						std::cout << "Closing connection..." << std::endl;
-					#endif
+//					#ifdef DEBUG
+//						std::cout << "Closing connection..." << std::endl;
+//					#endif
 					server.deleteUser(i);
-					#ifdef DEBUG
-						std::cout << "Closed " << i;
-						std::cout << " socket connection." << std::endl;
-					#endif
+//					#ifdef DEBUG
+//						std::cout << "Closed " << i;
+//						std::cout << " socket connection." << std::endl;
+//					#endif
 				}
 				else
 				{
 					std::string info(buff);
-					#ifdef DEBUG
-						std::cout << "Recv->" << info << std::endl;
-					#endif
-					#ifdef DEBUG
-						std::cout << "Searching for socket client..." << std::endl;
-					#endif
+//					#ifdef DEBUG
+//						std::cout << "Recv->" << info << std::endl;
+//					#endif
+//					#ifdef DEBUG
+//						std::cout << "Searching for socket client..." << std::endl;
+//					#endif
 					User *client = server.getSocketUser(i);
-					#ifdef DEBUG
-						std::cout << "Found client for socket " << i;
-						std::cout << "." << std::endl;
-					#endif		
+//					#ifdef DEBUG
+//						std::cout << "Found client for socket " << i;
+//						std::cout << "." << std::endl;
+//					#endif		
 					Command cmd(info, server, *client);
 					cmd.execute();
 				}
 			}
 		}
 	}
-#ifdef DEBUG
-	std::cout << "Exited the main loop." << std::endl;
-#endif
+//#ifdef DEBUG
+//	std::cout << "Exited the main loop." << std::endl;
+//#endif
 }

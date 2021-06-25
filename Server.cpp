@@ -96,10 +96,10 @@ void					Server::addUser(void)
 		throw std::runtime_error(strerror(errno));
 	User temp(newfd);
 	_users.push_back(temp.clone());
-	#ifdef DEBUG
-		std::cout << "New User with socket " << temp.getSocket();
-		std::cout << " added." << std::endl;
-	#endif
+//	#ifdef DEBUG
+//		std::cout << "New User with socket " << temp.getSocket();
+//		std::cout << " added." << std::endl;
+//	#endif
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;

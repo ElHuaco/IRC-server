@@ -8,7 +8,6 @@ Command::Command(std::string str, Server &server, User &commander) : _server(ser
 	this->_erroneous = new std::string[5];
 	if (!parseStr(str))
 		return ;					// Parse error
-//	execute();						// Should I?
 	return;
 }
 
@@ -23,19 +22,19 @@ Command::~Command(void)
 int		Command::parseStr(std::string str)
 {
 
-	#ifdef DEBUG
-		std::cout << "Buff = \"" << str << "\"" << std::endl;
-	#endif
+//	#ifdef DEBUG
+//		std::cout << "Buff = \"" << str << "\"" << std::endl;
+//	#endif
 	if (str.empty())
 		return (-1);						// Error, the string is empty.
 	int pos1 = 0;
 	int pos2 = str.find(" ");
-	std::cout << pos2 << std::endl;
-	std::cout << str.find("\r\n", pos1) << std::endl;
+//	std::cout << pos2 << std::endl;
+//	std::cout << str.find("\r\n", pos1) << std::endl;
 	this->_command = str.substr(pos1, pos2);
-	#ifdef DEBUG
-		std::cout << "Command = \"" << this->_command << "\"" << std::endl;
-	#endif
+//	#ifdef DEBUG
+//		std::cout << "Command = \"" << this->_command << "\"" << std::endl;
+//	#endif
 	int i = 0;
 	while (i < 5)				// While there are parameters, save them.
 	{
@@ -46,13 +45,13 @@ int		Command::parseStr(std::string str)
 		if (pos2 <= pos1)
 			break;
 		this->_params[i++] = str.substr(pos1, pos2 - pos1);
-		#ifdef DEBUG
-			std::cout << i << " parameter = \"" << this->_params[i - 1] << "\"" << std::endl;
-		#endif
+//		#ifdef DEBUG
+//			std::cout << i << " parameter = \"" << this->_params[i - 1] << "\"" << std::endl;
+//		#endif
 	}
-	#ifdef DEBUG
-		std::cout << "Ended parser." << std::endl;
-	#endif
+//	#ifdef DEBUG
+//		std::cout << "Ended parser." << std::endl;
+//	#endif
 	this->_paramsNum = i;
 	return (0);
 }
@@ -73,9 +72,9 @@ std::vector<std::string>	Command::parseParam(std::string param)
 			break;
 		rst.push_back(param.substr(pos1, pos2 - pos1));
 	}
-	#ifdef DEBUG
-		std::cout << "End of sub parser" << std::endl;
-	#endif
+//	#ifdef DEBUG
+//		std::cout << "End of sub parser" << std::endl;
+//	#endif
 	return (rst);
 }
 
@@ -178,26 +177,11 @@ void		Command::ftUSER()
 	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
 	if (_commander.isWelcomed() == false)
 	{
-		//numeric_reply 001
-		ack = ":ft_irc 001 " + _commander.getNickname()
-			+ " Welcome to the Internet Relay Network!\r\n";
-		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
-		//numeric_reply 002
-		ack = ":ft_irc 002 " + _commander.getNickname()
-			+ " Your host is ft_irc\r\n";
-		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
-		//numeric_reply 003
-		ack = ":ft_irc 003 " + _commander.getNickname()
-			+ " This server was created long ago\r\n";
-		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
-		//numeric_reply 004
-		ack = ":ft_irc 004 " + _commander.getNickname()
-			+ " RPL_MYINFO\r\n";
-		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
-		//numeric_reply 005
-		ack = ":ft_irc 005 " + _commander.getNickname()
-			+ " tokens are not supported by this server\r\n";
-		send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+		this->numeric_reply(1);
+		this->numeric_reply(2);
+		this->numeric_reply(3);
+		this->numeric_reply(4);
+		this->numeric_reply(5);
 		_commander.setWelcomed(true);
 	}
 	return ;
@@ -244,9 +228,6 @@ void		Command::ftQUIT()
 
 void		Command::ftJOIN()
 {
-	#ifdef DEBUG
-		std::cout << "Entered JOIN..." << std::endl;
-	#endif
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum == 0)
 	{
@@ -645,6 +626,21 @@ void			Command::numeric_reply(int key)
 	// Select correct msg reply.
 	switch (key)		// This is my new favourite toy.
 	{
+		case 1:			//RPL_WELCOME
+			buff += ":Welcome to the Internet Relay Network!";
+			break;
+		case 2:			//RPL_YOURHOST
+			buff += ":Your host is ft_irc";
+			break;
+		case 3:			//RPL_CREATED
+			buff += ":This server was created long ago in a galaxy far far away...";
+			break;
+		case 4:			//RPL_MYINFO
+			buff += ":ft_irc 1.0";
+			break;
+		case 5:			//RPL_ISSUPPORT
+			buff += ":tokens are not supported by this server";
+			break;
 		case 331:		// RPLY_NOTOPIC
 			buff += ":No topic is set";
 			break;
