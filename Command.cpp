@@ -291,31 +291,28 @@ void		Command::ftJOIN()
 				continue ;
 			this->_commander.addChannel(aux);
 		}
+		//Server reply to commander
 		std::string buff = ":" + _commander.getNickname() + " JOIN "
 			+ *it + "\r\n";
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		//numeric_reply 332;
 		if (aux->getTopic().empty() == false)
 		{
-			buff = ":127.0.0.1 332 " + _commander.getNickname() + " ";
-			buff += aux->getName() + " " + aux->getTopic() + "\r\n";
-			send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+			this->_erroneous[0] = aux->getName();
+			this->_erroneous[4] = aux->getTopic();
+			this->numeric_reply(332);
 		}
 		//numeric_reply 353;
-		buff = ":127.0.0.1 353 " + _commander.getNickname() + " = " + *it
-			+ " :";
+		this->_erroneous[0] = "= " + *it;
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
 			u_iter != _server.getUsers().end(); ++u_iter)
 		{
 			if ((*u_iter)->is_in_channel(aux) == true)
-				buff += (*u_iter)->getNickname() + " ";
+				this->_erroneous[4] += (*u_iter)->getNickname() + " ";
 		}
-		buff += "\r\n";
-		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		this->numeric_reply(353);
 		//numeric_reply 366
-		buff = ":127.0.0.1 366 " + _commander.getNickname() + " " + *it +
-			" :End of /NAMES list\r\n";
-		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		this->numeric_reply(366);
 		//server reply to other users on channel
 		buff = ":" + _commander.getNickname() + " JOIN " + *it + "\r\n";
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
