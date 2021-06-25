@@ -89,6 +89,7 @@ std::cout << "Main loop is checking " << i << std::endl;
 				int nbytes;
 				if ((nbytes = recv(i, buff, sizeof buff, 0)) <= 0)
 				{
+					//Tratar envío de EOF con ^D
 					if (nbytes != 0)
 						throw std::runtime_error(strerror(errno));
 					#ifdef DEBUG

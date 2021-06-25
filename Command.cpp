@@ -449,6 +449,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 		
 		// Check if the channel exists.
 		if ((chan = _server.getChannelName(*it)) != nullptr)	// It exists.
+		{
 			// List all the users of the channel.
 			for (std::list<User *>::iterator u_iter = users.begin(); u_iter != users.end(); ++u_iter)
 				if ((*u_iter)->is_in_channel(chan) == true)
@@ -456,6 +457,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 					this->_erroneous[4] = (*u_iter)->getNickname();
 					this->numeric_reply(353);
 				}
+		}
 		else													// There isn't such channel.
 		{
 			this->numeric_reply(401);
