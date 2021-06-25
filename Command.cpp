@@ -30,9 +30,11 @@ int		Command::parseStr(std::string str)
 		return (-1);						// Error, the string is empty.
 	int pos1 = 0;
 	int pos2 = str.find(" ");
+	std::cout << pos2 << std::endl;
+	std::cout << str.find("\r\n", pos1) << std::endl;
 	this->_command = str.substr(pos1, pos2);
 	#ifdef DEBUG
-		std::cout << "Command = \"" << str << "\"" << std::endl;
+		std::cout << "Command = \"" << this->_command << "\"" << std::endl;
 	#endif
 	int i = 0;
 	while (i < 5)				// While there are parameters, save them.
@@ -449,21 +451,19 @@ void		Command::ftNAMES()		// List all visible nicknames.
 		
 		// Check if the channel exists.
 		if ((chan = _server.getChannelName(*it)) != nullptr)	// It exists.
+		{
 			// List all the users of the channel.
 			for (std::list<User *>::iterator u_iter = users.begin(); u_iter != users.end(); ++u_iter)
 				if ((*u_iter)->is_in_channel(chan) == true)
 				{
-					this->_erroneous[4] = (*u_iter)->getNickname();
-					this->numeric_reply(353);
+					this->_erroneous[4] += (*u_iter)->getNickname() + " ";
 				}
-		else													// There isn't such channel.
-		{
-			this->numeric_reply(401);
-			continue ;
+			this->numeric_reply(353);
+			this->numeric_reply(366);
+			this->_erroneous[4].clear();
 		}
-
-		// End of the list of names.
-		this->numeric_reply(366);
+		else													// There isn't such channel.
+			this->numeric_reply(401);
 	}
 	return ;
 }
@@ -593,7 +593,7 @@ void			Command::numeric_reply(int key)
 	{
 		int i = -1;
 		while (_erroneous[++i].empty() == false)
-			buff += _erroneous[i];
+			buff += _erroneous[i] + " ";
 	}
 	// Select correct msg reply.
 	switch (key)		// This is my new favourite toy.
@@ -607,10 +607,10 @@ void			Command::numeric_reply(int key)
 		case 333:		// RPLY_TOPICWHOTIME
 			break;
 		case 353:		// RPLY_NAMREPLY
-			buff += ":End of /NAMES list";
-			break;
-		case 366:		// 
 			buff += ":" + this->_erroneous[4];
+			break;
+		case 366:		// RPLY_ENDOFNAMES
+			buff += ":End of /NAMES list";
 			break;
 		case 381:		// RPLY_YOUROPER
 			buff += ":You are now an IRC operator";
