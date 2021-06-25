@@ -462,19 +462,9 @@ void		Command::ftLIST()//list channels & their topics
 
 	for (; c_iter != channels.end(); ++c_iter)
 	{
-		buff.append(":127.0.0.1 322 ");
-		buff.append("#");
-		buff.append((*c_iter)->getName());//si no pones esto no funciona
-		buff.append(" ");
-		buff.append((*c_iter)->getName());
-		buff.append(" ");
-		//buff.append(itoa(this->_server.getNumUsers()));//no funciona itoa <stdlib.h> ft_itoa??
-		buff.append("2");//Numero de prueba
-		buff.append(" ");
-		buff.append((*c_iter)->getTopic());
-		buff.append("\r\n");
-		// buff = ":127.0.0.1 322 " + (*c_iter)->getName() + " 6 "
-		//  		+ (*c_iter)->getTopic() + "\r\n";
+		buff = ":127.0.0.1 322 " + (*c_iter)->getName() + " "//repito getName porque así funciona
+				+ (*c_iter)->getName() + " " + this->ft_itoa(this->_server.getNumUsers())
+				+ " " + (*c_iter)->getTopic() + "\r\n";
 		std::cout << "buff: " << buff << std::endl;
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 	}
@@ -754,4 +744,33 @@ void			Command::numeric_reply(int key)
 	int nbytes = strlen(buff.c_str());
 	if (send(_commander.getSocket(), buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
+}
+
+std::string Command::ft_itoa(int num)
+{
+	long	n;
+	size_t	len;
+	char	*str;
+	std::string s;
+
+	n = num;
+	len = (n > 0) ? 0 : 1;
+	n = (n > 0) ? n : -n;
+	while (num)
+		num = len++ ? num / 10 : num / 10;
+	if (!(str = (char *)malloc(sizeof(char) * len + 1)))
+		return (NULL);
+	*(str + len--) = 0;
+	while (n > 0)
+	{
+		*(str + len--) = n % 10 + '0';
+		n /= 10;
+	}
+	if (len == 0 && str[1] == 0)
+		str[len] = '0';
+	if (len == 0 && str[1] != 0)
+		str[len] = '-';
+	s = str;
+	free(str);
+	return (s);
 }
