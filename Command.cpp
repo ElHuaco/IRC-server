@@ -445,7 +445,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 	std::vector<std::string> targets = this->parseParam(_params[0]);
 	for (std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
 	{
-		this->_erroneous[0] = (*it);
+		this->_erroneous[0] = "= " + (*it);
 		if ((*it).empty() == true)
 			continue ;
 		
