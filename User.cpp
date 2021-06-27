@@ -111,6 +111,7 @@ void					User::addChannel(Channel *chann)
 		if ((*it)->getName() == chann->getName())
 			return ;
 	}
+	chann->setChanUsers(1);
 	_joinedChannels.push_back(chann);
 }
 Channel					*User::getChannelName(const std::string &str)

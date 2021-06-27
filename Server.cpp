@@ -3,6 +3,7 @@
 Server::Server(void)
 {
 }
+
 Server::~Server(void)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -56,34 +57,42 @@ void					Server::setMax(int max)
 {
 	_max = max;
 }
+
 int						Server::getMax(void) const
 {
 	return (_max);
 }
+
 void					Server::setMaster(fd_set set)
 {
 	FD_COPY(&set, &_master);
 }
+
 fd_set					&Server::getMaster(void)
 {
 	return (_master);
 }
+
 void					Server::setPassword(const std::string &password)
 {
 	_password = password;
 }
+
 std::string				Server::getPassword(void) const
 {
 	return (_password);
 }
+
 int						Server::getListener(void) const
 {
 	return (_listener);
 }
+
 std::list<User *>		&Server::getUsers(void)
 {
 	return (_users);
 }
+
 void					Server::addUser(void)
 {
 	struct sockaddr_storage remoteaddr;
@@ -103,8 +112,8 @@ void					Server::addUser(void)
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
-	this->_numusers++;
 }
+
 User					*Server::getSocketUser(int socket)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -114,6 +123,7 @@ User					*Server::getSocketUser(int socket)
 	}
 	return (nullptr);
 }
+
 User					*Server::getUserNick(const std::string &str)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -123,6 +133,7 @@ User					*Server::getUserNick(const std::string &str)
 	}
 	return (nullptr);
 }
+
 void					Server::deleteUser(int fd)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -133,7 +144,6 @@ void					Server::deleteUser(int fd)
 			FD_CLR(fd, &_master);
 			delete *it;
 			_users.erase(it);
-			this->_numusers--;
 			if (fd == _max)
 			{
 				int max = 0;
@@ -148,6 +158,7 @@ void					Server::deleteUser(int fd)
 		}
 	}
 }
+
 void					Server::deleteUser(const std::string &nick)
 {
 	for (u_iterator it = _users.begin(); it != _users.end(); ++it)
@@ -158,7 +169,6 @@ void					Server::deleteUser(const std::string &nick)
 			FD_CLR((*it)->getSocket(), &_master);
 			delete *it;
 			_users.erase(it);
-			this->_numusers--;
 			if ((*it)->getSocket() == _max)
 			{
 				int max = 0;
@@ -173,6 +183,7 @@ void					Server::deleteUser(const std::string &nick)
 		}
 	}
 }
+
 void					Server::addChannel(Channel *chann)
 {
 	if (chann == nullptr)
@@ -184,6 +195,7 @@ void					Server::addChannel(Channel *chann)
 	}
 	_channels.push_back(chann->clone());
 }
+
 Channel					*Server::getChannelName(const std::string &str)
 {
 	for (c_iterator it = _channels.begin(); it != _channels.end(); ++it)
@@ -209,11 +221,6 @@ void					Server::deleteChannel(const std::string &name)
 		}
 		
 	}
-}
-
-int			Server::getNumUsers(void) const
-{
-	return (this->_numusers);
 }
 
 bool		Server::are_in_same_channels(int sender, int receiver)

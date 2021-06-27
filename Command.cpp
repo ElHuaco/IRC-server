@@ -303,7 +303,7 @@ void		Command::ftJOIN()
 		{
 			if ((*u_iter)->getNickname() != _commander.getNickname() &&
 				(*u_iter)->is_in_channel(aux) == true)
-				send((*u_iter)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+					send((*u_iter)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
 		}
 	}
 	return ;
@@ -348,6 +348,7 @@ void		Command::ftPART()
 		for (std::list<User *>::iterator it2 = _server.getUsers().begin();
 			it2 != _server.getUsers().end(); ++it2)
 			send((*it2)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		chan->setChanUsers(-1);
 		_commander.deleteChannel(*it);
 	}
 	return;
@@ -470,7 +471,7 @@ void		Command::ftLIST()//list channels & their topics
 	for (; c_iter != channels.end(); ++c_iter)
 	{
 		buff = ":127.0.0.1 322 " + (*c_iter)->getName() + " "//repito getName porque así funciona
-				+ (*c_iter)->getName() + " " + this->ft_itoa(this->_server.getNumUsers())
+				+ (*c_iter)->getName() + " " + std::to_string((*c_iter)->getChanUsers())
 				+ " " + (*c_iter)->getTopic() + "\r\n";
 		std::cout << "buff: " << buff << std::endl;
 		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
@@ -753,33 +754,4 @@ void			Command::numeric_reply(int key, std::string rply, int socket)
 		socket = _commander.getSocket();
 	if (send(socket, buff.c_str(), nbytes, 0) == -1)
 		throw std::runtime_error(strerror(errno));
-}
-
-std::string Command::ft_itoa(int num)
-{
-	long	n;
-	size_t	len;
-	char	*str;
-	std::string s;
-
-	n = num;
-	len = (n > 0) ? 0 : 1;
-	n = (n > 0) ? n : -n;
-	while (num)
-		num = len++ ? num / 10 : num / 10;
-	if (!(str = (char *)malloc(sizeof(char) * len + 1)))
-		return (NULL);
-	*(str + len--) = 0;
-	while (n > 0)
-	{
-		*(str + len--) = n % 10 + '0';
-		n /= 10;
-	}
-	if (len == 0 && str[1] == 0)
-		str[len] = '0';
-	if (len == 0 && str[1] != 0)
-		str[len] = '-';
-	s = str;
-	free(str);
-	return (s);
 }

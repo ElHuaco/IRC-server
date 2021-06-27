@@ -88,6 +88,11 @@ std::string				Channel::getWhoTopicSetat(void) const
 	return (this->_whoTopicSetat);
 }
 
+int					Channel::getChanUsers() const
+{
+	return (this->_chanusers);
+}
+
 //	Setters
 
 void					Channel::setTopic(std::string topic)
@@ -103,4 +108,9 @@ void					Channel::setWhoTopicNick(std::string str)
 void					Channel::setWhoTopicSetat(std::string str)
 {
 	this->_whoTopicSetat = str;
+}
+
+void					Channel::setChanUsers(int n)
+{
+	(n > 0) ? this->_chanusers++ : this->_chanusers--;
 }

@@ -23,6 +23,7 @@ class Channel
 		std::string _topic;
 		std::string	_whoTopicNick;
 		std::string _whoTopicSetat;
+		int			_chanusers;
 		Channel();
 
 	public:
@@ -45,10 +46,12 @@ class Channel
 		std::string			getTopic(void) const;
 		std::string			getWhoTopicNick(void) const;
 		std::string			getWhoTopicSetat(void) const;
+		int					getChanUsers() const;
 
 		void				setTopic(std::string topic);
 		void				setWhoTopicNick(std::string str);
 		void				setWhoTopicSetat(std::string str);
+		void				setChanUsers(int);
 
 };
 # include "User.hpp"
