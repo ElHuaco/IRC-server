@@ -21,20 +21,11 @@ Command::~Command(void)
 // String/buff parser
 int		Command::parseStr(std::string str)
 {
-
-//	#ifdef DEBUG
-//		std::cout << "Buff = \"" << str << "\"" << std::endl;
-//	#endif
 	if (str.empty())
 		return (-1);						// Error, the string is empty.
 	int pos1 = 0;
 	int pos2 = str.find(" ");
-//	std::cout << pos2 << std::endl;
-//	std::cout << str.find("\r\n", pos1) << std::endl;
 	this->_command = str.substr(pos1, pos2);
-//	#ifdef DEBUG
-//		std::cout << "Command = \"" << this->_command << "\"" << std::endl;
-//	#endif
 	int i = 0;
 	while (i < 5)				// While there are parameters, save them.
 	{
@@ -47,13 +38,7 @@ int		Command::parseStr(std::string str)
 		if (str[pos1] == ':')
 			pos1++;
 		this->_params[i++] = str.substr(pos1, pos2 - pos1);
-//		#ifdef DEBUG
-//			std::cout << i << " parameter = \"" << this->_params[i - 1] << "\"" << std::endl;
-//		#endif
 	}
-//	#ifdef DEBUG
-//		std::cout << "Ended parser." << std::endl;
-//	#endif
 	this->_paramsNum = i;
 	return (0);
 }
@@ -74,9 +59,6 @@ std::vector<std::string>	Command::parseParam(std::string param)
 			break;
 		rst.push_back(param.substr(pos1, pos2 - pos1));
 	}
-//	#ifdef DEBUG
-//		std::cout << "End of sub parser" << std::endl;
-//	#endif
 	return (rst);
 }
 
@@ -210,6 +192,9 @@ void		Command::ftOPER()
 	// Not needed if we dont use other hosts.			(ERR_NOOPERHOST)
 		//this->numeric_reply(491);
 
+	if (this->_params[1] == "\"\"")
+		this->_params[1] = "";
+
 	// Checking if the password is valid.				(ERR_PASSWDMISMATCH)
 	if (this->_server.getPassword() != this->_params[1])
 	{
@@ -222,8 +207,8 @@ void		Command::ftOPER()
 	for (it = this->_server.getUsers().begin(); it != this->_server.getUsers().end(); ++it)
 		if ((*it)->getNickname() == this->_params[0])
 		{
-			this->_commander.setIsOP(true);
-			this->numeric_reply(381);
+			(*it)->setIsOP(true);
+			this->numeric_reply(381, "", (*it)->getSocket());
 		}
 	return;
 }
