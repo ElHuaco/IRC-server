@@ -15,7 +15,6 @@ class Channel
 		typedef std::list<User *>::iterator	iterator;
 
 	private:
-		std::list<User *>		_chanops;
 		std::string	_name;
 		std::string _topic;
 		std::string	_whoTopicNick;
@@ -32,9 +31,6 @@ class Channel
 
 	//	Functions
 		Channel				*clone(void) const;
-		void				addChanop(User *chanop);
-		void				deleteChanop(User *chanop);
-		bool				isChanop(User *chanop);
 
 	//	Getters + Setters
 		std::string			getName(void) const;
