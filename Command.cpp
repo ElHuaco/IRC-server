@@ -461,10 +461,9 @@ void		Command::ftNAMES()		// List all visible nicknames.
 
 void		Command::ftMODE()
 {
-	//RPL_CHANNELMODEIS
-	std::string buff = ":127.0.0.1 324 " + _commander.getNickname() + " "
-		+ _params[0] + " b,k,l,imnpst\r\n";
-	send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	this->_extra[0] = this->_params[0];
+	this->_extra[1] = "b,k,l,imnpst\r\n";
+	this->numeric_reply(324);
 }
 
 void		Command::ftLIST()	//list channels & their topics
@@ -648,11 +647,13 @@ void			Command::numeric_reply(int key, std::string rply, int socket)
 		case 321:		// RPL_LISTSTART
 			buff += "Channel :Users  Name";
 			break;
-		case 322:
+		case 322:		// RPL_LIST
 			buff += ":" + rply;
 			break;
-		case 323:
+		case 323:		// RPL_LISTEND
 			buff += ":End of /LIST";
+			break;
+		case 324:
 			break;
 		case 331:		// RPL_NOTOPIC
 			buff += ":No topic is set";
