@@ -134,7 +134,6 @@ void					User::deleteChannel(const std::string &name)
 		if ((*it)->getName() == name)
 		{
 			(*it)->setChanUsers(-1);
-			(*it)->deleteChanop(this);
 			_joinedChannels.erase(it);
 			return ;
 		}

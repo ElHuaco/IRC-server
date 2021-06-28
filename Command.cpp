@@ -201,7 +201,6 @@ void		Command::ftOPER()
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
 	{
-		this->_extra[0] = this->_command;
 		this->numeric_reply(461);
 		return ;
 	}
@@ -269,7 +268,6 @@ void		Command::ftJOIN()
 		if (!aux)
 		{
 			aux = new Channel(*it);
-			aux->getListChanops().push_back(&this->_commander);
 			this->_server.addChannel(aux);
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(*it));
@@ -395,8 +393,8 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 	}
 	else if (this->_paramsNum >= 2)		// Wants to change the topic.
 	{
-		if (aux->isChanop(&this->_commander) || this->_commander.getIsOP())	// Commander is a channel operator.
-		{
+		//if (this->_commander.getIsOP())	// Commander is OP.
+		//{
 			if (this->_params[1] == "\"\"")
 				this->_params[1].clear();
 			aux->setTopic(this->_params[1]);		// Topic changed.
@@ -408,9 +406,9 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 			u_iter != this->_server.getUsers().end(); ++u_iter)
 				if ((*u_iter)->is_in_channel(aux))
 					this->numeric_reply(332, aux->getTopic(), (*u_iter)->getSocket());
-		}
-		else									// Commander is not a channel operator.
-			this->numeric_reply(482);
+		//}
+		//else									// Commander is not a channel operator.
+			//this->numeric_reply(482);
 	}
 	return;
 }
