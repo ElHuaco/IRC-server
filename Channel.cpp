@@ -52,11 +52,6 @@ bool					Channel::isChanop(User *chanop)
 
 //	Getters
 
-std::list <User *>		Channel::getListChanops() const
-{
-	return (this->_chanops);
-}
-
 std::string				Channel::getTopic(void) const
 {
 	return (this->_topic);

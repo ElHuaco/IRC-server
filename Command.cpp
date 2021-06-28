@@ -201,7 +201,6 @@ void		Command::ftOPER()
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
 	{
-		this->_extra[0] = this->_command;
 		this->numeric_reply(461);
 		return ;
 	}
@@ -269,7 +268,6 @@ void		Command::ftJOIN()
 		if (!aux)
 		{
 			aux = new Channel(*it);
-			aux->getListChanops().push_back(&this->_commander);
 			this->_server.addChannel(aux);
 			delete aux;
 			this->_commander.addChannel(this->_server.getChannelName(*it));
@@ -354,7 +352,6 @@ void		Command::ftPART()
 		for (std::list<User *>::iterator it2 = _server.getUsers().begin();
 			it2 != _server.getUsers().end(); ++it2)
 			send((*it2)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-		chan->setChanUsers(-1);
 		_commander.deleteChannel(*it);
 	}
 	return;
@@ -396,8 +393,8 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 	}
 	else if (this->_paramsNum >= 2)		// Wants to change the topic.
 	{
-		if (aux->isChanop(&this->_commander) || this->_commander.getIsOP())	// Commander is a channel operator.
-		{
+		//if (this->_commander.getIsOP())	// Commander is OP.
+		//{
 			if (this->_params[1] == "\"\"")
 				this->_params[1].clear();
 			aux->setTopic(this->_params[1]);		// Topic changed.
@@ -409,9 +406,9 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 			u_iter != this->_server.getUsers().end(); ++u_iter)
 				if ((*u_iter)->is_in_channel(aux))
 					this->numeric_reply(332, aux->getTopic(), (*u_iter)->getSocket());
-		}
-		else									// Commander is not a channel operator.
-			this->numeric_reply(482);
+		//}
+		//else									// Commander is not a channel operator.
+			//this->numeric_reply(482);
 	}
 	return;
 }
@@ -462,26 +459,26 @@ void		Command::ftNAMES()		// List all visible nicknames.
 
 void		Command::ftMODE()
 {
-	//RPL_CHANNELMODEIS
-	std::string buff = ":127.0.0.1 324 " + _commander.getNickname() + " "
-		+ _params[0] + " b,k,l,imnpst\r\n";
-	send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	this->_extra[0] = this->_params[0];
+	this->_extra[1] = "b,k,l,imnpst\r\n";
+	this->numeric_reply(324);
 }
 
-void		Command::ftLIST()//list channels & their topics
+void		Command::ftLIST()	//list channels & their topics
 {
-	std::list<Channel *> channels = this->_server.getChannels();
-	std::list<Channel *>::iterator c_iter = channels.begin();
-	std::string buff;
+	std::list<Channel *>::iterator it;
 
-	for (; c_iter != channels.end(); ++c_iter)
+	this->numeric_reply(321);
+	for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
 	{
-		buff = ":127.0.0.1 322 " + (*c_iter)->getName() + " "//repito getName porque así funciona
-				+ (*c_iter)->getName() + " " + std::to_string((*c_iter)->getChanUsers())
-				+ " " + (*c_iter)->getTopic() + "\r\n";
-		std::cout << "buff: " << buff << std::endl;
-		send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+		this->_extra[0] = (*it)->getName();
+		this->_extra[1] = std::to_string((*it)->getChanUsers());
+		this->numeric_reply(322, (*it)->getTopic());
 	}
+	this->_extra[0].clear();
+	this->_extra[1].clear();
+	this->numeric_reply(323);
+	return;
 }
 
 
@@ -630,30 +627,41 @@ void			Command::numeric_reply(int key, std::string rply, int socket)
 	// Select correct msg reply.
 	switch (key)		// This is my new favourite toy.
 	{
-		case 1:			//RPL_WELCOME
+		case 1:			// RPL_WELCOME
 			buff += ":Welcome to the Internet Relay Network!";
 			break;
-		case 2:			//RPL_YOURHOST
+		case 2:			// RPL_YOURHOST
 			buff += ":Your host is ft_irc";
 			break;
-		case 3:			//RPL_CREATED
+		case 3:			// RPL_CREATED
 			buff += ":This server was created long ago in a galaxy far far away...";
 			break;
-		case 4:			//RPL_MYINFO
+		case 4:			// RPL_MYINFO
 			buff += ":ft_irc 1.0";
 			break;
-		case 5:			//RPL_ISSUPPORT
+		case 5:			// RPL_ISSUPPORT
 			buff += ":tokens are not supported by this server";
 			break;
-		case 331:		// RPLY_NOTOPIC
-			buff += ":No topic is set";
+		case 321:		// RPL_LISTSTART
+			buff += "Channel :Users  Name";
 			break;
-		case 332:		// RPLY_TOPIC
+		case 322:		// RPL_LIST
 			buff += ":" + rply;
 			break;
-		case 333:		// RPLY_TOPICWHOTIME
+		case 323:		// RPL_LISTEND
+			buff += ":End of /LIST";
 			break;
-		case 353:		// RPLY_NAMREPLY
+		case 324:
+			break;
+		case 331:		// RPL_NOTOPIC
+			buff += ":No topic is set";
+			break;
+		case 332:		// RPL_TOPIC
+			buff += ":" + rply;
+			break;
+		case 333:		// RPL_TOPICWHOTIME
+			break;
+		case 353:		// RPL_NAMREPLY
 			buff += ":" + rply;
 			break;
 		case 366:		// RPLY_ENDOFNAMES

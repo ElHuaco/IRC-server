@@ -38,7 +38,6 @@ class Channel
 
 	//	Getters + Setters
 		std::string			getName(void) const;
-		std::list <User *>	getListChanops(void) const;
 		std::string			getTopic(void) const;
 		std::string			getWhoTopicNick(void) const;
 		std::string			getWhoTopicSetat(void) const;

@@ -133,6 +133,7 @@ void					User::deleteChannel(const std::string &name)
 	{
 		if ((*it)->getName() == name)
 		{
+			(*it)->setChanUsers(-1);
 			_joinedChannels.erase(it);
 			return ;
 		}
