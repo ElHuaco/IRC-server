@@ -15,10 +15,7 @@ class Channel
 		typedef std::list<User *>::iterator	iterator;
 
 	private:
-		//lista de usuarios en el canal
 		std::list<User *>		_chanops;
-		//un vector de chanops
-		//atributos de commands: mensaje del día, etc.
 		std::string	_name;
 		std::string _topic;
 		std::string	_whoTopicNick;
@@ -38,7 +35,6 @@ class Channel
 		void				addChanop(User *chanop);
 		void				deleteChanop(User *chanop);
 		bool				isChanop(User *chanop);
-//		void				chanMessage(Server &serv, const char *buff, int nbytes);
 
 	//	Getters + Setters
 		std::string			getName(void) const;

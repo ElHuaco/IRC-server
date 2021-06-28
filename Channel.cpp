@@ -50,18 +50,6 @@ bool					Channel::isChanop(User *chanop)
 	return (false);
 }
 
-//void					Channel::chanMessage(Server &serv, const char *buff, int nbytes)
-//{
-//	std::list<User *>::iterator it;
-//	for (it = serv.getUsers().begin(); it != serv.getUsers().end(); ++it)
-//	{
-//		if ((*it)->is_in_channel(this))
-//			send((*it)->getSocket(), buff, nbytes, 0);
-//	}
-//	return ;
-//}
-
-
 //	Getters
 
 std::list <User *>		Channel::getListChanops() const
