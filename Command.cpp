@@ -354,7 +354,6 @@ void		Command::ftPART()
 		for (std::list<User *>::iterator it2 = _server.getUsers().begin();
 			it2 != _server.getUsers().end(); ++it2)
 			send((*it2)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
-		chan->setChanUsers(-1);
 		_commander.deleteChannel(*it);
 	}
 	return;
@@ -475,12 +474,12 @@ void		Command::ftLIST()	//list channels & their topics
 	this->numeric_reply(321);
 	for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
 	{
-		this->_erroneous[0] = (*it)->getName();
-		this->_erroneous[1] = std::to_string((*it)->getChanUsers());
+		this->_extra[0] = (*it)->getName();
+		this->_extra[1] = std::to_string((*it)->getChanUsers());
 		this->numeric_reply(322, (*it)->getTopic());
 	}
-	this->_erroneous[0].clear();
-	this->_erroneous[1].clear();
+	this->_extra[0].clear();
+	this->_extra[1].clear();
 	this->numeric_reply(323);
 	return;
 }
