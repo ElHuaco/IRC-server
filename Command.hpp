@@ -20,7 +20,7 @@ class Command
 		std::string				_prefix;
 		std::string				_command;
 		std::string				*_params;
-		std::string				*_erroneous;
+		std::string				*_extra;
 		int						_paramsNum;
 
 		Command(void);
@@ -33,7 +33,7 @@ class Command
 		// Getters + Setters
 		std::string		getCommand(void) const;
 		std::string		*getParams() const;
-		std::string		*getErroneous() const;
+		std::string		*getExtra() const;
 
 		// Functions
 		int							parseStr(std::string str);

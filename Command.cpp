@@ -5,7 +5,7 @@
 Command::Command(std::string str, Server &server, User &commander) : _server(server), _commander(commander)
 {
 	this->_params = new std::string[5];
-	this->_erroneous = new std::string[5];
+	this->_extra = new std::string[5];
 	if (!parseStr(str))
 		return ;					// Parse error
 	return;
@@ -14,7 +14,7 @@ Command::Command(std::string str, Server &server, User &commander) : _server(ser
 Command::~Command(void)
 {
 	delete[] this->_params;
-	delete[] this->_erroneous;
+	delete[] this->_extra;
 	return ;
 }
 
@@ -122,15 +122,17 @@ void			Command::ftNICK()
 		return ;
 	}
 
-	// Checking that the nickname isn't erroneous.					(ERR_ERRONEUSNICKNAME)
-	this->_erroneous[0] = this->_params[0];
+	// Checking that the nickname isn't extra.					(ERR_ERRONEUSNICKNAME)
+	this->_extra[0] = this->_params[0];
 	int i = -1;
 	while (this->_params[0][++i])
+	{
 		if (!isalnum(this->_params[0][i]) || !isalpha(this->_params[0][0]))
 		{
 			this->numeric_reply(432);
 			return ;
 		}
+	}
 
 	// Checking if the nickname isn't being used by another user.	(ERR_NICKNAMEINUSE)
 	std::list<User *>::iterator it = this->_server.getUsers().begin();
@@ -148,9 +150,13 @@ void			Command::ftNICK()
 	//this->numeric_reply(436);
 
 	// Changing the nickname
+	std::string buff = ":" + _commander.getNickname() + " NICK " + _params[0] + "\r\n";
 	this->_commander.setNickname(this->_params[0]);
-	std::string ack = ": NICK " + _params[0] + "\r\n";
-	send(_commander.getSocket(), ack.c_str(), strlen(ack.c_str()), 0);
+	for (std::list<User *>::iterator u_it = _server.getUsers().begin();
+		u_it != _server.getUsers().end(); ++u_it)
+	{
+		send((*u_it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	}
 	return ;
 }
 
@@ -160,7 +166,7 @@ void		Command::ftUSER()
 	// Checking number of parameters.				(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 4)
 	{
-		this->_erroneous[0] = this->_command;
+		this->_extra[0] = this->_command;
 		this->numeric_reply(461);
 		return ;
 	}
@@ -195,7 +201,7 @@ void		Command::ftOPER()
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum < 2)
 	{
-		this->_erroneous[0] = this->_command;
+		this->_extra[0] = this->_command;
 		this->numeric_reply(461);
 		return ;
 	}
@@ -233,7 +239,7 @@ void		Command::ftJOIN()
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
 	if (this->_paramsNum == 0)
 	{
-		this->_erroneous[0] = this->_command;
+		this->_extra[0] = this->_command;
 		this->numeric_reply(461);
 		return ;
 	}
@@ -281,11 +287,11 @@ void		Command::ftJOIN()
 		//numeric_reply 332;
 		if (aux->getTopic().empty() == false)
 		{
-			this->_erroneous[0] = aux->getName();
+			this->_extra[0] = aux->getName();
 			this->numeric_reply(332, aux->getTopic());
 		}
 		//numeric_reply 353;
-		this->_erroneous[0] = "= " + *it;
+		this->_extra[0] = "= " + *it;
 		std::string rply;
 		for (std::list<User *>::iterator u_iter = _server.getUsers().begin();
 			u_iter != _server.getUsers().end(); ++u_iter)
@@ -323,7 +329,7 @@ void		Command::ftPART()
 	std::vector<std::string> targets = this->parseParam(_params[0]);
 	for (std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
 	{
-		this->_erroneous[0] = (*it);
+		this->_extra[0] = (*it);
 		if (it->empty() == true)
 			continue ;
 
@@ -365,7 +371,7 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 	}
 
 	Channel *aux = this->_server.getChannelName(this->_params[0]);
-	this->_erroneous[0] = this->_params[0];
+	this->_extra[0] = this->_params[0];
 	
 	// Check if the channel exist.
 	if (!aux)
@@ -383,8 +389,8 @@ void		Command::ftTOPIC()		// Prints topic of a channel.
 		else									// There is a topic.
 		{
 			this->numeric_reply(332, aux->getTopic());
-			this->_erroneous[1] = aux->getWhoTopicNick();
-			this->_erroneous[2] = aux->getWhoTopicSetat();
+			this->_extra[1] = aux->getWhoTopicNick();
+			this->_extra[2] = aux->getWhoTopicSetat();
 			this->numeric_reply(333);
 		}
 	}
@@ -416,7 +422,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 	// If there is no arguments an "end of the list" reply is returned.
 	if (this->_paramsNum < 1)
 	{
-		this->_erroneous[0] = ("*");
+		this->_extra[0] = ("*");
 		this->numeric_reply(366);
 		return ;
 	}
@@ -433,7 +439,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 		// Check if the channel exists.
 		if ((chan = _server.getChannelName(*it)) != nullptr)	// It exists.
 		{
-			this->_erroneous[0] = "= " + (*it);
+			this->_extra[0] = "= " + (*it);
 			std::string	rply;
 			// List all the users of the channel.
 			for (std::list<User *>::iterator u_iter = users.begin(); u_iter != users.end(); ++u_iter)
@@ -447,7 +453,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 		}
 		else													// There isn't such channel.
 		{
-			this->_erroneous[0] = (*it);
+			this->_extra[0] = (*it);
 			this->numeric_reply(401);
 		}
 	}
@@ -572,7 +578,7 @@ void		Command::ftPRIVMSG()
 		{
 			if (_commander.is_in_channel(chan) == false)
 			{
-				this->_erroneous[0] = (*it);
+				this->_extra[0] = (*it);
 				this->numeric_reply(404);
 				continue ;
 			}
@@ -588,7 +594,7 @@ void		Command::ftPRIVMSG()
 		// There is not such server/user.
 		else
 		{
-			this->_erroneous[0] = (*it);
+			this->_extra[0] = (*it);
 			this->numeric_reply(401);
 		}
 	}
@@ -605,9 +611,9 @@ std::string		*Command::getParams(void) const
 	return (this->_params);
 }
 
-std::string		*Command::getErroneous(void) const
+std::string		*Command::getExtra(void) const
 {
-	return (this->_erroneous);
+	return (this->_extra);
 }
 
 void			Command::numeric_reply(int key, std::string rply, int socket)
@@ -616,11 +622,11 @@ void			Command::numeric_reply(int key, std::string rply, int socket)
 	std::string buff = ":127.0.0.1 " + std::to_string(key) + " "
 		+ _commander.getNickname() + " ";
 	// Save in buff <extra data> before the specific msg.
-	if (_erroneous != nullptr)
+	if (_extra != nullptr)
 	{
 		int i = -1;
-		while (_erroneous[++i].empty() == false)
-			buff += _erroneous[i] + " ";
+		while (_extra[++i].empty() == false)
+			buff += _extra[i] + " ";
 	}
 	// Select correct msg reply.
 	switch (key)		// This is my new favourite toy.
