@@ -107,6 +107,8 @@ void		Command::execute(void)
 		this->ftPRIVMSG();
 	else if (this->_command == "MODE")
 		this->ftMODE();
+	else if (this->_command == "PONG")
+		return;
 	else
 		this->numeric_reply(421);
 	return ;
