@@ -34,6 +34,7 @@ std::string	*ft_argv_parser(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+	std::string info;
 	std::string *arg = ft_argv_parser(argc, argv);
 	if (arg == 0)
 	{
@@ -94,7 +95,7 @@ int main(int argc, char **argv)
 				}
 				else
 				{
-					std::string info(buff);
+					info += buff;
 //					#ifdef DEBUG
 //						std::cout << "Recv->" << info << std::endl;
 //					#endif
@@ -105,9 +106,13 @@ int main(int argc, char **argv)
 //					#ifdef DEBUG
 //						std::cout << "Found client for socket " << i;
 //						std::cout << "." << std::endl;
-//					#endif		
-					Command cmd(info, server, *client);
-					cmd.execute();
+//					#endif
+					if (info.find("\n") != std::string::npos)
+					{
+						Command cmd(info, server, *client);
+						cmd.execute();
+						info.clear();
+					}
 				}
 			}
 		}
