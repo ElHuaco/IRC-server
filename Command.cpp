@@ -65,38 +65,71 @@ std::vector<std::string>	Command::parseParam(std::string param)
 // Execute
 void		Command::execute(void)
 {
-	if (this->_command == "NICK")
-		this->ftNICK();
-	else if (this->_command == "USER")
-		this->ftUSER();
-	else if (this->_command == "OPER")
-		this->ftOPER();
-	else if (this->_command == "QUIT")
-		this->ftQUIT();
-	else if (this->_command == "JOIN")
-		this->ftJOIN();
-	else if (this->_command == "PART")
-		this->ftPART();
-	else if (this->_command == "TOPIC")
-		this->ftTOPIC();
-	else if (this->_command == "NAMES")
-		this->ftNAMES();
-	else if (this->_command == "LIST")
-		this->ftLIST();
-	else if (this->_command == "KICK")
-		this->ftKICK();
-	else if (this->_command == "PRIVMSG")
-		this->ftPRIVMSG();
-	else if (this->_command == "MODE")
-		this->ftMODE();
-	else if (this->_command == "PONG")
-		return;
-	else
-		this->numeric_reply(421);
+	if (this->_commander.getPassword() || this->_server.getPassword().empty())
+	{
+		if (this->_command == "NICK")
+			this->ftNICK();
+		else if (this->_command == "USER")
+			this->ftUSER();
+		else if (this->_command == "OPER")
+			this->ftOPER();
+		else if (this->_command == "QUIT")
+			this->ftQUIT();
+		else if (this->_command == "JOIN")
+			this->ftJOIN();
+		else if (this->_command == "PART")
+			this->ftPART();
+		else if (this->_command == "TOPIC")
+			this->ftTOPIC();
+		else if (this->_command == "NAMES")
+			this->ftNAMES();
+		else if (this->_command == "LIST")
+			this->ftLIST();
+		else if (this->_command == "KICK")
+			this->ftKICK();
+		else if (this->_command == "PRIVMSG")
+			this->ftPRIVMSG();
+		else if (this->_command == "MODE")
+			this->ftMODE();
+		else if (this->_command == "PONG")
+			return;
+		else
+			this->numeric_reply(421);
+	}
+	else if (this->_command == "PASS")
+		this->ftPASS();
 	return ;
 }
 
 // Commands
+void			Command::ftPASS()
+{
+	// Checking number of parameters
+	if (this->_paramsNum == 0)
+	{
+		this->numeric_reply(431);
+		return ;
+	}
+
+	// Checking if a password has alredy been provided
+	if (this->_commander.getPassword())
+	{
+		this->numeric_reply(462);
+		return ;
+	}
+
+	// Checking the password
+	if (this->_params[0] != this->_server.getPassword())
+	{
+		this->numeric_reply(464);
+		return ;
+	}
+
+	this->_commander.setPassword(true);
+	return;
+}
+
+
 void			Command::ftNICK()
 {
 	// Checking if a nickname has been provided.					(ERR_NONICKNAMEGIVEN)
@@ -712,7 +745,7 @@ void			Command::numeric_reply(int key, std::string rply, int socket)
 			buff += this->_command + " :Not enough parameters";
 			break;
 		case 462:		// ERR_
-			buff += ":Unauthorized command (already registered)";
+			buff += ":You may not reregister";
 			break;
 		case 464:		// ERR_
 			buff += ":Password incorrect";

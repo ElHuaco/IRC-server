@@ -42,6 +42,7 @@ class Command
 		void						numeric_reply(int key, std::string rply="", int socket=0);
 
 		// Commands
+		void				ftPASS();
 		void				ftNICK();
 		void				ftUSER();
 		void				ftOPER();

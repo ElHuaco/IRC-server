@@ -3,7 +3,7 @@
 // Constructor + Destructor
 
 User::User(int fd)
-: _socket(fd), _isOP(false), _isWelcomed(false)
+: _socket(fd), _isOP(false), _isWelcomed(false), _password(false)
 {
 	return;
 }
@@ -30,8 +30,6 @@ User		&User::operator=(const User &rhs)
  	_hostname = rhs._hostname;
  	_isOP = rhs._isOP;
 	_isWelcomed = rhs._isWelcomed;
-	//Hay que clonar los canales en User?
-	//	NO, SOLO SERVER ALLOCA LA LISTA
 	return (*this);
 }
 
@@ -72,6 +70,10 @@ bool					User::isWelcomed(void) const
 {
 	return (_isWelcomed);
 }
+bool					User::getPassword(void) const
+{
+	return (this->_password);
+}
 
 void					User::setHopcount(int hopcount)
 {
@@ -102,6 +104,13 @@ void					User::setWelcomed(bool isit)
 {
 	_isWelcomed = isit;
 }
+void					User::setPassword(bool pass)
+{
+	this->_password = pass;
+	return;
+}
+
+
 void					User::addChannel(Channel *chann)
 {
 	if (chann == nullptr)

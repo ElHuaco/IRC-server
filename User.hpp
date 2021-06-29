@@ -17,8 +17,8 @@ class User
 		std::string				_nickname;
 		std::string				_username;
 		std::string				_realname;
-		std::string				_password;
 		std::string				_hostname;
+		bool					_password;
 		bool					_isOP;
 		bool					_isWelcomed;
 		std::list<Channel*>		_joinedChannels;
@@ -42,6 +42,7 @@ class User
 		std::string				getHostname() const;
 		bool					getIsOP() const;
 		bool					isWelcomed() const;
+		bool					getPassword() const;
 
 		void					setHopcount(int hopcount);
 		void					setNickname(std::string nickname);
@@ -49,11 +50,13 @@ class User
 		void					setWelcomed(bool is_it);
 		void					setUsername(std::string username);
 		void					setRealname(std::string realname);
+		void					setPassword(bool pass);
 
 		void					addChannel(Channel *chann);
 		Channel					*getChannelName(const std::string &str);
 		std::list <Channel *>	&getListChannels(void);
 		void					deleteChannel(const std::string &name);
+		
 		
 		//métodos de enviar a secas a otros sockets, comprobando channels
 //		void					message(Server &serv, const char *buff, int nbytes);
