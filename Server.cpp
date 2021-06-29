@@ -167,9 +167,10 @@ void					Server::deleteUser(const std::string &nick)
 		{
 			close((*it)->getSocket());
 			FD_CLR((*it)->getSocket(), &_master);
+			int fd = (*it)->getSocket();
 			delete *it;
 			_users.erase(it);
-			if ((*it)->getSocket() == _max)
+			if (fd == _max)
 			{
 				int max = 0;
 				for (u_iterator it = _users.begin(); it != _users.end(); ++it)
