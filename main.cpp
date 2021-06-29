@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 				{
 					info += buff;
 //					#ifdef DEBUG
-//						std::cout << "Recv->" << info << std::endl;
+//						std::cout << "Recv->\"" << info << "\"" << std::endl;
 //					#endif
 //					#ifdef DEBUG
 //						std::cout << "Searching for socket client..." << std::endl;
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 //						std::cout << "Found client for socket " << i;
 //						std::cout << "." << std::endl;
 //					#endif
-					if (info.find("\n") != std::string::npos)
+					if (info.find("\r\n") != std::string::npos)
 					{
 						Command cmd(info, server, *client);
 						cmd.execute();

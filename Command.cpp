@@ -581,7 +581,7 @@ void		Command::ftPRIVMSG()
 	std::vector<std::string>::iterator it;
 	for (it = targets.begin(); it != targets.end(); ++it)
 	{
-		buff += " " + *it + " " + _params[1] + "\r\n";
+		buff += " " + *it + " :" + _params[1] + "\r\n";
 		User *client;
 		Channel *chan;
 

@@ -12,9 +12,6 @@ Server::~Server(void)
 	for (c_iterator it2 = _channels.begin(); it2 != _channels.end(); ++it2)
 		delete *it2;
 	_channels.clear();
-	#ifdef DEBUG
-		std::cout << "Server conf destroyed" << std::endl;
-	#endif
 }
 
 void	Server::start(const std::string &port_listen)
@@ -48,9 +45,6 @@ void	Server::start(const std::string &port_listen)
 	FD_ZERO(&_master);
 	FD_SET(_listener, &_master);
 	_max = _listener;
-	#ifdef DEBUG
-		std::cout << "Server conf finished" << std::endl;
-	#endif
 }
 
 void					Server::setMax(int max)
@@ -105,10 +99,6 @@ void					Server::addUser(void)
 		throw std::runtime_error(strerror(errno));
 	User temp(newfd);
 	_users.push_back(temp.clone());
-//	#ifdef DEBUG
-//		std::cout << "New User with socket " << temp.getSocket();
-//		std::cout << " added." << std::endl;
-//	#endif
 	FD_SET(newfd, &_master);
 	if (newfd > _max)
 		_max = newfd;
