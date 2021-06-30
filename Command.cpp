@@ -319,6 +319,7 @@ void		Command::ftJOIN()
 		}
 		this->numeric_reply(353, rply);
 		//numeric_reply 366
+		this->_extra[0] = (*it);
 		this->numeric_reply(366);
 		//server reply to other users on channel
 		buff = ":" + _commander.getNickname() + " JOIN " + *it + "\r\n";
@@ -439,7 +440,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 	// If there is no arguments an "end of the list" reply is returned.
 	if (this->_paramsNum < 1)
 	{
-		this->_extra[0] = ("*");
+		this->_extra[0] = "*";
 		this->numeric_reply(366);
 		return ;
 	}
@@ -450,9 +451,6 @@ void		Command::ftNAMES()		// List all visible nicknames.
 	std::vector<std::string> targets = this->parseParam(_params[0]);
 	for (std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
 	{
-		if ((*it).empty() == true)
-			continue ;
-		
 		// Check if the channel exists.
 		if ((chan = _server.getChannelName(*it)) != nullptr)	// It exists.
 		{
@@ -465,13 +463,14 @@ void		Command::ftNAMES()		// List all visible nicknames.
 					rply += (*u_iter)->getNickname() + " ";
 				}
 			this->numeric_reply(353, rply);
+			this->_extra[0] = (*it);
 			this->numeric_reply(366);
 			rply.clear();
 		}
 		else													// There isn't such channel.
 		{
 			this->_extra[0] = (*it);
-			this->numeric_reply(401);
+			this->numeric_reply(366);
 		}
 	}
 	return ;
@@ -480,7 +479,7 @@ void		Command::ftNAMES()		// List all visible nicknames.
 void		Command::ftMODE()
 {
 	this->_extra[0] = this->_params[0];
-	this->_extra[1] = "b,k,l,imnpst\r\n";
+	this->_extra[1] = "b,k,l,imnpst";
 	this->numeric_reply(324);
 }
 
