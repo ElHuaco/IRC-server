@@ -55,6 +55,8 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		read_fds = server.getMaster();
+//std::cout << "Selecting..." << std::endl;
+//std::cout << "\tserver.getMax() = " << server.getMax() << std::endl;
 		if (select(server.getMax() + 1, &read_fds, NULL, NULL, NULL) == -1)
 			throw std::runtime_error(strerror(errno));
 		for (int i = 0; i <= server.getMax(); ++i)
@@ -81,7 +83,6 @@ int main(int argc, char **argv)
 				int nbytes;
 				if ((nbytes = recv(i, buff, sizeof buff, 0)) <= 0)
 				{
-					//Tratar envío de EOF con ^D
 					if (nbytes != 0)
 						throw std::runtime_error(strerror(errno));
 //					#ifdef DEBUG
