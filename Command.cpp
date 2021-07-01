@@ -249,9 +249,17 @@ void		Command::ftOPER()
 
 void		Command::ftQUIT()
 {
-	// Client only?
+	std::string buff = ":127.0.0.1 ERROR :You have disconnected\r\n";
+	send(_commander.getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	buff = ":" + _commander.getNickname() + " QUIT :" + _params[0]
+		+ "\r\n";
+	_server.deleteUser(_commander.getSocket());
+	for (std::list<User*>::iterator it = _server.getUsers().begin();
+		it != _server.getUsers().end(); ++it)
+	{
+		send((*it)->getSocket(), buff.c_str(), strlen(buff.c_str()), 0);
+	}
 }
-
 
 void		Command::ftJOIN()
 {
