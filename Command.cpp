@@ -65,6 +65,10 @@ std::vector<std::string>	Command::parseParam(std::string param)
 // Execute
 void		Command::execute(void)
 {
+	/*std::cout << "COMMAND = \"" << this->_command << "\"" << std::endl;
+	for (int i = 0; i < 5; ++i)
+		std::cout << "	Param[" << i + 1 << "] = \"" << this->_params[i] << "\"" << std::endl;
+	std::cout << "		Number of params = " << this->_paramsNum << std::endl;*/
 	if (this->_command == "PASS")
 		this->ftPASS();
 	else if (this->_command == "PONG")
@@ -271,9 +275,8 @@ void		Command::ftQUIT()
 void		Command::ftJOIN()
 {
 	// Checking number of parameters.					(ERR_NEEDMOREPARAMS)
-	if (this->_paramsNum == 0)
+	if (this->_paramsNum == 0 || this->_params[0].empty() || this->_params[0] == "#")
 	{
-		this->_extra[0] = this->_command;
 		this->numeric_reply(461);
 		return ;
 	}
@@ -353,7 +356,7 @@ void		Command::ftJOIN()
 void		Command::ftPART()
 {
 	// Check number of parameters.
-	if (this->_paramsNum < 1)
+	if (this->_paramsNum < 1 || this->_params[0].empty())
 	{
 		this->numeric_reply(461);
 		return;
@@ -503,11 +506,24 @@ void		Command::ftLIST()	//list channels & their topics
 	std::list<Channel *>::iterator it;
 
 	this->numeric_reply(321);
-	for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
+	if (this->_paramsNum < 1)
+		for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
+		{
+			this->_extra[0] = (*it)->getName();
+			this->_extra[1] = std::to_string((*it)->getChanUsers());
+			this->numeric_reply(322, (*it)->getTopic());
+		}
+	else
 	{
-		this->_extra[0] = (*it)->getName();
-		this->_extra[1] = std::to_string((*it)->getChanUsers());
-		this->numeric_reply(322, (*it)->getTopic());
+		std::vector<std::string> targets = this->parseParam(_params[0]);
+		for (it = this->_server.getChannels().begin(); it != this->_server.getChannels().end(); ++it)
+			for (std::vector<std::string>::iterator it2 = targets.begin(); it2 != targets.end(); ++it2)
+				if ((*it)->getName() == *it2)
+				{
+					this->_extra[0] = (*it)->getName();
+					this->_extra[1] = std::to_string((*it)->getChanUsers());
+					this->numeric_reply(322, (*it)->getTopic());
+				}
 	}
 	this->_extra[0].clear();
 	this->_extra[1].clear();
