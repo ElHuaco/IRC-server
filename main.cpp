@@ -1,9 +1,6 @@
 #include "Server.hpp"
 #include <iostream>
 
-//signal_handlers con signal(SIGKILL)
-
-
 std::string	*ft_argv_parser(int argc, char **argv)
 {
 	if (argc == 3)		// Two arguments case, no need to parse
@@ -55,25 +52,14 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		read_fds = server.getMaster();
-//std::cout << "Selecting..." << std::endl;
-//std::cout << "\tserver.getMax() = " << server.getMax() << std::endl;
 		if (select(server.getMax() + 1, &read_fds, NULL, NULL, NULL) == -1)
 			throw std::runtime_error(strerror(errno));
 		for (int i = 0; i <= server.getMax(); ++i)
 		{
-//std::cout << "Main loop is checking " << i << std::endl;
 			if (FD_ISSET(i, &read_fds) == false)
 				continue ;
 			if (i == server.getListener())
-			{
-//				#ifdef DEBUG
-//					std::cout << "Creating new connection..." << std::endl;
-//				#endif
 				server.addUser();
-//				#ifdef DEBUG
-//					std::cout << "New connection registered. " << std::endl;
-//				#endif
-			}
 			//Si no es nueva conexión, parsea para ver si es un Command y 
 			// entonces command.execute(server, ...) o se envía el mensaje.
 			else
@@ -85,29 +71,12 @@ int main(int argc, char **argv)
 				{
 					if (nbytes != 0)
 						throw std::runtime_error(strerror(errno));
-//					#ifdef DEBUG
-//						std::cout << "Closing connection..." << std::endl;
-//					#endif
 					server.deleteUser(i);
-//					#ifdef DEBUG
-//						std::cout << "Closed " << i;
-//						std::cout << " socket connection." << std::endl;
-//					#endif
 				}
 				else
 				{
 					info += buff;
-//					#ifdef DEBUG
-//						std::cout << "Recv->\"" << info << "\"" << std::endl;
-//					#endif
-//					#ifdef DEBUG
-//						std::cout << "Searching for socket client..." << std::endl;
-//					#endif
 					User *client = server.getSocketUser(i);
-//					#ifdef DEBUG
-//						std::cout << "Found client for socket " << i;
-//						std::cout << "." << std::endl;
-//					#endif
 					if (info.find("\r\n") != std::string::npos)
 					{
 						Command cmd(info, server, *client);
@@ -118,7 +87,4 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-//#ifdef DEBUG
-//	std::cout << "Exited the main loop." << std::endl;
-//#endif
 }
