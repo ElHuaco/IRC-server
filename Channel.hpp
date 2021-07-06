@@ -1,7 +1,5 @@
 #pragma once
 
-# define DEBUG
-
 # include <map>
 # include <list>
 # include <string>
