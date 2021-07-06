@@ -60,8 +60,6 @@ int main(int argc, char **argv)
 				continue ;
 			if (i == server.getListener())
 				server.addUser();
-			//Si no es nueva conexión, parsea para ver si es un Command y 
-			// entonces command.execute(server, ...) o se envía el mensaje.
 			else
 			{
 				char buff[512];
