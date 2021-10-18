@@ -1,42 +1,39 @@
-# ft_irc
- The goal of this project is to make you write your own IRC server. To do so, you will follow the real IRC RFC and test your work with real IRC clients. Internet is ruled by solid and standards protocols that allow a strong interaction between every connected computer. It’s always good to know about it.
- 
- Steps
- -------------
+<div id="top"></div>
+<!--
+*** Amazing README template from othneildrew
+*** https://github.com/othneildrew/Best-README-Template
+-->
+
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <h1>ft_irc</h1>
+  <img src="https://www.plutora.com/wp-content/uploads/2018/11/irc_internet_relay_chat.png" />
+</div>
+
+<!-- ABOUT THE PROJECT -->
+## ℹ️ About The Project
+
+_42 Project_
+
+The goal of this project is to make you write your own IRC server. To do so, you will follow the real IRC RFC and test your work with real IRC clients. Internet is ruled by solid and standards protocols that allow a strong interaction between every connected computer. It’s always good to know about it.
+
+### Subject
+
+* [Subject](https://cdn.intra.42.fr/pdf/pdf/32224/en.subject.pdf)
+
+### Steps
+
    1. [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html//index.html)
    2. [Beej's cheesy chat example](https://beej.us/guide/bgnet/examples/selectserver.c)
    3. [RFC for Human beings](https://modern.ircdocs.horse/)
    4. ????
    5. Profit
 
-¿Qué es el IRC?
----------------
+### RFC Documentation
 
-[IRC:](https://es.wikipedia.org/wiki/Internet_Relay_Chat) es un "application layer" sobre la Internet, que permite comunicación por
-texto. Este chat funciona con un modelo de red "cliente/servidor".
-  - [Internet](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/How_does_the_Internet_work)
-  - Application Layer: es un "abstraction layer" que especifica los protocolos de comunicación compartidos por los "hosts de la red", así como los métodos de interfaz usados.
-    - Abstraction Layer: categorización de los entresijos de un sistema para poder atacarlos por separado.
-    - Host de Red: ordenador conectado a una red, asignado con una dirección red al menos.
-  - Modelo Cliente/Servidor: es una forma de "distributed application" donde se reparten las tareas entre los proveedores de un servicio (servidores) y los usuarios del servicio (clientes). Un "host de red" del servicio ejecuta programas que pueden compartir sus recursos con lo clientes. Un cliente no comparte sus recursos, pero sí que exige el servicio al servidor.
-    - Distributed Application: programa que se ejecuta en un "distributed system".
-      - Distributed System: sistema cuyas componentes están en diferentes ordenadores de la red, como los MMORPGs.
-Los clientes IRC se comunican con los servidores del chat para transmitir mensajes a otros clientes. Debe ser TCP/IP(v4) ó (v6).
-  - [TCP/IP](https://www.youtube.com/watch?v=614QGgw_FA4)
-
-Ejemplos de lunáticos creando servidores TCP/IP socket en C/C++
----------------
-  - [X] [Biblia introductora a programación de redes](https://beej.us/guide/bgnet/html//index.html#what-is-a-socket)
-  - [Loco crea IRC server en C para NeoVim](https://www.youtube.com/watch?v=Cct_vXCJOFw)
-  - [X] [Tutorial Parte 1](https://www.youtube.com/watch?v=C7CpfL1p6y0): repaso IP, TCP, sockets.
-  - [X] [Tutorial Parte 2](https://www.youtube.com/watch?v=OuYPe_HcLWc): abstraer el código de conexión con Socket, Server classes.
-  - [Esquema aplicación server-client socket](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
-  - [Puertos IRC](https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=IRC)
-
-¿Qué es el RFC?
----------------
-
-Request For Comments, son la documentación del IRC.
+Request For Comments, official documentation for IRC.
   - [X] [RFC 1459](https://datatracker.ietf.org/doc/html/rfc1459)
   - [ ] [RFC 2810](https://datatracker.ietf.org/doc/html/rfc2810)
   - [ ] [RFC 2811](https://datatracker.ietf.org/doc/html/rfc2811)
@@ -44,26 +41,11 @@ Request For Comments, son la documentación del IRC.
   - [ ] [RFC 2813](https://datatracker.ietf.org/doc/html/rfc2813)
   - [ ] [RFC 7194](https://datatracker.ietf.org/doc/html/rfc7194)
 
-Mandatory parts
----------------
+### Allowed functions
 
-  - ./ircserv [host:port_network:password_network] \<port\> \<password\>
-  - Varios clientes a la vez sin colgarse.
-  - No forking, all I/O non-blocking and use only 1 select for all T/O operations (read, write, listen...)
-    - ¿Qué significan non-blocking sockets? Any descriptor (pipes, FIFOs, sockets, terminals, pseudo-terminals, and some other types of devices) can be put in the nonblocking mode. When a descriptor is set in nonblocking mode, an I/O system call on that descriptor will return immediately, even if that request can’t be immediately completed (and would therefore result in the process being blocked otherwise). 
-      - TCP/IP Socket: Once a peer-to-peer connection is established, a socket descriptor is used to uniquely identify the connection. The socket descriptor itself is a task-specific numerical value.
-  - Verificar errores en low bandwith, partial data received...
-  - test con nc para enviar cachos de un command.
-  - Lista mínimos del RFC:
-    - You must be able to connect the reference client to your server without producing any error.
-    - You must be able to authenticate, set a nickname, a username, join a channel, send and receive private messages using this client.
-    - All messages from one client on a channel are sent to all other clients of the channel.
-    - You must have operators and regular users. Some operator’s specific actions/commands.
-
+<details>
+  <summary>Expand</summary>
   
-Funciones Externas
--------------------
-
   - `socket()`: lo crea. Selecciona protocolos (`PF_INET` ó `PF_INET6`; `SOCK_STREAM`; `getprotobyname("tcp")`). También se puede rellenar con el `struct addrinfo` usado en `getaddrinfo()`.
   - `setsockopt()`, `getsockname()`: controlar socket descriptors, como `fcntl()`.
   - `getprotobyname()`: devuelve el número asociado al nombre del protocolo, como "tcp" o "udp".
@@ -84,6 +66,88 @@ Funciones Externas
   - `FD_ISSET`: returns true if fd is in the set.
   - `FD_SET`: adds fd to the set.
   - `FD_ZERO`: clears all entries from the set.
-  - signal
-  - lseek
-  - fstat
+  - `signal`
+  - `lseek`
+  - `fstat`
+</details>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- GETTING STARTED -->
+## 🏃 Quick Start
+
+### Important
+
+* Project has only been tested and runned on macOS systems
+
+### Installation
+
+* Clone the repo
+  ```sh
+  git clone https://github.com/its-a-maxi/ft_irc.git
+  ```
+  
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- USAGE EXAMPLES -->
+## ⌨️ Usage
+
+* Compile
+```sh
+  make
+```
+* Run
+``` sh
+  ./ircserv [host:port_network:password_network] <port> <password>
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- CONTACT -->
+## 📫 Contact
+
+Maximo Monroy - monroy.vds@gmail.com
+
+Alejandro León - https://github.com/ElHuaco
+
+Fernando Jimenez - https://github.com/fjimenez81
+
+Project Link: [https://github.com/its-a-maxi/ft_irc](https://github.com/its-a-maxi/ft_irc)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## 🥇 Acknowledgments
+
+* [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html//index.html#what-is-a-socket)
+* [Building an IRC Server for Vim in C](https://www.youtube.com/watch?v=Cct_vXCJOFw)
+* [Introduction to TCP/IP and Sockets, part 1: Introducing the protocols and API](https://www.youtube.com/watch?v=C7CpfL1p6y0)
+* [Introduction to TCP/IP and Sockets, part 2: Example code Walk-Through](https://www.youtube.com/watch?v=OuYPe_HcLWc)
+* [A typical client-server program flow chart](https://www.ibm.com/docs/en/zos/2.4.0?topic=internets-typical-client-server-program-flow-chart#o4ag1__tiptcp)
+* [IRC Ports](https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=IRC)
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/othneildrew
+[product-screenshot]: images/screenshot.png
